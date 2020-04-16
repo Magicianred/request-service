@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="9.0.0" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference ReplaceParameters="true" Include="..\RequestService.Core\RequestService.Core.csproj">
+			<Name >RequestService.Core</Name>
+		</ProjectReference>
+		<ProjectReference ReplaceParameters="true" Include="..\RequestService.Repo\RequestService.Repo.csproj">
+			<Name >RequestService.Repo</Name>
+		</ProjectReference>
+	</ItemGroup>
+</Project>
