@@ -4,6 +4,7 @@
 		<AzureFunctionsVersion>v2</AzureFunctionsVersion>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="AzureFunctions.Extensions.Swashbuckle" Version="1.4.4" />
 		<PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.0.0" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="MediatR" Version="8.0.1" />
@@ -15,13 +16,13 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference ReplaceParameters="true" Include="..\RequestService.Handlers\RequestService.Handlers.csproj">
-			<Name >RequestService.Handlers</Name>
+			<Name>RequestService.Handlers</Name>
 		</ProjectReference>
 		<ProjectReference ReplaceParameters="true" Include="..\RequestService.Mappers\RequestService.Mappers.csproj">
-			<Name >RequestService.Mappers</Name>
+			<Name>RequestService.Mappers</Name>
 		</ProjectReference>
 		<ProjectReference ReplaceParameters="true" Include="..\RequestService.Repo\RequestService.Repo.csproj">
-			<Name >RequestService.Repo</Name>
+			<Name>RequestService.Repo</Name>
 		</ProjectReference>
 	</ItemGroup>
 	<ItemGroup>
