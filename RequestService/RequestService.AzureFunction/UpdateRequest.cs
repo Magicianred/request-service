@@ -6,29 +6,33 @@ using Microsoft.Extensions.Logging;
 using MediatR;
 using System;
 using RequestService.Core.Domains.Entities;
+using System.Net;
+using AzureFunctions.Extensions.Swashbuckle.Attribute;
 
 namespace RequestService.AzureFunction
 {
-    public class FunctionA
+    public class UpdateRequest
     {
         private readonly IMediator _mediator;
 
-        public FunctionA(IMediator mediator)
+        public UpdateRequest(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        [FunctionName("FunctionA")]
+        [FunctionName("UpdateRequest")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] FunctionARequest req,
+            [HttpTrigger(AuthorizationLevel.Function,"post", Route = null)]
+            [RequestBodyType(typeof(UpdateRequestRequest), "product request")] UpdateRequestRequest req,
             ILogger log)
         {
             try
             {
                 log.LogInformation("C# HTTP trigger function processed a request.");
 
-                FunctionAResponse response = await _mediator.Send(req);
-                return new OkObjectResult(response);
+                await _mediator.Send(req);
+                return new NoContentResult();
             }
             catch (Exception exc)
             {
