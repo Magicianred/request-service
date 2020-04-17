@@ -21,7 +21,7 @@ namespace RequestService.Handlers
         public Task<LogRequestResponse> Handle(LogRequestRequest request, CancellationToken cancellationToken)
         {
             LogRequestResponse response = null;
-            switch (request.PostCode)
+            switch (request.Postcode)
             {
                 case "NG16DQ":
                     response = new LogRequestResponse()
