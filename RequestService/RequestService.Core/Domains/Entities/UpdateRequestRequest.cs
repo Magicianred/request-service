@@ -9,7 +9,6 @@ namespace RequestService.Core.Domains.Entities
     public class UpdateRequestRequest : IRequest
     {
         public int RequestID { get; set; }
-        public string Postcode { get; set; }
         public bool OnBehalfOfAnother { get; set; }
         public bool HealthOrWellbeingConcern { get; set; }
         public List<SupportActivities> SupportActivitiesRequired { get; set; }
