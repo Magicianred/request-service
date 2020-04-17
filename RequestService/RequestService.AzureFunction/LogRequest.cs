@@ -6,28 +6,32 @@ using Microsoft.Extensions.Logging;
 using MediatR;
 using System;
 using RequestService.Core.Domains.Entities;
+using System.Net;
+using AzureFunctions.Extensions.Swashbuckle.Attribute;
 
 namespace RequestService.AzureFunction
 {
-    public class FunctionB
+    public class LogRequest
     {
         private readonly IMediator _mediator;
 
-        public FunctionB(IMediator mediator)
+        public LogRequest(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        [FunctionName("FunctionB")]
+        [FunctionName("LogRequest")]        
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(LogRequestResponse))]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] FunctionBRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
+            [RequestBodyType(typeof(LogRequestRequest), "product request")] LogRequestRequest req,
             ILogger log)
         {
             try
             {
                 log.LogInformation("C# HTTP trigger function processed a request.");
 
-                FunctionBResponse response = await _mediator.Send(req);
+                LogRequestResponse response = await _mediator.Send(req);
                 return new OkObjectResult(response);
             }
             catch (Exception exc)

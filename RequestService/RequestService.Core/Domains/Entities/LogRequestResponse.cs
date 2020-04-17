@@ -4,8 +4,9 @@ using System.Text;
 
 namespace RequestService.Core.Domains.Entities
 {
-    public class FunctionAResponse
+    public class LogRequestResponse
     {
-        public string Status { get; set; }
+        public int RequestID { get; set; }
+        public bool Fulfillable { get; set; }
     }
 }
