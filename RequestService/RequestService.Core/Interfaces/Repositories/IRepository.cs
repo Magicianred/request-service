@@ -8,5 +8,6 @@ namespace RequestService.Core.Interfaces.Repositories
 {
     public interface IRepository
     {
+        Task<int> CreateRequest(string postCode);
     }
 }

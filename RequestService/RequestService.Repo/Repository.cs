@@ -18,5 +18,18 @@ namespace RequestService.Repo
             _context = context;
             _mapper = mapper;
         }
+
+        public async Task<int> CreateRequest(string postCode)
+        {
+            Request request = new Request
+            {
+                PostCode = postCode,
+                DateRequested = DateTime.Now,
+                IsFulfillable = false,
+            };
+           _context.Request.Add(request);
+            await _context.SaveChangesAsync();
+            return request.Id;
+        }
     }
 }

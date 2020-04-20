@@ -27,7 +27,7 @@ namespace RequestService.AzureFunction
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            ExecutionContextOptions executioncontextoptions = builder.Services.BuildServiceProvider()
+         ExecutionContextOptions executioncontextoptions = builder.Services.BuildServiceProvider()
            .GetService<IOptions<ExecutionContextOptions>>().Value;
             string currentDirectory = executioncontextoptions.AppDirectory;
 
