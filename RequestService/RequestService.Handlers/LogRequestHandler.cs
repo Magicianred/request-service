@@ -31,10 +31,10 @@ namespace RequestService.Handlers
                 RequestID = await _repository.CreateRequest(request.Postcode)
             };
 
-            int championCount = await _userService.GetChampionCountByPostcode(request.Postcode, cancellationToken);
+           int championCount = await _userService.GetChampionCountByPostcode(request.Postcode, cancellationToken);
            if (championCount > 0) {
                 response.Fulfillable = true;                 
-                await _repository.UpdateFulfillment(response.RequestID, true);
+                await _repository.UpdateFulfillment(response.RequestID, response.Fulfillable);
              }
            
             return response;
