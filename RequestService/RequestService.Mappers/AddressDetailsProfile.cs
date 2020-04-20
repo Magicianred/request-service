@@ -11,8 +11,8 @@ namespace RequestService.Mappers
     {
         public AddressDetailsProfile()
         {
-            CreateMap<AddressDetails, AddressDetailsDTO>();
-            CreateMap<AddressDetailsDTO, AddressDetails>();
+            //CreateMap<AddressDetails, AddressDetailsDTO>();
+            //CreateMap<AddressDetailsDTO, AddressDetails>();
         }
     }
 }
