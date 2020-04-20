@@ -15,64 +15,90 @@ namespace RequestService.Repo
         {
         }
 
-        public virtual DbSet<AddressDetails> AddressDetails { get; set; }
-        public virtual DbSet<PostCode> PostCode { get; set; }
+        public virtual DbSet<PersonalDetails> PersonalDetails { get; set; }
+        public virtual DbSet<Request> Request { get; set; }
+        public virtual DbSet<SupportActivities> SupportActivities { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-            }
+        {            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AddressDetails>(entity =>
+            modelBuilder.Entity<PersonalDetails>(entity =>
             {
-                entity.ToTable("AddressDetails", "Address");
+                entity.HasKey(e => e.RequestId);
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.ToTable("PersonalDetails", "RequestPersonal");
 
-                entity.Property(e => e.City)
-                    .HasMaxLength(50)
+                entity.Property(e => e.RequestId)
+                    .HasColumnName("RequestID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.FurtherDetails)
+                    .IsRequired()
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.County)
-                    .HasMaxLength(50)
+                entity.Property(e => e.RequestorEmailAddress)
+                    .IsRequired()
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.HouseName)
-                    .HasMaxLength(50)
+                entity.Property(e => e.RequestorFirstName)
+                    .IsRequired()
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.HouseNumber)
-                    .HasMaxLength(50)
+                entity.Property(e => e.RequestorLastName)
+                    .IsRequired()
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PostCodeId).HasColumnName("PostCodeID");
-
-                entity.Property(e => e.Street)
-                    .HasMaxLength(50)
+                entity.Property(e => e.RequestorPhoneNumber)
+                    .IsRequired()
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.PostCode)
-                    .WithMany(p => p.AddressDetails)
-                    .HasForeignKey(d => d.PostCodeId)
+                entity.HasOne(d => d.Request)
+                    .WithOne(p => p.PersonalDetails)
+                    .HasForeignKey<PersonalDetails>(d => d.RequestId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AddressDetails_PostCodeID");
+                    .HasConstraintName("FK_PersonalDetails_RequestID");
             });
 
-            modelBuilder.Entity<PostCode>(entity =>
+            modelBuilder.Entity<Request>(entity =>
             {
-                entity.ToTable("PostCode", "Address");
+                entity.ToTable("Request", "Request");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.PostalCode)
+                entity.Property(e => e.DateRequested)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.PostCode)
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
+
+            modelBuilder.Entity<SupportActivities>(entity =>
+            {
+                entity.HasKey(e => new { e.RequestId, e.ActivityId });
+
+                entity.ToTable("SupportActivities", "Request");
+
+                entity.Property(e => e.RequestId).HasColumnName("RequestID");
+
+                entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.SupportActivities)
+                    .HasForeignKey(d => d.RequestId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SupportActivities_RequestID");
+            });            
         }
     }
 }
