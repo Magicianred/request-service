@@ -24,24 +24,19 @@ namespace RequestService.Handlers
         public async Task<LogRequestResponse> Handle(LogRequestRequest request, CancellationToken cancellationToken)
         {
             LogRequestResponse response = null;
-            int championCount = await _userService.GetChampionCountByPostcode(request.Postcode, cancellationToken);
-            switch (request.Postcode)
+            string postCode = HelpMyStreet.Utils.Utils.PostcodeFormatter.FormatPostcode(request.Postcode);
+            
+            response = new LogRequestResponse
             {
-                case "NG16DQ":
-                    response = new LogRequestResponse()
-                    {
-                        RequestID = 1,
-                        Fulfillable = true
-                    };
-                    break;
-                default:
-                    response = new LogRequestResponse()
-                    {
-                        RequestID = 2,
-                        Fulfillable = false
-                    };
-                    break;
-            }
+                RequestID = await _repository.CreateRequest(request.Postcode)
+            };
+
+            int championCount = await _userService.GetChampionCountByPostcode(request.Postcode, cancellationToken);
+           if (championCount > 0) {
+                response.Fulfillable = true;                 
+                await _repository.UpdateFulfillment(response.RequestID, true);
+             }
+           
             return response;
         }
     }

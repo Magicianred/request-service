@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
 using RequestService.Repo.EntityFramework.Entities;
@@ -30,6 +31,18 @@ namespace RequestService.Repo
            _context.Request.Add(request);
             await _context.SaveChangesAsync();
             return request.Id;
+        }
+
+
+        public async Task UpdateFulfillment(int requestId, bool isFulfillable)
+        {
+            var request = await _context.Request.FirstAsync(x => x.Id == requestId);
+            if (request != null)
+            {
+                request.IsFulfillable = isFulfillable;
+                await _context.SaveChangesAsync();
+            }
+        
         }
     }
 }

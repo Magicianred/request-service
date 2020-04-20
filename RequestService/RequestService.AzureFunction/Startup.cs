@@ -76,34 +76,31 @@ namespace RequestService.AzureFunction
 
             builder.Services.AddMediatR(typeof(LogRequestHandler).Assembly);
             builder.Services.AddAutoMapper(typeof(AddressDetailsProfile).Assembly);
-
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                   options.UseInMemoryDatabase(databaseName: "RequestService.AzureFunction"));
             builder.Services.AddTransient<IHttpClientWrapper, HttpClientWrapper>();
             builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<IRepository, Repository>();
 
 
-            //builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            //        ConfigureDbContextOptionsBuilder(options, connectionStrings.RequestService),
-            //    ServiceLifetime.Transient
-            //);
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                    ConfigureDbContextOptionsBuilder(options, connectionStrings.RequestService),
+                ServiceLifetime.Transient
+            );
 
-            //// automatically apply EF migrations
-            //// DbContext is being created manually instead of through DI as it throws an exception and I've not managed to find a way to solve it yet: 
-            //// 'Unable to resolve service for type 'Microsoft.Azure.WebJobs.Script.IFileLoggingStatusManager' while attempting to activate 'Microsoft.Azure.WebJobs.Script.Diagnostics.HostFileLoggerProvider'.'
-            //DbContextOptionsBuilder<ApplicationDbContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            //ConfigureDbContextOptionsBuilder(dbContextOptionsBuilder, connectionStrings.RequestService);
-            //ApplicationDbContext dbContext = new ApplicationDbContext(dbContextOptionsBuilder.Options);
+            // automatically apply EF migrations
+            // DbContext is being created manually instead of through DI as it throws an exception and I've not managed to find a way to solve it yet: 
+            // 'Unable to resolve service for type 'Microsoft.Azure.WebJobs.Script.IFileLoggingStatusManager' while attempting to activate 'Microsoft.Azure.WebJobs.Script.Diagnostics.HostFileLoggerProvider'.'
+            DbContextOptionsBuilder<ApplicationDbContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            ConfigureDbContextOptionsBuilder(dbContextOptionsBuilder, connectionStrings.RequestService);
+            ApplicationDbContext dbContext = new ApplicationDbContext(dbContextOptionsBuilder.Options);
 
-            //dbContext.Database.Migrate();
+            dbContext.Database.Migrate();
         }
 
         private void ConfigureDbContextOptionsBuilder(DbContextOptionsBuilder options, string connectionString)
         {
             options
                 .UseSqlServer(connectionString)
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
         }
     }
 }

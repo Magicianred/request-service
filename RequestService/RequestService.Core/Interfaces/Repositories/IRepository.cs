@@ -9,5 +9,6 @@ namespace RequestService.Core.Interfaces.Repositories
     public interface IRepository
     {
         Task<int> CreateRequest(string postCode);
+        Task UpdateFulfillment(int requestId, bool isFulfillable);
     }
 }
