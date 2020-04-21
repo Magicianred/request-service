@@ -8,7 +8,6 @@ namespace RequestService.Repo.EntityFramework.Entities
     {
         public int RequestId { get; set; }
         public int ActivityId { get; set; }
-
         public virtual Request Request { get; set; }
     }
 }

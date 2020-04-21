@@ -4,7 +4,9 @@ using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
 using RequestService.Repo.EntityFramework.Entities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RequestService.Repo
@@ -20,8 +22,8 @@ namespace RequestService.Repo
             _mapper = mapper;
         }
 
-        public async Task<int> CreateRequest(string postCode)
-        {
+        public async Task<int> CreateRequestAsync(string postCode, CancellationToken cancellationToken)
+        {            
             Request request = new Request
             {
                 PostCode = postCode,
@@ -29,20 +31,51 @@ namespace RequestService.Repo
                 IsFulfillable = false,
             };
            _context.Request.Add(request);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return request.Id;
         }
 
 
-        public async Task UpdateFulfillment(int requestId, bool isFulfillable)
+        public async Task UpdateFulfillmentAsync(int requestId, bool isFulfillable, CancellationToken cancellationToken)
         {
-            var request = await _context.Request.FirstAsync(x => x.Id == requestId);
+            var request = await _context.Request.FirstAsync(x => x.Id == requestId, cancellationToken);
             if (request != null)
             {
                 request.IsFulfillable = isFulfillable;
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(cancellationToken);
+            }        
+        }
+
+        public async Task UpdatePersonalDetailsAsync(PersonalDetailsDto dto, CancellationToken cancellationToken)
+        {
+            var personalDetails = new PersonalDetails
+            {
+                RequestId = dto.RequestID,
+                FurtherDetails = dto.FurtherDetails,
+                OnBehalfOfAnother = dto.OnBehalfOfAnother,
+                RequestorEmailAddress = dto.RequestorEmailAddress,
+                RequestorFirstName = dto.RequestorFirstName,
+                RequestorLastName = dto.RequestorLastName,
+                RequestorPhoneNumber = dto.RequestorPhoneNumber,
+            };
+            _context.PersonalDetails.Add(personalDetails);
+            await _context.SaveChangesAsync(cancellationToken);               
+        }
+
+        public async Task AddSupportActivityAsync(SupportActivityDTO dto, CancellationToken cancellationToken)
+        {
+            List<SupportActivities> activties = new List<SupportActivities>();
+            foreach(var activtity in dto.SupportActivities)
+            {
+                activties.Add(new SupportActivities
+                {
+                    RequestId = dto.RequestId,
+                    ActivityId = (int)activtity
+                });
             }
-        
+
+            _context.SupportActivities.AddRange(activties);
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }
