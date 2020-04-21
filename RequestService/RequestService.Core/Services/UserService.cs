@@ -1,4 +1,5 @@
 ﻿using Marvin.StreamExtensions;
+using Newtonsoft.Json;
 using RequestService.Core.Config;
 using RequestService.Core.Dto;
 using RequestService.Core.Utils;
@@ -41,8 +42,8 @@ namespace RequestService.Core.Services
             using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.UserService, path, cancellationToken).ConfigureAwait(false))
             {
                 response.EnsureSuccessStatusCode();                
-                Stream stream = await response.Content.ReadAsStreamAsync();
-                championsResponse = stream.ReadAndDeserializeFromJson<GetChampionsByPostcodeResponse>();
+                string content = await response.Content.ReadAsStringAsync();
+                championsResponse = JsonConvert.DeserializeObject<GetChampionsByPostcodeResponse>(content);
             }
             return championsResponse;
         }
