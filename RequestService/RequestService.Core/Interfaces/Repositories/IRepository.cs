@@ -13,5 +13,7 @@ namespace RequestService.Core.Interfaces.Repositories
         Task UpdateFulfillmentAsync(int requestId, bool isFulfillable, CancellationToken cancellationToken);
         Task AddSupportActivityAsync(SupportActivityDTO dto, CancellationToken cancellationToken);
         Task UpdatePersonalDetailsAsync(PersonalDetailsDto dto, CancellationToken cancellationToken);
+        Task<string> GetRequestPostCodeAsync(int requestId, CancellationToken cancellationToken);
+        Task UpdateCommunicationSentAsync(int requestId, bool communicationSent, CancellationToken cancellationToken);
     }
 }

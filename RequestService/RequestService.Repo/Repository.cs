@@ -22,6 +22,16 @@ namespace RequestService.Repo
             _mapper = mapper;
         }
 
+        public async Task<string> GetRequestPostCodeAsync(int requestId, CancellationToken cancellationToken)
+        {
+            var request = await _context.Request.FirstAsync(x => x.Id == requestId, cancellationToken);
+            if (request != null)
+            {
+                return request.PostCode;
+            }
+            return null;
+        }
+
         public async Task<int> CreateRequestAsync(string postCode, CancellationToken cancellationToken)
         {            
             Request request = new Request
@@ -29,7 +39,9 @@ namespace RequestService.Repo
                 PostCode = postCode,
                 DateRequested = DateTime.Now,
                 IsFulfillable = false,
+                CommunicationSent = false,
             };
+
            _context.Request.Add(request);
             await _context.SaveChangesAsync(cancellationToken);
             return request.Id;
@@ -44,6 +56,16 @@ namespace RequestService.Repo
                 request.IsFulfillable = isFulfillable;
                 await _context.SaveChangesAsync(cancellationToken);
             }        
+        }
+
+        public async Task UpdateCommunicationSentAsync(int requestId, bool communicationSent, CancellationToken cancellationToken)
+        {
+            var request = await _context.Request.FirstAsync(x => x.Id == requestId, cancellationToken);
+            if (request != null)
+            {
+                request.CommunicationSent = communicationSent;
+                await _context.SaveChangesAsync(cancellationToken);
+            }
         }
 
         public async Task UpdatePersonalDetailsAsync(PersonalDetailsDto dto, CancellationToken cancellationToken)

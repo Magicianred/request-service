@@ -18,14 +18,20 @@ namespace RequestService.Core.Services
         public CommunicationService(IHttpClientWrapper httpClientWrapper)
         {
             _httpClientWrapper = httpClientWrapper;
-        }
+        }     
 
-        public async Task SendEmailAsync(SendEmailRequest request,  CancellationToken cancellationToken)
+        public async Task<bool> SendEmailToUsersAsync(SendEmailToUsersRequest request,  CancellationToken cancellationToken)
         {
-            string path = $"api/SendEmail";            
+            string path = $"api/SendEmailToUsers";
+            
             var jsonContent =  new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-            await _httpClientWrapper.PostAsync(HttpClientConfigName.CommunicationService, path, jsonContent, cancellationToken).ConfigureAwait(false);                       
+
+            using (HttpResponseMessage response = await _httpClientWrapper.PostAsync(HttpClientConfigName.CommunicationService, path, jsonContent, cancellationToken).ConfigureAwait(false)){
+                response.EnsureSuccessStatusCode();
+                return true;
+            }      
         }
+ 
 
     }
 }

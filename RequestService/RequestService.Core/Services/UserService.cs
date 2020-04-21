@@ -27,11 +27,24 @@ namespace RequestService.Core.Services
             GetChampionCountByPostcodeResponse championCountResponse ;
             using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.UserService, path, cancellationToken).ConfigureAwait(false))
             {
-                response.EnsureSuccessStatusCode();
+                response.EnsureSuccessStatusCode();                 
                 Stream stream = await response.Content.ReadAsStreamAsync();
                 championCountResponse = stream.ReadAndDeserializeFromJson<GetChampionCountByPostcodeResponse>();
             }
             return championCountResponse.Count;
+        }
+
+        public async Task<GetChampionsByPostcodeResponse> GetChampionsByPostcode(string postcode, CancellationToken cancellationToken)
+        {
+            string path = $"api/GetChampionsByPostcode?postcode={postcode}";
+            GetChampionsByPostcodeResponse championsResponse;
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.UserService, path, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();                
+                Stream stream = await response.Content.ReadAsStreamAsync();
+                championsResponse = stream.ReadAndDeserializeFromJson<GetChampionsByPostcodeResponse>();
+            }
+            return championsResponse;
         }
     }
 }

@@ -9,6 +9,6 @@ namespace RequestService.Core.Services
 {
     public interface ICommunicationService
     {
-        Task SendEmailAsync(SendEmailRequest request, CancellationToken cancellationToken);
+        Task<bool> SendEmailToUsersAsync(SendEmailToUsersRequest request, CancellationToken cancellationToken);
     }
 }

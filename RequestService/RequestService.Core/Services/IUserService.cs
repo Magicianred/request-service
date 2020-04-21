@@ -10,5 +10,7 @@ namespace RequestService.Core.Services
     public interface IUserService
     {
         Task<int> GetChampionCountByPostcode(string postcode, CancellationToken cancellationToken);
+        Task<GetChampionsByPostcodeResponse> GetChampionsByPostcode(string postcode, CancellationToken cancellationToken);
     }
+
 }

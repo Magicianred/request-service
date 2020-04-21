@@ -18,8 +18,5 @@ namespace RequestService.Core.Domains.Entities
         public string RequestorEmailAddress { get; set; }
         public string RequestorPhoneNumber { get; set; }
     }
-    public class SupportActivityRequest
-    {
-        public List<SupportActivities> SupportActivities { get; set; }
-    }
+
 }
