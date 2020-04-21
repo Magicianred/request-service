@@ -13,5 +13,6 @@ namespace RequestService.Core.Dto
         public string RequestorLastName { get; set; }
         public string RequestorEmailAddress { get; set; }
         public string RequestorPhoneNumber { get; set; }
+        public bool HealthOrWellbeingConcern { get; set; }
     }
 }

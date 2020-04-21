@@ -91,7 +91,7 @@ namespace RequestService.Repo
             {
                 activties.Add(new SupportActivities
                 {
-                    RequestId = dto.RequestId,
+                    RequestId = dto.RequestID,
                     ActivityId = (int)activtity
                 });
             }

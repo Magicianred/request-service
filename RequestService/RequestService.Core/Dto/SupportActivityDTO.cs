@@ -7,7 +7,7 @@ namespace RequestService.Core.Dto
     public class SupportActivityDTO
     {
         public List<HelpMyStreet.Utils.Enums.SupportActivities> SupportActivities { get; set; }
-        public int RequestId { get; set; }            
+        public int RequestID { get; set; }            
     }
 
 }

@@ -55,15 +55,15 @@ namespace RequestService.Handlers
             // intially set the first person to be the userId before we apply logic
             int toUserId = ChampionIds.First();
             
-            if(ChampionIds.Count > 1)
+            if(champions.Users.Count > 1)
             {
                 Random random = new Random();
                 var randomElementIndex = random.Next(0, (ChampionIds.Count - 1));
                 toUserId = ChampionIds.ElementAt(randomElementIndex);
                 ChampionIds.RemoveAt(randomElementIndex);
 
-                if (ChampionIds.Count > 3)
-                {
+                if (champions.Users.Count > 3)
+                {                    
                     var randomCCElementIndex = random.Next(0, (ChampionIds.Count - 1));
                     ccList.Add(ChampionIds.ElementAt(randomCCElementIndex));
                     ChampionIds.RemoveAt(randomCCElementIndex);
@@ -73,7 +73,7 @@ namespace RequestService.Handlers
                     ChampionIds.RemoveAt(randomCCElementIndex);
                 }
                 else
-                {
+                {                    
                     ccList = ChampionIds.Select(x => x).ToList();
                 }                            
             }
@@ -193,6 +193,8 @@ namespace RequestService.Handlers
                 RequestorPhoneNumber = request.RequestorPhoneNumber,
                 FurtherDetails = request.FurtherDetails,
                 OnBehalfOfAnother = request.OnBehalfOfAnother,
+                HealthOrWellbeingConcern = request.HealthOrWellbeingConcern
+
             };
 
             await _repository.UpdatePersonalDetailsAsync(dto, cancellationToken);
@@ -203,7 +205,7 @@ namespace RequestService.Handlers
         {
             SupportActivityDTO activies = new SupportActivityDTO
             {
-                RequestId = requestId,
+                RequestID = requestId,
                 SupportActivities = activities
             };
 
