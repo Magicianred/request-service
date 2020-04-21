@@ -28,7 +28,7 @@ namespace RequestService.Handlers
         {
            var personalDetails =  await UpdatePersonalDetailsAsync(request, cancellationToken);
 
-           var supportDetails = await UpdateSupportActivitiesAsync(request.RequestID, request.SupportActivtiesRequired.SupportActivities, cancellationToken);
+           var supportDetails = await UpdateSupportActivitiesAsync(request.RequestID, request.SupportActivitiesRequired.SupportActivities, cancellationToken);
 
            bool commsSent = await SendEmailAsync(request.RequestID, personalDetails, supportDetails, cancellationToken);
 

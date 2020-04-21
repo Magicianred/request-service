@@ -11,7 +11,7 @@ namespace RequestService.Core.Domains.Entities
         public int RequestID { get; set; }
         public bool OnBehalfOfAnother { get; set; }
         public bool HealthOrWellbeingConcern { get; set; }
-        public SupportActivityRequest SupportActivtiesRequired { get; set; }
+        public SupportActivityRequest SupportActivitiesRequired { get; set; }
         public string FurtherDetails { get; set; }
         public string RequestorFirstName { get; set; }
         public string RequestorLastName { get; set; }

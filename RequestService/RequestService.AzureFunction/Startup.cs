@@ -33,7 +33,7 @@ namespace RequestService.AzureFunction
 
             IConfigurationBuilder configBuilder = new ConfigurationBuilder()
             .SetBasePath(currentDirectory)
-            .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables();
 
             IConfigurationRoot config = configBuilder.Build();

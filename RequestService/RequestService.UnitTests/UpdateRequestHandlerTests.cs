@@ -51,7 +51,7 @@ namespace RequestService.UnitTests
                 RequestorFirstName = "Joe",
                 RequestorLastName = "Bloggs",
                 RequestorPhoneNumber = "07592124574",
-                SupportActivtiesRequired = new SupportActivityRequest
+                SupportActivitiesRequired = new SupportActivityRequest
                 {
                     SupportActivities = new System.Collections.Generic.List<HelpMyStreet.Utils.Enums.SupportActivities> {
                         HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn,
@@ -100,7 +100,7 @@ namespace RequestService.UnitTests
             SupportActivityDTO expectedDto = new SupportActivityDTO
             {
                 RequestID = _request.RequestID,
-                SupportActivities = _request.SupportActivtiesRequired.SupportActivities
+                SupportActivities = _request.SupportActivitiesRequired.SupportActivities
                
             };
             _repository.Verify(x => x.AddSupportActivityAsync(It.Is<SupportActivityDTO>(arg =>
