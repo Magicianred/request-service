@@ -14,8 +14,14 @@ namespace RequestService.Core.Dto
 
     public class Recipients
     {
-        public List<int> ToUserID { get; set; }
+        public List<int> ToUserIDs { get; set; }
         public List<int> CcUserIDs { get; set; }
         public List<int> BccUserIDs { get; set; }
     }
-}
+
+    public class SendEmailToUsersResponse {
+       public bool Success { get; set; }
+    }
+
+}        
+

@@ -22,13 +22,13 @@ namespace RequestService.Core.Services
 
         public async Task<bool> SendEmailToUsersAsync(SendEmailToUsersRequest request,  CancellationToken cancellationToken)
         {
-            string path = $"api/SendEmailToUsers";
-            
+            string path = $"api/SendEmailToUsers";            
             var jsonContent =  new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-
             using (HttpResponseMessage response = await _httpClientWrapper.PostAsync(HttpClientConfigName.CommunicationService, path, jsonContent, cancellationToken).ConfigureAwait(false)){
                 response.EnsureSuccessStatusCode();
-                return true;
+                string jsonResponse = await response.Content.ReadAsStringAsync();                
+                var emailSentResponse =  JsonConvert.DeserializeObject<SendEmailToUsersResponse>(jsonResponse);
+                return emailSentResponse.Success;
             }      
         }
  

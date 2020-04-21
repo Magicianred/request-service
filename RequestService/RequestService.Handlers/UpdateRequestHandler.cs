@@ -55,7 +55,7 @@ namespace RequestService.Handlers
             // intially set the first person to be the userId before we apply logic
             int toUserId = ChampionIds.First();
             
-            if(ChampionIds.Count >= 1)
+            if(ChampionIds.Count > 1)
             {
                 Random random = new Random();
                 var randomElementIndex = random.Next(0, (ChampionIds.Count - 1));
@@ -83,7 +83,7 @@ namespace RequestService.Handlers
             {
                 Recipients = new Recipients
                 {
-                    ToUserID = new List<int> { toUserId },
+                    ToUserIDs = new List<int> { toUserId },
                     CcUserIDs = ccList,
                 },
                 Subject = "Help Requested",
@@ -94,7 +94,6 @@ namespace RequestService.Handlers
             
            return await _communicationService.SendEmailToUsersAsync(emailRequest, cancellationToken);
         }
-
 
         private string BuildHtmlTemplate(string RequestorFirstName, string RequestLastName, string RequestorEmailAddress, string RequestorPhoneNumber, string FurtherDetails,
             List<SupportActivities> activties, string ChampionFirstName, string ChampionLastName)
@@ -182,6 +181,7 @@ namespace RequestService.Handlers
             return html;
 
         }
+
         private async Task<PersonalDetailsDto> UpdatePersonalDetailsAsync(UpdateRequestRequest request, CancellationToken cancellationToken)
         {
             PersonalDetailsDto dto = new PersonalDetailsDto
