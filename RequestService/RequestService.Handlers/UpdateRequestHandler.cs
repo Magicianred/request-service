@@ -9,6 +9,7 @@ using System.Linq;
 using System;
 using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Contracts.RequestService.Request;
+using HelpMyStreet.Contracts.CommunicationService.Request;
 
 namespace RequestService.Handlers
 {
@@ -84,7 +85,7 @@ namespace RequestService.Handlers
                 Recipients = new Recipients
                 {
                     ToUserIDs = new List<int> { toUserId },
-                    CcUserIDs = ccList,
+                    CCUserIDs = ccList,
                 },
                 Subject = "Help Requested",
                 BodyText = $"Help Requested \r\n Hi {selectedChampion.UserPersonalDetails.FirstName} {selectedChampion.UserPersonalDetails.LastName}, \r\n " +

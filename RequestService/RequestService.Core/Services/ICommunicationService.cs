@@ -1,4 +1,5 @@
-﻿using RequestService.Core.Dto;
+﻿using HelpMyStreet.Contracts.CommunicationService.Request;
+using RequestService.Core.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;

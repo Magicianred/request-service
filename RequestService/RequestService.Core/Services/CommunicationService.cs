@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using HelpMyStreet.Contracts.CommunicationService.Request;
+using HelpMyStreet.Contracts.CommunicationService.Response;
+using HelpMyStreet.Contracts.Shared;
+using Newtonsoft.Json;
 using RequestService.Core.Config;
 using RequestService.Core.Dto;
 using RequestService.Core.Utils;
@@ -24,11 +27,14 @@ namespace RequestService.Core.Services
         {
             string path = $"api/SendEmailToUsers";            
             var jsonContent =  new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-            using (HttpResponseMessage response = await _httpClientWrapper.PostAsync(HttpClientConfigName.CommunicationService, path, jsonContent, cancellationToken).ConfigureAwait(false)){
-                response.EnsureSuccessStatusCode();
+            using (HttpResponseMessage response = await _httpClientWrapper.PostAsync(HttpClientConfigName.CommunicationService, path, jsonContent, cancellationToken).ConfigureAwait(false)){     
                 string jsonResponse = await response.Content.ReadAsStringAsync();                
-                var emailSentResponse =  JsonConvert.DeserializeObject<SendEmailToUsersResponse>(jsonResponse);
-                return emailSentResponse.Success;
+                var emailSentResponse =  JsonConvert.DeserializeObject<ResponseWrapper<SendEmailResponse, CommunicationServiceErrorCode>>(jsonResponse);
+                if (emailSentResponse.HasContent && emailSentResponse.IsSuccessful)
+                {
+                 return   emailSentResponse.Content.Success; ;
+                }
+                return false;
             }      
         }
  

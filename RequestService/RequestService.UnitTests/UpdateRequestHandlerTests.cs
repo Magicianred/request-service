@@ -1,3 +1,4 @@
+using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.RequestService.Request;
 using Moq;
 using NUnit.Framework;
@@ -129,7 +130,7 @@ namespace RequestService.UnitTests
             });
             UpdateRequestHandler handler = new UpdateRequestHandler(_repository.Object, _communicationService.Object, _userService.Object);
             await handler.Handle(_request, new CancellationToken());
-             _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(r =>  r.Recipients.ToUserIDs.Count == 1 && r.Recipients.CcUserIDs.Count == 0), It.IsAny<CancellationToken>()));            
+             _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(r =>  r.Recipients.ToUserIDs.Count == 1 && r.Recipients.CCUserIDs.Count == 0), It.IsAny<CancellationToken>()));            
         }
 
         [Test]
@@ -161,7 +162,7 @@ namespace RequestService.UnitTests
             });
             UpdateRequestHandler handler = new UpdateRequestHandler(_repository.Object, _communicationService.Object, _userService.Object);
             await handler.Handle(_request, new CancellationToken());
-            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(r => r.Recipients.ToUserIDs.Count == 1 && r.Recipients.CcUserIDs.Count == 1), It.IsAny<CancellationToken>()));
+            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(r => r.Recipients.ToUserIDs.Count == 1 && r.Recipients.CCUserIDs.Count == 1), It.IsAny<CancellationToken>()));
         }
 
         [Test]
@@ -202,7 +203,7 @@ namespace RequestService.UnitTests
             });
             UpdateRequestHandler handler = new UpdateRequestHandler(_repository.Object, _communicationService.Object, _userService.Object);
             await handler.Handle(_request, new CancellationToken());
-            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(r => r.Recipients.ToUserIDs.Count == 1 && r.Recipients.CcUserIDs.Count == 2), It.IsAny<CancellationToken>()));
+            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(r => r.Recipients.ToUserIDs.Count == 1 && r.Recipients.CCUserIDs.Count == 2), It.IsAny<CancellationToken>()));
         }
 
         [Test]
@@ -253,7 +254,7 @@ namespace RequestService.UnitTests
             });
             UpdateRequestHandler handler = new UpdateRequestHandler(_repository.Object, _communicationService.Object, _userService.Object);
             await handler.Handle(_request, new CancellationToken());
-            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(r => r.Recipients.ToUserIDs.Count == 1 && r.Recipients.CcUserIDs.Count == 2), It.IsAny<CancellationToken>()));
+            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(r => r.Recipients.ToUserIDs.Count == 1 && r.Recipients.CCUserIDs.Count == 2), It.IsAny<CancellationToken>()));
         }
 
         [Test] 
