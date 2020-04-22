@@ -1,5 +1,4 @@
-﻿using RequestService.Core.Domains.Entities;
-using MediatR;
+﻿using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using RequestService.Core.Interfaces.Repositories;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using HelpMyStreet.Utils.Enums;
+using HelpMyStreet.Contracts.RequestService.Request;
 
 namespace RequestService.Handlers
 {

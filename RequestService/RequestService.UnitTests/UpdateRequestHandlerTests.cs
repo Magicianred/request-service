@@ -1,6 +1,6 @@
+using HelpMyStreet.Contracts.RequestService.Request;
 using Moq;
 using NUnit.Framework;
-using RequestService.Core.Domains.Entities;
 using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
 using RequestService.Core.Services;

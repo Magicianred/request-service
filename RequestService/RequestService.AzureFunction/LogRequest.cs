@@ -5,9 +5,12 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using MediatR;
 using System;
-using RequestService.Core.Domains.Entities;
 using System.Net;
 using AzureFunctions.Extensions.Swashbuckle.Attribute;
+using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Contracts.RequestService.Request;
+using HelpMyStreet.Contracts.Shared;
+using Microsoft.AspNetCore.Http;
 
 namespace RequestService.AzureFunction
 {
@@ -24,19 +27,19 @@ namespace RequestService.AzureFunction
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(LogRequestResponse))]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
-            [RequestBodyType(typeof(LogRequestRequest), "product request")] LogRequestRequest req,
+            [RequestBodyType(typeof(LogRequestRequest), "log request")] LogRequestRequest req,
             ILogger log)
         {
             try
             {
                 log.LogInformation("C# HTTP trigger function processed a request.");
-
-                LogRequestResponse response = await _mediator.Send(req);
-                return new OkObjectResult(response);
+                LogRequestResponse response = await _mediator.Send(req);                
+                return new OkObjectResult(ResponseWrapper<LogRequestResponse, RequestServiceErrorCode>.CreateSuccessfulResponse(response));
             }
             catch (Exception exc)
             {
-                return new BadRequestObjectResult(exc);
+                log.LogError("Exception occured in Log Request", exc);
+                return new ObjectResult(ResponseWrapper<LogRequestResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.InternalServerError, "Internal Error")) { StatusCode = StatusCodes.Status500InternalServerError };                
             }
         }
     }
