@@ -10,10 +10,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference ReplaceParameters="true" Include="..\RequestService.Core\RequestService.Core.csproj">
-			<Name >RequestService.Core</Name>
+			<Name>RequestService.Core</Name>
 		</ProjectReference>
-		<ProjectReference ReplaceParameters="true" Include="..\RequestService.Repo\RequestService.Repo.csproj">
-			<Name >RequestService.Repo</Name>
-		</ProjectReference>
+		<ProjectReference Include="..\RequestService.Repo\RequestService.Repo.csproj" />
 	</ItemGroup>
 </Project>

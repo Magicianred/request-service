@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestService.AzureFunction", "RequestService\RequestService.AzureFunction\RequestService.AzureFunction.csproj", "{66D9996D-4EC6-4893-B565-FF3296E3F822}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestService.AzureFunction", "RequestService\RequestService.AzureFunction\RequestService.AzureFunction.csproj", "{66D9996D-4EC6-4893-B565-FF3296E3F822}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestService.Core", "RequestService\RequestService.Core\RequestService.Core.csproj", "{76D714ED-A24B-4701-94E9-8999982B19C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestService.Core", "RequestService\RequestService.Core\RequestService.Core.csproj", "{76D714ED-A24B-4701-94E9-8999982B19C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestService.Handlers", "RequestService\RequestService.Handlers\RequestService.Handlers.csproj", "{F60A8D13-917D-44C1-8DC1-4B93E26C8503}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestService.Handlers", "RequestService\RequestService.Handlers\RequestService.Handlers.csproj", "{F60A8D13-917D-44C1-8DC1-4B93E26C8503}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestService.Mappers", "RequestService\RequestService.Mappers\RequestService.Mappers.csproj", "{28BF64D5-A59A-4ACB-8566-46AADBA1754A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestService.Mappers", "RequestService\RequestService.Mappers\RequestService.Mappers.csproj", "{28BF64D5-A59A-4ACB-8566-46AADBA1754A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestService.Repo", "RequestService\RequestService.Repo\RequestService.Repo.csproj", "{19F3F3B3-248A-47B9-86CF-7943F3031C54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestService.Repo", "RequestService\RequestService.Repo\RequestService.Repo.csproj", "{19F3F3B3-248A-47B9-86CF-7943F3031C54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestService.UnitTests", "RequestService\RequestService.UnitTests\RequestService.UnitTests.csproj", "{C82D84E0-2ADF-4CCE-9399-6D62EE81A0D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{19F3F3B3-248A-47B9-86CF-7943F3031C54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19F3F3B3-248A-47B9-86CF-7943F3031C54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19F3F3B3-248A-47B9-86CF-7943F3031C54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C82D84E0-2ADF-4CCE-9399-6D62EE81A0D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C82D84E0-2ADF-4CCE-9399-6D62EE81A0D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C82D84E0-2ADF-4CCE-9399-6D62EE81A0D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C82D84E0-2ADF-4CCE-9399-6D62EE81A0D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
