@@ -1,4 +1,5 @@
 using HelpMyStreet.Contracts.RequestService.Request;
+using HelpMyStreet.Contracts.RequestService.Response;
 using Moq;
 using NUnit.Framework;
 using RequestService.Core.Interfaces.Repositories;
@@ -34,17 +35,17 @@ namespace RequestService.UnitTests
 
             LogRequestHandler handler = new LogRequestHandler(_repository.Object, _userService.Object);
             var response = await handler.Handle(_request, new CancellationToken());
-            Assert.AreEqual(true, response.Fulfillable);
+            Assert.AreEqual(Fulfillable.Accepted_PassToStreetChampion, response.Fulfillable);
             Assert.AreEqual(1, response.RequestID);
         }
 
         [Test]
-        public async Task WhenICall_LogRequestHandler_WithNoChampions_IGetFullfilable_EqualsFalse()
+        public async Task WhenICall_LogRequestHandler_WithNoChampions_IGetFullfilable_EqualsManulRefer()
         {
             _userService.Setup(x => x.GetChampionCountByPostcode(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(0);
             LogRequestHandler handler = new LogRequestHandler(_repository.Object, _userService.Object);
             var response = await handler.Handle(_request, new CancellationToken());
-            Assert.AreEqual(false, response.Fulfillable);
+            Assert.AreEqual(Fulfillable.Accepted_ManualReferral, response.Fulfillable);
             Assert.AreEqual(1, response.RequestID);
         }
 
