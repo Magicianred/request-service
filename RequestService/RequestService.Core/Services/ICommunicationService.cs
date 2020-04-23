@@ -11,5 +11,7 @@ namespace RequestService.Core.Services
     public interface ICommunicationService
     {
         Task<bool> SendEmailToUsersAsync(SendEmailToUsersRequest request, CancellationToken cancellationToken);
+
+        Task<bool> SendEmail(SendEmailRequest request, CancellationToken cancellationToken);
     }
 }

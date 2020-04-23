@@ -10,6 +10,8 @@ using System;
 using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.CommunicationService.Request;
+using Microsoft.Extensions.Options;
+using RequestService.Core.Config;
 
 namespace RequestService.Handlers
 {
@@ -18,11 +20,13 @@ namespace RequestService.Handlers
         private readonly IRepository _repository;
         private readonly ICommunicationService _communicationService;
         private readonly IUserService _userService;
-        public UpdateRequestHandler(IRepository repository, ICommunicationService communicationService, IUserService userService)
+        private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
+        public UpdateRequestHandler(IRepository repository, ICommunicationService communicationService, IUserService userService, IOptionsSnapshot<ApplicationConfig> applicationConfig)
         {
             _repository = repository;
             _communicationService = communicationService;
             _userService = userService;
+            _applicationConfig = applicationConfig;
         }
 
         public async Task<Unit> Handle(UpdateRequestRequest request, CancellationToken cancellationToken)
@@ -39,23 +43,27 @@ namespace RequestService.Handlers
         }
 
         private async Task<bool> SendEmailAsync(int requestId, PersonalDetailsDto requestorDetails, SupportActivityDTO supportActivities, CancellationToken cancellationToken )
-        {
-            
+        {            
+
             string postCode = await _repository.GetRequestPostCodeAsync(requestId, cancellationToken);
-
             var champions = await _userService.GetChampionsByPostcode(postCode, cancellationToken);         
-
-            if(champions == null || champions.Users.Count == 0)
+            
+            List<int> ChampionIds = champions.Users.Select(x => x.ID).ToList();
+            List<int> ccList = new List<int>();             
+            if (champions.Users.Count == 0)
             {
-                throw new Exception("No Champions found using the supplied request postcode");
+                SendEmailRequest request = new SendEmailRequest()
+                {
+                    Subject = "Help Requested - Manual",
+                    ToAddress = _applicationConfig.Value.ManualReferEmail,
+                    ToName = _applicationConfig.Value.ManualReferName,
+                    BodyHTML = BuildHtmlTemplate(requestorDetails, supportActivities, _applicationConfig.Value.ManualReferName, string.Empty)
+                };
+                return await _communicationService.SendEmail(request, cancellationToken);
             }
 
-            List<int> ChampionIds = champions.Users.Select(x => x.ID).ToList();
-            List<int> ccList = new List<int>();
 
-            // intially set the first person to be the userId before we apply logic
-            int toUserId = ChampionIds.First();
-            
+            int toUserId = ChampionIds.First();           
             if(champions.Users.Count > 1)
             {
                 Random random = new Random();
