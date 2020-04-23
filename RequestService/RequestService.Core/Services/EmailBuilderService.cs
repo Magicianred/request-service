@@ -88,11 +88,12 @@ namespace RequestService.Core.Services
             $"</div> " +
                       $"<div>" +
             $"<span style='font-size: 12px;'><br>" +
-            $"if you think you have received this email in error or f you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span></div> " +
-            $"</div> " +
-                           $"<div>" +
-            $"<span style='font-size: 12px;'><br>" +
+            $"if you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span></div> " +
+             $"<div>" +
+            $"<span style='font-size: 12px;'>" +
             $"Once the request has been actioned, please delete any copies of this email that you have, for data protection reasons.</span></div> " +
+            $"</div> " +
+                          
             $"</div> " +
             $"</td> </tr> </tbody></table> </div> " +
             $"<!--[if mso | IE]> </td> </tr> </table> <![endif]--> </td> </tr> </tbody> " +
@@ -113,7 +114,7 @@ namespace RequestService.Core.Services
             }
 
             string html = BuildHeader();
-            html += BuildTitle("Request Recieved");
+            html += BuildTitle("Request Received");
 
             html += "<table align='center' border='0' cellpadding='0' cellspacing='0' class='' style='width:600px;' width='600' > " +
                 "<tr> <td style='line-height:0px;font-size:0px;mso-line-height-rule:exactly;'> <![endif]--> " +
@@ -129,17 +130,18 @@ namespace RequestService.Core.Services
                 $"<span style='font-size: 14px;'>" +
                 $"{body}" + 
                 $"</span></div>" +
-                $"<div>&#xA0;</div>" +                    
+                $"<div>&#xA0;</div>" +    
+                "<div>" + 
                 $"<span style='font-size: 14px;'><br>" +
                 $"Thanks so much!</span></div> " +
-                $"</div> " +
-                 $"<div>" +
+                  $"<div>" +
                 $"<span style='font-size: 14px;'><br>" +
                 $"The HelpMyStreet Team</span></div> " +
+                $"</div> " +               
             $"</div> " +
                       $"<div>" +
             $"<span style='font-size: 12px;'><br>" +
-            $"if you think you have received this email in error or f you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span></div> " +
+            $"if you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span></div> " +
             $"</div> " +
             $"</td> </tr> </tbody></table> </div> " +
             $"<!--[if mso | IE]> </td> </tr> </table> <![endif]--> </td> </tr> </tbody> " +
