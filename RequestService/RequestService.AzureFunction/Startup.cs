@@ -78,6 +78,7 @@ namespace RequestService.AzureFunction
             builder.Services.AddAutoMapper(typeof(AddressDetailsProfile).Assembly);
             builder.Services.AddTransient<IHttpClientWrapper, HttpClientWrapper>();
             builder.Services.AddTransient<IUserService, UserService>();
+            builder.Services.AddTransient<IAddressService, AddressService>();
             builder.Services.AddTransient<ICommunicationService, CommunicationService>();
             builder.Services.AddTransient<IRepository, Repository>();
 

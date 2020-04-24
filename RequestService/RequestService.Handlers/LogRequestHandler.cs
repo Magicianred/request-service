@@ -17,19 +17,22 @@ namespace RequestService.Handlers
     {
         private readonly IRepository _repository;
         private readonly IUserService _userService;
+        private readonly IAddressService _addressService;
 
-        public LogRequestHandler(IRepository repository, IUserService userService)
+        public LogRequestHandler(IRepository repository, IUserService userService, IAddressService addressService)
         {
             _repository = repository;
             _userService = userService;
+            _addressService = addressService;
         }
 
         public async Task<LogRequestResponse> Handle(LogRequestRequest request, CancellationToken cancellationToken)
         {
             LogRequestResponse response = null;
             request.Postcode = HelpMyStreet.Utils.Utils.PostcodeFormatter.FormatPostcode(request.Postcode);
-            Regex rx = new Regex("^((([A-Z]{1,2})[0-9][0-9A-Z]?)|NPT|GIR)\\s?[0-9]([A-Z])([A-Z])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            if (!rx.IsMatch(request.Postcode) || request.Postcode.Length > 10)
+            var postcodeValid =  await _addressService.IsValidPostcode(request.Postcode, cancellationToken);
+                       
+            if (!postcodeValid || request.Postcode.Length > 10)
              {
                return  new LogRequestResponse
                 {
@@ -37,6 +40,7 @@ namespace RequestService.Handlers
                     Fulfillable = Fulfillable.Rejected_InvalidPostcode                 
                 };
             }
+
             response = new LogRequestResponse
             {
                 RequestID = await _repository.CreateRequestAsync(request.Postcode, cancellationToken)
