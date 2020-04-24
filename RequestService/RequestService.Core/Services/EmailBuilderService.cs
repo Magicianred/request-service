@@ -141,7 +141,7 @@ namespace RequestService.Core.Services
             $"</div> " +
                       $"<div>" +
             $"<span style='font-size: 12px;'><br>" +
-            $"if you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span></div> " +
+            $"If you think you have received this email in error, please let the HelpMyStreet team know by contacting support@helpmystreet.org</span></div> " +
             $"</div> " +
             $"</td> </tr> </tbody></table> </div> " +
             $"<!--[if mso | IE]> </td> </tr> </table> <![endif]--> </td> </tr> </tbody> " +

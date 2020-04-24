@@ -14,6 +14,7 @@ namespace RequestService.UnitTests
     {
         private Mock<IRepository> _repository;
         private Mock<IUserService> _userService;
+        private Mock<IAddressService> _addressService;
         private LogRequestRequest _request;
 
         [SetUp]
@@ -22,6 +23,8 @@ namespace RequestService.UnitTests
             _repository = new Mock<IRepository>();
             _repository.Setup(x => x.CreateRequestAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(1);
             _userService = new Mock<IUserService>();
+            _addressService = new Mock<IAddressService>();
+            _addressService.Setup(x => x.IsValidPostcode(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
             _request = new LogRequestRequest
             {
                 Postcode = "TE5T1NG"
@@ -33,7 +36,7 @@ namespace RequestService.UnitTests
         {
             _userService.Setup(x => x.GetChampionCountByPostcode(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
-            LogRequestHandler handler = new LogRequestHandler(_repository.Object, _userService.Object);
+            LogRequestHandler handler = new LogRequestHandler(_repository.Object, _userService.Object, _addressService.Object);
             var response = await handler.Handle(_request, new CancellationToken());
             Assert.AreEqual(Fulfillable.Accepted_PassToStreetChampion, response.Fulfillable);
             Assert.AreEqual(1, response.RequestID);
@@ -43,7 +46,7 @@ namespace RequestService.UnitTests
         public async Task WhenICall_LogRequestHandler_WithNoChampions_IGetFullfilable_EqualsManulRefer()
         {
             _userService.Setup(x => x.GetChampionCountByPostcode(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(0);
-            LogRequestHandler handler = new LogRequestHandler(_repository.Object, _userService.Object);
+            LogRequestHandler handler = new LogRequestHandler(_repository.Object, _userService.Object, _addressService.Object);
             var response = await handler.Handle(_request, new CancellationToken());
             Assert.AreEqual(Fulfillable.Accepted_ManualReferral, response.Fulfillable);
             Assert.AreEqual(1, response.RequestID);
@@ -57,7 +60,7 @@ namespace RequestService.UnitTests
             {
                 Postcode = "te5T1ng"
             };
-            LogRequestHandler handler = new LogRequestHandler(_repository.Object, _userService.Object);
+            LogRequestHandler handler = new LogRequestHandler(_repository.Object, _userService.Object, _addressService.Object);
             var response = await handler.Handle(_request, new CancellationToken());
             _repository.Verify(x =>  x.CreateRequestAsync("TE5T 1NG", It.IsAny<CancellationToken>()));         
         }
