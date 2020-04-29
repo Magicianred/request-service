@@ -33,7 +33,7 @@ namespace RequestService.Handlers
             var postcodeValid =  await _addressService.IsValidPostcode(request.Postcode, cancellationToken);
                        
             if (!postcodeValid || request.Postcode.Length > 10)
-             {
+            {
                return  new LogRequestResponse
                 {
                     RequestID = -1,
@@ -49,13 +49,13 @@ namespace RequestService.Handlers
            int championCount = await _userService.GetChampionCountByPostcode(request.Postcode, cancellationToken);
             if (championCount > 0) {
                 response.Fulfillable = Fulfillable.Accepted_PassToStreetChampion;
-                await _repository.UpdateFulfillmentAsync(response.RequestID, true, cancellationToken);
             }
             else
             {
                 response.Fulfillable = Fulfillable.Accepted_ManualReferral;
             }
-           
+            await _repository.UpdateFulfillmentAsync(response.RequestID, response.Fulfillable, cancellationToken);
+
             return response;
         }
     }
