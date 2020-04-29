@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HelpMyStreet.Contracts.RequestService.Response;
 using Microsoft.EntityFrameworkCore;
 using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
@@ -48,12 +49,12 @@ namespace RequestService.Repo
         }
 
 
-        public async Task UpdateFulfillmentAsync(int requestId, bool isFulfillable, CancellationToken cancellationToken)
+        public async Task UpdateFulfillmentAsync(int requestId, Fulfillable fulfillable, CancellationToken cancellationToken)
         {
             var request = await _context.Request.FirstAsync(x => x.Id == requestId, cancellationToken);
             if (request != null)
             {
-                request.IsFulfillable = isFulfillable;
+                request.FulfillableStatus = (byte)fulfillable;
                 await _context.SaveChangesAsync(cancellationToken);
             }        
         }
