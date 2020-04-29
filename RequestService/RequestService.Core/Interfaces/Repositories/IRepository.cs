@@ -1,4 +1,5 @@
-﻿using RequestService.Core.Dto;
+﻿using HelpMyStreet.Contracts.ReportService.Response;
+using RequestService.Core.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,7 @@ namespace RequestService.Core.Interfaces.Repositories
 {
     public interface IRepository
     {
+        List<ReportItem> GetDailyReport();
         Task<int> CreateRequestAsync(string postCode, CancellationToken cancellationToken);
         Task UpdateFulfillmentAsync(int requestId, bool isFulfillable, CancellationToken cancellationToken);
         Task AddSupportActivityAsync(SupportActivityDTO dto, CancellationToken cancellationToken);

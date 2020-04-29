@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HelpMyStreet.Contracts.ReportService.Response;
 using Microsoft.EntityFrameworkCore;
 using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
@@ -98,6 +99,28 @@ namespace RequestService.Repo
 
             _context.SupportActivities.AddRange(activties);
             await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public List<ReportItem> GetDailyReport()
+        {
+            List<ReportItem> response = new List<ReportItem>();
+            List<DailyReport> result = _context.DailyReport.ToList();
+
+            if (result != null)
+            {
+                foreach (DailyReport dailyReport in result)
+                {
+                    response.Add(new ReportItem()
+                    {
+                        Section = dailyReport.Section,
+                        Last2Hours = dailyReport.Last2Hours,
+                        Today = dailyReport.Today,
+                        SinceLaunch = dailyReport.SinceLaunch
+                    });
+                }
+            }
+
+            return response;
         }
     }
 }

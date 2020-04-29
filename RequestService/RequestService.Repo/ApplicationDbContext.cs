@@ -19,12 +19,16 @@ namespace RequestService.Repo
         public virtual DbSet<Request> Request { get; set; }
         public virtual DbSet<SupportActivities> SupportActivities { get; set; }
 
+        public virtual DbQuery<DailyReport> DailyReport { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Query<DailyReport>().ToQuery(() => DailyReport.FromSql("TwoHourlyReport"));
+
             modelBuilder.Entity<PersonalDetails>(entity =>
             {
                 entity.HasKey(e => e.RequestId);
