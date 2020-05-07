@@ -28,63 +28,19 @@ namespace RequestService.Handlers
 
         public async Task<GetJobsAllocatedToUserResponse> Handle(GetJobsAllocatedToUserRequest request, CancellationToken cancellationToken)
         {
-            List<HelpMyStreet.Utils.Models.Job> Jobs = new List<HelpMyStreet.Utils.Models.Job>();
-            Jobs.Add(new HelpMyStreet.Utils.Models.Job()
+            List<HelpMyStreet.Utils.Models.JobSummary> jobSummaries = new List<HelpMyStreet.Utils.Models.JobSummary>();
+            jobSummaries.Add(new HelpMyStreet.Utils.Models.JobSummary()
             {
                 UniqueIdentifier = Guid.NewGuid(),
                 Critical = true,
                 Details = "Job Details",
-                DueDays = 5,
-                SupportActivity = SupportActivities.DogWalking,
-                Recipient = new HelpMyStreet.Utils.Models.JobPersonalDetails()
-                {
-                    FirstName = "John",
-                    LastName = "Smith",
-                    EmailAddress = "John@Smith.com",
-                    ContactNumbers = new HelpMyStreet.Utils.Models.ContactNumber()
-                    {
-                        ContactNumbers = new List<string>()
-                        {
-                            "07897 565 4321",
-                            "01332 365 543"
-                        }
-                    },
-                    Address = new HelpMyStreet.Utils.Models.Address()
-                    {
-                        AddressLine1 = "40 Friar Lane",
-                        AddressLine2 = "Nottingham",
-                        AddressLine3 = "Nottinghamshire",
-                        Locality = "Locality",
-                        Postcode = "NG1 6DQ"
-                    }
-                },
-                Requestor = new HelpMyStreet.Utils.Models.JobPersonalDetails()
-                {
-                    FirstName = "Harold",
-                    LastName = "Jones",
-                    EmailAddress = "Harold@Jones.com",
-                    ContactNumbers = new HelpMyStreet.Utils.Models.ContactNumber()
-                    {
-                        ContactNumbers = new List<string>()
-                        {
-                            "07897 565 4321",
-                            "01332 365 543"
-                        }
-                    },
-                    Address = new HelpMyStreet.Utils.Models.Address()
-                    {
-                        AddressLine1 = "30 Friar Lane",
-                        AddressLine2 = "Nottingham",
-                        AddressLine3 = "Nottinghamshire",
-                        Locality = "Locality",
-                        Postcode = "NG1 6DQ"
-                    }
-                }
+                DueDate = DateTime.Now.AddDays(5),
+                SupportActivity = SupportActivities.DogWalking
             });
 
             GetJobsAllocatedToUserResponse result = new GetJobsAllocatedToUserResponse()
             {
-                Jobs = Jobs
+                JobSummaries = jobSummaries
             };
             return result;
         }
