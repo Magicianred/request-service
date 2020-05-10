@@ -5,7 +5,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="AzureFunctions.Extensions.Swashbuckle" Version="1.4.4" />
-		<PackageReference Include="HelpMyStreet.Contracts" Version="1.1.56" />
+		<PackageReference Include="HelpMyStreet.Contracts" Version="1.1.79" />
 		<PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.0.0" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="MediatR" Version="8.0.1" />
@@ -13,10 +13,12 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="2.2.0" />
 		<PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.28" />
 		<PackageReference Include="NewRelic.Agent" Version="8.27.139" />
 		<PackageReference Include="NewRelic.Agent.Api" Version="8.27.139" />
+		<PackageReference Include="Polly" Version="7.2.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference ReplaceParameters="true" Include="..\RequestService.Handlers\RequestService.Handlers.csproj">

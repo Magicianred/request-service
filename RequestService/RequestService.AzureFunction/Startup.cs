@@ -17,6 +17,8 @@ using System;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Net;
+using HelpMyStreet.Utils.PollyPolicies;
+using Polly;
 using RequestService.Core.Services;
 using RequestService.Core.Utils;
 
@@ -34,14 +36,19 @@ namespace RequestService.AzureFunction
             IConfigurationBuilder configBuilder = new ConfigurationBuilder()
             .SetBasePath(currentDirectory)
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables();
 
             IConfigurationRoot config = configBuilder.Build();
+
+            // DI doesn't work in startup
+            PollyHttpPolicies pollyHttpPolicies = new PollyHttpPolicies(new PollyHttpPoliciesConfig());
 
             Dictionary<HttpClientConfigName, ApiConfig> httpClientConfigs = config.GetSection("Apis").Get<Dictionary<HttpClientConfigName, ApiConfig>>();
 
             foreach (KeyValuePair<HttpClientConfigName, ApiConfig> httpClientConfig in httpClientConfigs)
             {
+                IAsyncPolicy<HttpResponseMessage> retryPolicy = httpClientConfig.Value.IsExternal ? pollyHttpPolicies.ExternalHttpRetryPolicy : pollyHttpPolicies.InternalHttpRetryPolicy;
 
                 builder.Services.AddHttpClient(httpClientConfig.Key.ToString(), c =>
                 {
@@ -58,9 +65,9 @@ namespace RequestService.AzureFunction
 
                 }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
                 {
-                    MaxConnectionsPerServer = httpClientConfig.Value.MaxConnectionsPerServer ?? 15,
+                    MaxConnectionsPerServer = httpClientConfig.Value.MaxConnectionsPerServer ?? int.MaxValue,
                     AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-                });
+                }).AddPolicyHandler(retryPolicy); ;
 
             }
 
