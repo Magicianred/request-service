@@ -123,5 +123,15 @@ namespace RequestService.Repo
 
             return response;
         }
+
+
+        public async Task<IEnumerable<PostcodeWithNumberOfRequestsDto>> GetNumberOfRequestsPerPostcode()
+        {
+            var result = await _context.Request.GroupBy(x => x.PostCode)
+                .Select(x => new PostcodeWithNumberOfRequestsDto(x.Key, x.Count()))
+                .ToListAsync();
+
+            return result;
+        }
     }
 }

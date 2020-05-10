@@ -1,26 +1,27 @@
 ﻿using AutoMapper;
+using HelpMyStreet.Utils.PollyPolicies;
+using MediatR;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.Azure.WebJobs.Host.Bindings;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Polly;
+using RequestService.Core.Config;
 using RequestService.Core.Interfaces.Repositories;
+using RequestService.Core.Services;
+using RequestService.Core.Utils;
 using RequestService.Handlers;
 using RequestService.Mappers;
 using RequestService.Repo;
-using MediatR;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-using System.Collections.Generic;
-using RequestService.Core.Config;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Azure.WebJobs.Host.Bindings;
-using Microsoft.Extensions.Options;
 using System;
-using System.Net.Http.Headers;
-using System.Net.Http;
+using System.Collections.Generic;
 using System.Net;
-using HelpMyStreet.Utils.PollyPolicies;
-using Polly;
-using RequestService.Core.Services;
-using RequestService.Core.Utils;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using RequestService.Core.BusinessLogic;
+using RequestService.Core.Cache;
 
 [assembly: FunctionsStartup(typeof(RequestService.AzureFunction.Startup))]
 namespace RequestService.AzureFunction
@@ -71,6 +72,10 @@ namespace RequestService.AzureFunction
 
             }
 
+
+            builder.Services.AddTransient<IRequestCache, RequestCache>();
+            builder.Services.AddTransient<IRequestsForCacheGetter, RequestsForCacheGetter>();
+
             IConfigurationSection applicationConfigSettings = config.GetSection("ApplicationConfig");
             builder.Services.Configure<ApplicationConfig>(applicationConfigSettings);
 
@@ -93,6 +98,7 @@ namespace RequestService.AzureFunction
                     ConfigureDbContextOptionsBuilder(options, connectionStrings.RequestService),
                 ServiceLifetime.Transient
             );
+
 
             // automatically apply EF migrations
             // DbContext is being created manually instead of through DI as it throws an exception and I've not managed to find a way to solve it yet: 

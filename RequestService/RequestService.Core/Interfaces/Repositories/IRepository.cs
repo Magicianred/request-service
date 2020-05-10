@@ -1,9 +1,7 @@
 ﻿using HelpMyStreet.Contracts.ReportService.Response;
 using HelpMyStreet.Contracts.RequestService.Response;
 using RequestService.Core.Dto;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,5 +16,6 @@ namespace RequestService.Core.Interfaces.Repositories
         Task UpdatePersonalDetailsAsync(PersonalDetailsDto dto, CancellationToken cancellationToken);
         Task<string> GetRequestPostCodeAsync(int requestId, CancellationToken cancellationToken);
         Task UpdateCommunicationSentAsync(int requestId, bool communicationSent, CancellationToken cancellationToken);
+        Task<IEnumerable<PostcodeWithNumberOfRequestsDto>> GetNumberOfRequestsPerPostcode();
     }
 }
