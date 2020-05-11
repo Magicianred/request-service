@@ -4,8 +4,8 @@ using System.Runtime.Serialization;
 
 namespace RequestService.Core.Contracts
 {
-    [DataContract(Name = "getRequestsCoordinatesResponse")]
-    public class GetPostcodeRequestSummariesInBoundaryResponse
+    [DataContract(Name = "getRequestSummaryCoordinatesResponse")]
+    public class GetRequestSummaryCoordinatesResponse
     {
         [DataMember(Name = "postcodeSummaries")]
         public IReadOnlyList<PostcodeRequestSummary> PostcodeSummaries { get; set; }

@@ -20,6 +20,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using HelpMyStreet.Utils.CoordinatedResetCache;
+using HelpMyStreet.Utils.Utils;
+using Microsoft.Extensions.Internal;
 using RequestService.Core.BusinessLogic;
 using RequestService.Core.Cache;
 
@@ -73,8 +76,8 @@ namespace RequestService.AzureFunction
             }
 
 
-            builder.Services.AddTransient<IRequestCache, RequestCache>();
-            builder.Services.AddTransient<IRequestsForCacheGetter, RequestsForCacheGetter>();
+            builder.Services.AddTransient<IPostcodeRequestSummaryCache, PostcodeRequestSummaryCache>();
+            builder.Services.AddTransient<IPostcodeRequestSummaryGetter, PostcodeRequestSummaryGetter>();
 
             IConfigurationSection applicationConfigSettings = config.GetSection("ApplicationConfig");
             builder.Services.Configure<ApplicationConfig>(applicationConfigSettings);
@@ -93,6 +96,13 @@ namespace RequestService.AzureFunction
             builder.Services.AddTransient<IAddressService, AddressService>();
             builder.Services.AddTransient<ICommunicationService, CommunicationService>();
             builder.Services.AddTransient<IRepository, Repository>();
+
+            builder.Services.AddSingleton<IPollyMemoryCacheProvider, PollyMemoryCacheProvider>();
+            builder.Services.AddTransient<ISystemClock, MockableDateTime>();
+            builder.Services.AddTransient<ICoordinatedResetCache, CoordinatedResetCache>();
+
+            builder.Services.AddTransient<IPostcodeRequestSummaryGetter, PostcodeRequestSummaryGetter>();
+            builder.Services.AddTransient<IPostcodeRequestSummaryCache, PostcodeRequestSummaryCache>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     ConfigureDbContextOptionsBuilder(options, connectionStrings.RequestService),

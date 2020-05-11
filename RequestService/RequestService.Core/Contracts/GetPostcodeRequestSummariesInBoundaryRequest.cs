@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RequestService.Core.Contracts
 {
-    public class GetPostcodeRequestSummariesInBoundaryRequest : IRequest<GetPostcodeRequestSummariesInBoundaryResponse>
+    public class GetRequestSummaryCoordinatesRequest : IRequest<GetRequestSummaryCoordinatesResponse>
     {
         [Required]
         [Range(-90, 90)]

@@ -5,7 +5,7 @@ using RequestService.Core.Dto;
 
 namespace RequestService.Core.Cache
 {
-    public interface IRequestCache
+    public interface IPostcodeRequestSummaryCache
     {
         Task<IEnumerable<PostcodeRequestSummaryDto>> GetPostcodeRequestSummaries(CancellationToken cancellationToken);
     }

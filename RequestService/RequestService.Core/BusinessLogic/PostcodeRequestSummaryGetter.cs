@@ -8,27 +8,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using RequestService.Core.Config;
 
 namespace RequestService.Core.BusinessLogic
 {
-    public class RequestsForCacheGetter : IRequestsForCacheGetter
+    public class PostcodeRequestSummaryGetter : IPostcodeRequestSummaryGetter
     {
         private readonly IRepository _repository;
         private readonly IAddressService _addressService;
+        private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
 
-        public RequestsForCacheGetter(IRepository repository, IAddressService addressService)
+        public PostcodeRequestSummaryGetter(IRepository repository, IAddressService addressService, IOptionsSnapshot<ApplicationConfig> applicationConfig)
         {
             _repository = repository;
             _addressService = addressService;
+            _applicationConfig = applicationConfig;
         }
 
         public async Task<IEnumerable<PostcodeRequestSummaryDto>> GetRequestPostcodeSummariesAsync(CancellationToken cancellationToken)
         {
             IEnumerable<PostcodeWithNumberOfRequestsDto> postcodesWithRequestNumbers = await _repository.GetNumberOfRequestsPerPostcode();
 
-            IEnumerable<IEnumerable<string>> postcodeChunks = postcodesWithRequestNumbers.Select(x => x.Postcode).Chunk(20000); // TODO: put in app setting
+            IEnumerable<IEnumerable<string>> postcodeChunks = postcodesWithRequestNumbers.Select(x => x.Postcode).Chunk(_applicationConfig.Value.CoordinatesBatchSize); 
 
             List<Task<GetPostcodeCoordinatesResponse>> postcodeCoordinateTasks = new List<Task<GetPostcodeCoordinatesResponse>>();
+
             foreach (IEnumerable<string> postcodeChunk in postcodeChunks)
             {
                 GetPostcodeCoordinatesRequest getPostcodeCoordinatesRequest = new GetPostcodeCoordinatesRequest()

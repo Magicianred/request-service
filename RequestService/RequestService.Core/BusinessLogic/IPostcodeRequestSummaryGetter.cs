@@ -5,7 +5,7 @@ using RequestService.Core.Dto;
 
 namespace RequestService.Core.BusinessLogic
 {
-    public interface IRequestsForCacheGetter
+    public interface IPostcodeRequestSummaryGetter
     {
         Task<IEnumerable<PostcodeRequestSummaryDto>> GetRequestPostcodeSummariesAsync(CancellationToken cancellationToken);
     }
