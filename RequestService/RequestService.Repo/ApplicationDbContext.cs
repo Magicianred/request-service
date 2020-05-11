@@ -24,10 +24,14 @@ namespace RequestService.Repo
 
         }
 
+        public virtual DbSet<Job> Job { get; set; }
+        public virtual DbSet<JobStatus> JobStatus { get; set; }
+        public virtual DbSet<Person> Person { get; set; }
         public virtual DbSet<PersonalDetails> PersonalDetails { get; set; }
         public virtual DbSet<Request> Request { get; set; }
+        public virtual DbSet<RequestJobStatus> RequestJobStatus { get; set; }
         public virtual DbSet<SupportActivities> SupportActivities { get; set; }
-
+        public virtual DbSet<SupportActivity> SupportActivity { get; set; }
         public virtual DbQuery<DailyReport> DailyReport { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -37,6 +41,92 @@ namespace RequestService.Repo
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Query<DailyReport>().ToQuery(() => DailyReport.FromSql("TwoHourlyReport"));
+
+            modelBuilder.Entity<Job>(entity =>
+            {
+                entity.ToTable("Job", "Request");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Details).IsUnicode(false);
+
+                entity.Property(e => e.DueDate).HasColumnType("datetime");
+
+                entity.Property(e => e.SupportActivityId).HasColumnName("SupportActivityID");
+
+                entity.HasOne(d => d.NewRequest)
+                    .WithMany(p => p.Job)
+                    .HasForeignKey(d => d.RequestId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_NewRequest_NewRequestID");
+
+                entity.HasOne(d => d.SupportActivity)
+                    .WithMany(p => p.Job)
+                    .HasForeignKey(d => d.SupportActivityId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SupportActivity_SupportActivityID");
+            });
+
+            modelBuilder.Entity<JobStatus>(entity =>
+            {
+                entity.ToTable("JobStatus", "Lookup");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Person>(entity =>
+            {
+                entity.ToTable("Person", "RequestPersonal");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AddressLine1)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLine2)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLine3)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EmailAddress)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Locality)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MobilePhone)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.OtherPhone)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Postcode)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+            });
 
             modelBuilder.Entity<PersonalDetails>(entity =>
             {
@@ -90,9 +180,70 @@ namespace RequestService.Repo
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.OtherDetails).IsUnicode(false);
+
+                entity.Property(e => e.PersonIdRecipient).HasColumnName("PersonID_Recipient");
+
+                entity.Property(e => e.PersonIdRequester).HasColumnName("PersonID_Requester");
+
                 entity.Property(e => e.PostCode)
                     .IsRequired()
                     .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SpecialCommunicationNeeds).IsUnicode(false);
+
+                entity.HasOne(d => d.PersonIdRecipientNavigation)
+                    .WithMany(p => p.RequestPersonIdRecipientNavigation)
+                    .HasForeignKey(d => d.PersonIdRecipient)
+                    .HasConstraintName("FK_RequestPersonal_Person_PersonID_Recipient");
+
+                entity.HasOne(d => d.PersonIdRequesterNavigation)
+                    .WithMany(p => p.RequestPersonIdRequesterNavigation)
+                    .HasForeignKey(d => d.PersonIdRequester)
+                    .HasConstraintName("FK_RequestPersonal_Person_PersonID_Requester");
+            });
+
+            modelBuilder.Entity<RequestJobStatus>(entity =>
+            {
+                entity.HasKey(e => new { e.JobId, e.DateCreated, e.JobStatusId });
+
+                entity.ToTable("RequestJobStatus", "Request");
+
+                entity.Property(e => e.JobId).HasColumnName("JobID");
+
+                entity.Property(e => e.DateCreated)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.JobStatusId).HasColumnName("JobStatusID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Job)
+                    .WithMany(p => p.RequestJobStatus)
+                    .HasForeignKey(d => d.JobId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Job_JobID");
+
+                entity.HasOne(d => d.JobStatus)
+                    .WithMany(p => p.RequestJobStatus)
+                    .HasForeignKey(d => d.JobStatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_JobStatus_JobStatusID");
+            });
+
+            modelBuilder.Entity<SupportActivity>(entity =>
+            {
+                entity.ToTable("SupportActivity", "Lookup");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasMaxLength(20)
                     .IsUnicode(false);
             });
 
