@@ -35,7 +35,9 @@ namespace RequestService.Handlers
                 Critical = true,
                 Details = "Job Details",
                 DueDate = DateTime.Now.AddDays(5),
-                SupportActivity = SupportActivities.DogWalking
+                SupportActivity = SupportActivities.DogWalking,
+                JobStatus = JobStatuses.InProgress,
+                PostCode = "NG1 6DQ"
             });
 
             GetJobsByFilterResponse result = new GetJobsByFilterResponse()

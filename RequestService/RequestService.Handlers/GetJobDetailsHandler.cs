@@ -13,6 +13,7 @@ using HelpMyStreet.Contracts.CommunicationService.Request;
 using Microsoft.Extensions.Options;
 using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Models;
 
 namespace RequestService.Handlers
 {
@@ -28,63 +29,63 @@ namespace RequestService.Handlers
 
         public async Task<GetJobDetailsResponse> Handle(GetJobDetailsRequest request, CancellationToken cancellationToken)
         {
-            HelpMyStreet.Utils.Models.Job job = new HelpMyStreet.Utils.Models.Job()
+            HelpRequest helpRequest = new HelpRequest()
             {
-                VolunteerUserID = 1,
-                JobStatus = JobStatuses.Open,
-                UniqueIdentifier = Guid.NewGuid(),
-                Critical = true,
-                Details = "Job Details",
-                DueDays = 5,
-                SupportActivity = SupportActivities.DogWalking,
-                Recipient = new HelpMyStreet.Utils.Models.JobPersonalDetails()
+                OtherDetails = "Other Details",
+                Recipient = new RequestPersonalDetails()
                 {
                     FirstName = "John",
                     LastName = "Smith",
                     EmailAddress = "John@Smith.com",
-                    ContactNumbers = new HelpMyStreet.Utils.Models.ContactNumber()
-                    {
-                        ContactNumbers = new List<string>()
-                        {
-                            "07897 565 4321",
-                            "01332 365 543"
-                        }
-                    },
-                    Address = new HelpMyStreet.Utils.Models.Address()
+                    Address = new Address()
                     {
                         AddressLine1 = "40 Friar Lane",
                         AddressLine2 = "Nottingham",
                         AddressLine3 = "Nottinghamshire",
                         Locality = "Locality",
                         Postcode = "NG1 6DQ"
-                    }
+                    },
+                    MobileNumber = "07765 432 421",
+                    OtherNumber = "01332 675 453"
                 },
-                Requestor = new HelpMyStreet.Utils.Models.JobPersonalDetails()
+                Requestor = new RequestPersonalDetails()
                 {
                     FirstName = "Harold",
-                    LastName = "Jones",
-                    EmailAddress = "Harold@Jones.com",
-                    ContactNumbers = new HelpMyStreet.Utils.Models.ContactNumber()
+                    LastName = "James",
+                    EmailAddress = "harold@james.com",
+                    Address = new Address()
                     {
-                        ContactNumbers = new List<string>()
-                        {
-                            "07897 565 4321",
-                            "01332 365 543"
-                        }
-                    },
-                    Address = new HelpMyStreet.Utils.Models.Address()
-                    {
-                        AddressLine1 = "30 Friar Lane",
+                        AddressLine1 = "36 Friar Lane",
                         AddressLine2 = "Nottingham",
                         AddressLine3 = "Nottinghamshire",
                         Locality = "Locality",
                         Postcode = "NG1 6DQ"
-                    }
-                }
+                    },
+                    MobileNumber = "07765 432 421",
+                    OtherNumber = "01332 675 453"
+                },
+                ConsentForContact = true,
+                ReadPrivacyNotice = true,
+                AcceptedTerms = true,
+                SpecialCommunicationNeeds = "None",
+                ForRequestor = false
+            };
+
+            Job job = new Job()
+            {
+                VolunteerUserID = 1,
+                JobStatus = JobStatuses.Open,
+                UniqueIdentifier = Guid.NewGuid(),
+                HealthCritical = true,
+                Details = "Job Details",
+                DueDays = 5,
+                SupportActivity = SupportActivities.DogWalking,
+                JobID = 1
             };
 
             GetJobDetailsResponse result = new GetJobDetailsResponse()
             {
+                HelpRequest = helpRequest,
                 Job = job
             };
             return result;

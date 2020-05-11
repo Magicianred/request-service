@@ -35,7 +35,8 @@ namespace RequestService.Handlers
                 Critical = true,
                 Details = "Job Details",
                 DueDate = DateTime.Now.AddDays(5),
-                SupportActivity = SupportActivities.DogWalking
+                SupportActivity = SupportActivities.DogWalking,
+                JobStatus = JobStatuses.InProgress
             });
 
             GetJobsAllocatedToUserResponse result = new GetJobsAllocatedToUserResponse()
