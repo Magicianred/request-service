@@ -11,6 +11,7 @@ namespace RequestService.Repo.EntityFramework.Entities
             SupportActivities = new HashSet<SupportActivities>();
         }
 
+        public int? CreatedByUserId { get; set; }
         public int Id { get; set; }
         public string PostCode { get; set; }
         public DateTime DateRequested { get; set; }

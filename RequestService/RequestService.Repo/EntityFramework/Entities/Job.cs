@@ -11,6 +11,8 @@ namespace RequestService.Repo.EntityFramework.Entities
             RequestJobStatus = new HashSet<RequestJobStatus>();
         }
 
+        public int? VolunteerUserId { get; set; }
+        public byte? JobStatusId { get; set; }
         public int Id { get; set; }
         public int RequestId { get; set; }
         public byte SupportActivityId { get; set; }
@@ -20,6 +22,9 @@ namespace RequestService.Repo.EntityFramework.Entities
 
         public virtual Request NewRequest { get; set; }
         public virtual SupportActivity SupportActivity { get; set; }
+
+        public virtual JobStatus JobStatus { get; set; }
+
         public virtual ICollection<RequestJobStatus> RequestJobStatus { get; set; }
     }
 }

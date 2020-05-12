@@ -148,6 +148,10 @@ namespace RequestService.Repo
 
                 entity.Property(e => e.SupportActivityId).HasColumnName("SupportActivityID");
 
+                entity.Property(e => e.VolunteerUserId).HasColumnName("VolunteerUserID");
+
+                entity.Property(e => e.JobStatusId).HasColumnName("JobStatusID");
+
                 entity.HasOne(d => d.NewRequest)
                     .WithMany(p => p.Job)
                     .HasForeignKey(d => d.RequestId)
@@ -159,6 +163,13 @@ namespace RequestService.Repo
                     .HasForeignKey(d => d.SupportActivityId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SupportActivity_SupportActivityID");
+
+                entity.HasOne(d => d.JobStatus)
+                    .WithMany(p => p.Job)
+                    .HasForeignKey(d => d.JobStatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Job_JobStatusID");
+
             });
 
             modelBuilder.Entity<JobStatus>(entity =>
@@ -270,6 +281,8 @@ namespace RequestService.Repo
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.CreatedByUserId).HasColumnName("CreatedByUserID");
+
                 entity.Property(e => e.DateRequested)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -312,7 +325,9 @@ namespace RequestService.Repo
 
                 entity.Property(e => e.JobStatusId).HasColumnName("JobStatusID");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.VolunteerUserId).HasColumnName("VolunteerUserID");
+
+                entity.Property(e => e.CreatedByUserId).HasColumnName("CreatedByUserID");
 
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.RequestJobStatus)

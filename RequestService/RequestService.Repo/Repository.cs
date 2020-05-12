@@ -170,7 +170,8 @@ namespace RequestService.Repo
                 ForRequestor = postNewRequestForHelpRequest.HelpRequest.ForRequestor,
                 PersonIdRecipientNavigation = recipient,
                 PersonIdRequesterNavigation = requester,
-                FulfillableStatus = (byte) fulfillable
+                FulfillableStatus = (byte) fulfillable,
+                CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId
             };
 
             _context.Request.Add(request);
@@ -183,6 +184,7 @@ namespace RequestService.Repo
                     IsHealthCritical = job.HealthCritical,
                     SupportActivityId = (byte)job.SupportActivity,
                     DueDate = DateTime.Now.AddDays(job.DueDays),
+                    JobStatusId = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Open
                 };
                 _context.Job.Add(EFcoreJob);
                 _context.RequestJobStatus.Add(new RequestJobStatus()
@@ -197,38 +199,68 @@ namespace RequestService.Repo
 
         }
 
-        private async Task<bool> AddJobStatus(int jobID, int userID, HelpMyStreet.Utils.Enums.JobStatuses jobStatus)
+        private void AddJobStatus(int jobID, int? createdByUserID, int? volunteerUserID, HelpMyStreet.Utils.Enums.JobStatuses jobStatus)
         {
             _context.RequestJobStatus.Add(new RequestJobStatus()
             {
-                UserId = userID,
+                CreatedByUserId = createdByUserID,
+                VolunteerUserId = volunteerUserID,
                 JobId = jobID,
                 JobStatusId = (byte)jobStatus
             });
-            int result = await _context.SaveChangesAsync();
-            if (result == 1)
+        }
+
+        public async Task<bool> UpdateJobStatusOpenAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
+        {
+            bool response = false;
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job != null)
             {
-                return true;
+                job.JobStatusId = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Open;
+                job.VolunteerUserId = null;
+                AddJobStatus(jobID, createdByUserID, null, HelpMyStreet.Utils.Enums.JobStatuses.Open);
+                int result = await _context.SaveChangesAsync(cancellationToken);
+                if (result == 2)
+                {
+                    response = true;
+                }
             }
-            else
+            return response;
+        }
+
+        public async Task<bool> UpdateJobStatusInProgressAsync(int jobID, int createdByUserID, int volunteerUserID, CancellationToken cancellationToken)
+        {
+            bool response = false;
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job != null)
             {
-                return false;
+                job.JobStatusId = (byte)HelpMyStreet.Utils.Enums.JobStatuses.InProgress;
+                job.VolunteerUserId = volunteerUserID;
+                AddJobStatus(jobID, createdByUserID, volunteerUserID, HelpMyStreet.Utils.Enums.JobStatuses.InProgress);
+                int result = await _context.SaveChangesAsync(cancellationToken);
+                if (result == 2)
+                {
+                    response = true;
+                }
             }
+            return response;
         }
 
-        public async Task<bool> UpdateJobStatusOpen(int jobID, int userID)
+        public async Task<bool> UpdateJobStatusDoneAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
         {
-            return await AddJobStatus(jobID, userID, HelpMyStreet.Utils.Enums.JobStatuses.Open);
-        }
-
-        public async Task<bool> UpdateJobStatusInProgress(int jobID, int userID)
-        {
-            return await AddJobStatus(jobID, userID, HelpMyStreet.Utils.Enums.JobStatuses.InProgress);
-        }
-
-        public async Task<bool> UpdateJobStatusDone(int jobID, int userID)
-        {
-            return await AddJobStatus(jobID, userID, HelpMyStreet.Utils.Enums.JobStatuses.Done);
+            bool response = false;
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job != null)
+            {
+                job.JobStatusId = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Done;
+                AddJobStatus(jobID, createdByUserID, null, HelpMyStreet.Utils.Enums.JobStatuses.InProgress);
+                int result = await _context.SaveChangesAsync(cancellationToken);
+                if (result == 2)
+                {
+                    response = true;
+                }
+            }
+            return response;
         }
     }
 }
