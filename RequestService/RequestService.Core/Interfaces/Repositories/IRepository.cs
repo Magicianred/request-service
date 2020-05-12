@@ -12,6 +12,9 @@ namespace RequestService.Core.Interfaces.Repositories
 {
     public interface IRepository
     {
+        Task<bool> UpdateJobStatusOpen(int jobID, int userID);
+        Task<bool> UpdateJobStatusInProgress(int jobID, int userID);
+        Task<bool> UpdateJobStatusDone(int jobID, int userID);
         Task<int> NewHelpRequestAsync(PostNewRequestForHelpRequest postNewRequestForHelpRequest, Fulfillable fulfillable);
         List<ReportItem> GetDailyReport();
         Task<int> CreateRequestAsync(string postCode, CancellationToken cancellationToken);
