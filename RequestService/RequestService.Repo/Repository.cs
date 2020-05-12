@@ -197,5 +197,38 @@ namespace RequestService.Repo
 
         }
 
+        private async Task<bool> AddJobStatus(int jobID, int userID, HelpMyStreet.Utils.Enums.JobStatuses jobStatus)
+        {
+            _context.RequestJobStatus.Add(new RequestJobStatus()
+            {
+                UserId = userID,
+                JobId = jobID,
+                JobStatusId = (byte)jobStatus
+            });
+            int result = await _context.SaveChangesAsync();
+            if (result == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateJobStatusOpen(int jobID, int userID)
+        {
+            return await AddJobStatus(jobID, userID, HelpMyStreet.Utils.Enums.JobStatuses.Open);
+        }
+
+        public async Task<bool> UpdateJobStatusInProgress(int jobID, int userID)
+        {
+            return await AddJobStatus(jobID, userID, HelpMyStreet.Utils.Enums.JobStatuses.InProgress);
+        }
+
+        public async Task<bool> UpdateJobStatusDone(int jobID, int userID)
+        {
+            return await AddJobStatus(jobID, userID, HelpMyStreet.Utils.Enums.JobStatuses.Done);
+        }
     }
 }

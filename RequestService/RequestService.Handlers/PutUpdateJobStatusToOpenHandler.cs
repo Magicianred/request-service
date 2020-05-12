@@ -28,11 +28,12 @@ namespace RequestService.Handlers
 
         public async Task<PutUpdateJobStatusToOpenResponse> Handle(PutUpdateJobStatusToOpenRequest request, CancellationToken cancellationToken)
         {
-            PutUpdateJobStatusToOpenResponse result = new PutUpdateJobStatusToOpenResponse()
+            var result = await _repository.UpdateJobStatusOpen(request.JobID, request.UserID);
+            PutUpdateJobStatusToOpenResponse response = new PutUpdateJobStatusToOpenResponse()
             {
-                Success = true
+                Success = result
             };
-            return result;
+            return response;
         }
     }
 }
