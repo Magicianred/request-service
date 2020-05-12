@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using HelpMyStreet.Contracts.ReportService.Response;
+using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Models;
 using Microsoft.EntityFrameworkCore;
 using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
@@ -123,5 +125,77 @@ namespace RequestService.Repo
 
             return response;
         }
+
+        private Person GetPersonFromPersonalDetails(RequestPersonalDetails requestPersonalDetails)
+        {
+            return new Person()
+            {
+                FirstName = requestPersonalDetails.FirstName,
+                LastName = requestPersonalDetails.LastName,
+                EmailAddress = requestPersonalDetails.EmailAddress,
+                AddressLine1 = requestPersonalDetails.Address.AddressLine1,
+                AddressLine2 = requestPersonalDetails.Address.AddressLine2,
+                AddressLine3 = requestPersonalDetails.Address.AddressLine3,
+                Locality = requestPersonalDetails.Address.Locality,
+                Postcode = requestPersonalDetails.Address.Postcode,
+                MobilePhone = requestPersonalDetails.MobileNumber,
+                OtherPhone = requestPersonalDetails.OtherNumber,
+            };
+        }
+
+        public async Task<int> NewHelpRequestAsync(PostNewRequestForHelpRequest postNewRequestForHelpRequest, Fulfillable fulfillable)
+        {
+            Person requester = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Requestor);
+            Person recipient;
+
+            if (postNewRequestForHelpRequest.HelpRequest.ForRequestor)
+            {
+                recipient = requester;
+            }
+            else
+            {
+                recipient = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Recipient);
+            }
+
+            _context.Person.Add(requester);
+            _context.Person.Add(recipient);
+
+            Request request = new Request()
+            {
+                ReadPrivacyNotice = postNewRequestForHelpRequest.HelpRequest.ReadPrivacyNotice,
+                SpecialCommunicationNeeds = postNewRequestForHelpRequest.HelpRequest.SpecialCommunicationNeeds,
+                AcceptedTerms = postNewRequestForHelpRequest.HelpRequest.AcceptedTerms,
+                OtherDetails = postNewRequestForHelpRequest.HelpRequest.OtherDetails,
+                PostCode = postNewRequestForHelpRequest.HelpRequest.Recipient.Address.Postcode,
+                ForRequestor = postNewRequestForHelpRequest.HelpRequest.ForRequestor,
+                PersonIdRecipientNavigation = recipient,
+                PersonIdRequesterNavigation = requester,
+                FulfillableStatus = (byte) fulfillable
+            };
+
+            _context.Request.Add(request);
+            foreach(HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
+            {
+                EntityFramework.Entities.Job EFcoreJob = new EntityFramework.Entities.Job()
+                {
+                    NewRequest = request,
+                    Details = job.Details,
+                    IsHealthCritical = job.HealthCritical,
+                    SupportActivityId = (byte)job.SupportActivity,
+                    DueDate = DateTime.Now.AddDays(job.DueDays),
+                };
+                _context.Job.Add(EFcoreJob);
+                _context.RequestJobStatus.Add(new RequestJobStatus()
+                {
+                    DateCreated = DateTime.Now,
+                    JobStatusId = (byte) HelpMyStreet.Utils.Enums.JobStatuses.Open,
+                    Job = EFcoreJob
+                });
+            }
+            await _context.SaveChangesAsync();
+            return request.Id;
+
+        }
+
     }
 }

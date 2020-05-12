@@ -6,8 +6,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="9.0.0" />
-		<PackageReference Include="HelpMyStreet.Contracts" Version="1.1.56" />
-		<PackageReference Include="HelpMyStreet.Utils" Version="1.1.56" />
 		<PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.4.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
@@ -16,6 +14,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="HelpMyStreet.Contracts" Version="1.1.89" />
+		<PackageReference Include="HelpMyStreet.Utils" Version="1.1.89" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
 	</ItemGroup>
