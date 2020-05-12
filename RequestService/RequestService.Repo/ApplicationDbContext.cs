@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Data.SqlClient;
 using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Linq;
 
 namespace RequestService.Repo
 {
@@ -21,8 +23,100 @@ namespace RequestService.Repo
             {
                 conn.AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync("https://database.windows.net/").Result;
             }
-
         }
+
+        public void PopulateLookupTables()
+        {
+            PopulateLookupSupportActivity();
+            PopulateJobStatus();
+        }
+
+        private void PopulateLookupSupportActivity()
+        {
+            if (SupportActivity.Count()==0)
+            { 
+                var supportActivities = new SupportActivity[]
+                {
+                    new SupportActivity
+                    {
+                        Value="Shopping"
+                    },
+                    new SupportActivity
+                    {
+                        Value="CollectingPrescriptions"
+                    },
+                    new SupportActivity
+                    {
+                        Value="Errands"
+                    },
+                    new SupportActivity
+                    {
+                        Value="MedicalAppointmentTransport"
+                    },
+                    new SupportActivity
+                    {
+                        Value="DogWalking"
+                    },
+                    new SupportActivity
+                    {
+                        Value="MealPreparation"
+                    },
+                    new SupportActivity
+                    {
+                        Value="PhoneCalls_Friendly"
+                    },
+                    new SupportActivity
+                    {
+                        Value="PhoneCalls_Anxious"
+                    },
+                    new SupportActivity
+                    {
+                        Value="HomeworkSupport"
+                    },
+                    new SupportActivity
+                    {
+                        Value="CheckingIn"
+                    },
+                    new SupportActivity
+                    {
+                        Value="Other"
+                    }
+                };
+                foreach (SupportActivity supportActivity in supportActivities)
+                {
+                    SupportActivity.Add(supportActivity);
+                }
+                this.SaveChanges();
+            }
+        }
+
+        private void PopulateJobStatus()
+        {
+            if (JobStatus.Count() == 0)
+            {
+                var jobstatuses = new JobStatus[]
+                {
+                    new JobStatus()
+                    {
+                        Value = "Open"
+                    },
+                    new JobStatus()
+                    {
+                        Value = "InProgress"
+                    },
+                    new JobStatus()
+                    {
+                        Value = "Done"
+                    }
+                };
+                foreach (JobStatus jobStatus in jobstatuses)
+                {
+                    JobStatus.Add(jobStatus);
+                }
+                this.SaveChanges();
+            }
+        }
+
 
         public virtual DbSet<Job> Job { get; set; }
         public virtual DbSet<JobStatus> JobStatus { get; set; }
@@ -243,7 +337,7 @@ namespace RequestService.Repo
 
                 entity.Property(e => e.Value)
                     .IsRequired()
-                    .HasMaxLength(20)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
             });
 
