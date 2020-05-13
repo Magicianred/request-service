@@ -28,7 +28,7 @@ namespace RequestService.Handlers
 
         public async Task<PutUpdateJobStatusToDoneResponse> Handle(PutUpdateJobStatusToDoneRequest request, CancellationToken cancellationToken)
         {
-            var result = await  _repository.UpdateJobStatusDone(request.JobID, request.UserID);
+            var result = await  _repository.UpdateJobStatusDoneAsync(request.JobID, request.CreatedByUserID, cancellationToken);
             PutUpdateJobStatusToDoneResponse response = new PutUpdateJobStatusToDoneResponse()
             {
                 Success = result

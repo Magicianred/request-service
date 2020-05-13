@@ -15,5 +15,6 @@ namespace RequestService.Repo.EntityFramework.Entities
         public string Value { get; set; }
 
         public virtual ICollection<RequestJobStatus> RequestJobStatus { get; set; }
+        public virtual ICollection<Job> Job { get; set; }
     }
 }

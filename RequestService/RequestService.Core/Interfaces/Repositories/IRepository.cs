@@ -1,6 +1,7 @@
 ﻿using HelpMyStreet.Contracts.ReportService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Models;
 using RequestService.Core.Dto;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,9 @@ namespace RequestService.Core.Interfaces.Repositories
 {
     public interface IRepository
     {
-        Task<bool> UpdateJobStatusOpen(int jobID, int userID);
-        Task<bool> UpdateJobStatusInProgress(int jobID, int userID);
-        Task<bool> UpdateJobStatusDone(int jobID, int userID);
+        Task<bool> UpdateJobStatusOpenAsync(int jobID, int createdByUserID, CancellationToken cancellationToken);
+        Task<bool> UpdateJobStatusInProgressAsync(int jobID, int createdByUserID, int volunteerUserID, CancellationToken cancellationToken);
+        Task<bool> UpdateJobStatusDoneAsync(int jobID, int createdByUserID, CancellationToken cancellationToken);
         Task<int> NewHelpRequestAsync(PostNewRequestForHelpRequest postNewRequestForHelpRequest, Fulfillable fulfillable);
         List<ReportItem> GetDailyReport();
         Task<int> CreateRequestAsync(string postCode, CancellationToken cancellationToken);
