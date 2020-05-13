@@ -9,5 +9,7 @@ namespace RequestService.Core.Services
     public interface IAddressService
     {
         Task<bool> IsValidPostcode(string postcode,  CancellationToken cancellationToken);
+
+        Task<GetPostcodeCoordinatesResponse> GetPostcodeCoordinatesAsync(List<string> postCodes, CancellationToken cancellationToken);
     }
 }

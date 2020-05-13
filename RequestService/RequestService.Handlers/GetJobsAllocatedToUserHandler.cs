@@ -5,41 +5,46 @@ using RequestService.Core.Interfaces.Repositories;
 using RequestService.Core.Dto;
 using RequestService.Core.Services;
 using System.Collections.Generic;
-using System.Linq;
-using System;
-using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Contracts.RequestService.Request;
-using HelpMyStreet.Contracts.CommunicationService.Request;
-using Microsoft.Extensions.Options;
-using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Models;
 
 namespace RequestService.Handlers
 {
     public class GetJobsAllocatedToUserHandler : IRequestHandler<GetJobsAllocatedToUserRequest, GetJobsAllocatedToUserResponse>
     {
         private readonly IRepository _repository;
-        private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
-        public GetJobsAllocatedToUserHandler(IRepository repository, IOptionsSnapshot<ApplicationConfig> applicationConfig)
+        private readonly IUserService _userService;
+        private readonly IJobService _jobService;
+        public GetJobsAllocatedToUserHandler(
+            IRepository repository,
+            IUserService userService,
+            IJobService jobService)
         {
             _repository = repository;
-            _applicationConfig = applicationConfig;
+            _userService = userService;
+            _jobService = jobService;
         }
 
         public async Task<GetJobsAllocatedToUserResponse> Handle(GetJobsAllocatedToUserRequest request, CancellationToken cancellationToken)
         {
-            List<HelpMyStreet.Utils.Models.JobSummary> jobSummaries = new List<HelpMyStreet.Utils.Models.JobSummary>();
-            jobSummaries.Add(new HelpMyStreet.Utils.Models.JobSummary()
-            {
-                UniqueIdentifier = Guid.NewGuid(),
-                Critical = true,
-                Details = "Job Details",
-                DueDate = DateTime.Now.AddDays(5),
-                SupportActivity = SupportActivities.DogWalking,
-                JobStatus = JobStatuses.InProgress
-            });
+            GetJobsAllocatedToUserResponse result = new GetJobsAllocatedToUserResponse();
+            List<JobSummary> jobSummaries = _repository.GetJobsAllocatedToUser(request.VolunteerUserID);
 
-            GetJobsAllocatedToUserResponse result = new GetJobsAllocatedToUserResponse()
+            GetUserByIDResponse userByIDResponse = await _userService.GetUser(request.VolunteerUserID, cancellationToken);
+            if (userByIDResponse == null || userByIDResponse.User == null)
+            {
+                return result;
+            }
+            string postCode = userByIDResponse.User.PostalCode;
+            await _jobService.GetJobSummaries(postCode, jobSummaries, cancellationToken);
+
+            if (jobSummaries.Count == 0)
+            {
+                return result;
+            }
+
+            result = new GetJobsAllocatedToUserResponse()
             {
                 JobSummaries = jobSummaries
             };
