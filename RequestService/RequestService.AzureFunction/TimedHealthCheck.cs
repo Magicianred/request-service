@@ -7,9 +7,9 @@ namespace RequestService.AzureFunction
     public class TimedHealthCheck
     {
         [FunctionName("TimedHealthCheck")]
-        public void Run([TimerTrigger("%TimedHealthCheckCronExpression%")] TimerInfo timerInfo, ILogger log)
+        public void Run([TimerTrigger("%TimedHealthCheckCronExpression%", RunOnStartup = true)] TimerInfo timerInfo, ILogger log)
         {
-            log.LogInformation($"Health check CRON trigger executed at : {DateTime.Now}");
+            log.LogInformation($"Health check CRON trigger executed at : {DateTimeOffset.Now}");
         }
     }
 }
