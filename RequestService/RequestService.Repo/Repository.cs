@@ -303,5 +303,72 @@ namespace RequestService.Repo
             }
             return response;
         }
+
+        private RequestPersonalDetails GetPerson(Person person)
+        {
+            return new RequestPersonalDetails()
+            {
+                FirstName = person.FirstName,
+                LastName = person.LastName,
+                EmailAddress = person.EmailAddress,
+                MobileNumber = person.MobilePhone,
+                OtherNumber = person.OtherPhone,
+                Address = new Address()
+                {
+                    AddressLine1 = person.AddressLine1,
+                    AddressLine2 = person.AddressLine2,
+                    AddressLine3 = person.AddressLine3,
+                    Locality = person.Locality,
+                    Postcode = person.Postcode
+                }
+            };
+        }
+
+        public GetJobDetailsResponse GetJobDetails(int jobID)
+        {
+            GetJobDetailsResponse response = new GetJobDetailsResponse()
+            {
+                HelpRequest = new HelpRequest(),
+                Job = new HelpMyStreet.Utils.Models.Job()
+                
+            };
+            var efJob = _context.Job
+                        .Include(i => i.NewRequest)
+                        .ThenInclude(i => i.PersonIdRecipientNavigation)
+                        .Include(i => i.NewRequest)
+                        .ThenInclude(i=> i.PersonIdRequesterNavigation)
+                        .Where(w => w.Id == jobID).FirstOrDefault();
+
+            if(efJob == null)
+            {
+                return response;
+            }
+
+            HelpRequest helpRequest = new HelpRequest()
+            {
+                OtherDetails = efJob.NewRequest.OtherDetails,
+                ForRequestor = efJob.NewRequest.ForRequestor.Value,
+                AcceptedTerms = efJob.NewRequest.AcceptedTerms.Value,
+                SpecialCommunicationNeeds = efJob.NewRequest.SpecialCommunicationNeeds,
+                ReadPrivacyNotice = efJob.NewRequest.ReadPrivacyNotice.Value,
+                CreatedByUserId = efJob.NewRequest.CreatedByUserId.Value,
+                Recipient = GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),
+                Requestor = GetPerson(efJob.NewRequest.PersonIdRequesterNavigation),
+            };
+
+            HelpMyStreet.Utils.Models.Job job = new HelpMyStreet.Utils.Models.Job()
+            {
+                Details = efJob.Details,
+                HealthCritical = efJob.IsHealthCritical,
+                JobID = efJob.Id,
+                VolunteerUserID = efJob.VolunteerUserId,
+                JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses) efJob.JobStatusId,
+                SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities) efJob.SupportActivityId
+            };
+            response.HelpRequest = helpRequest;
+            response.Job = job;
+
+            return response;
+        }
     }
 }
