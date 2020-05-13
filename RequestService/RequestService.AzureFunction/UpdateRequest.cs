@@ -11,6 +11,7 @@ using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
 using HelpMyStreet.Contracts.RequestService.Response;
 using Microsoft.AspNetCore.Http;
+using NewRelic.Api.Agent;
 
 namespace RequestService.AzureFunction
 {
@@ -23,6 +24,7 @@ namespace RequestService.AzureFunction
             _mediator = mediator;
         }
 
+        [Transaction(Web = true)]
         [FunctionName("UpdateRequest")]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         public async Task<IActionResult> Run(
@@ -32,6 +34,7 @@ namespace RequestService.AzureFunction
         {
             try
             {
+                NewRelic.Api.Agent.NewRelic.SetTransactionName("RequestService", "UpdateRequest");
                 log.LogInformation("C# HTTP trigger function processed a request.");
 
                 await _mediator.Send(req);                
@@ -39,8 +42,7 @@ namespace RequestService.AzureFunction
             }
             catch (Exception exc)
             {
-
-                log.LogError("Exception occured in Update Request", exc);
+                LogError.Log(log, exc, req);
                 return new ObjectResult(ResponseWrapper<LogRequestResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.InternalServerError, "Internal Error")) { StatusCode = StatusCodes.Status500InternalServerError };
             }
         }
