@@ -326,12 +326,7 @@ namespace RequestService.Repo
 
         public GetJobDetailsResponse GetJobDetails(int jobID)
         {
-            GetJobDetailsResponse response = new GetJobDetailsResponse()
-            {
-                HelpRequest = new HelpRequest(),
-                Job = new HelpMyStreet.Utils.Models.Job()
-                
-            };
+            GetJobDetailsResponse response = new GetJobDetailsResponse();
             var efJob = _context.Job
                         .Include(i => i.NewRequest)
                         .ThenInclude(i => i.PersonIdRecipientNavigation)
@@ -344,29 +339,20 @@ namespace RequestService.Repo
                 return response;
             }
 
-            HelpRequest helpRequest = new HelpRequest()
+            response = new GetJobDetailsResponse()
             {
                 OtherDetails = efJob.NewRequest.OtherDetails,
-                ForRequestor = efJob.NewRequest.ForRequestor.Value,
-                AcceptedTerms = efJob.NewRequest.AcceptedTerms.Value,
                 SpecialCommunicationNeeds = efJob.NewRequest.SpecialCommunicationNeeds,
-                ReadPrivacyNotice = efJob.NewRequest.ReadPrivacyNotice.Value,
-                CreatedByUserId = efJob.NewRequest.CreatedByUserId.Value,
                 Recipient = GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),
                 Requestor = GetPerson(efJob.NewRequest.PersonIdRequesterNavigation),
-            };
-
-            HelpMyStreet.Utils.Models.Job job = new HelpMyStreet.Utils.Models.Job()
-            {
                 Details = efJob.Details,
                 HealthCritical = efJob.IsHealthCritical,
                 JobID = efJob.Id,
                 VolunteerUserID = efJob.VolunteerUserId,
-                JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses) efJob.JobStatusId,
-                SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities) efJob.SupportActivityId
+                JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)efJob.JobStatusId,
+                SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
+                DueDate= efJob.DueDate
             };
-            response.HelpRequest = helpRequest;
-            response.Job = job;
 
             return response;
         }
