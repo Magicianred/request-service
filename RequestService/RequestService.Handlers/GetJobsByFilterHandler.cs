@@ -21,59 +21,27 @@ namespace RequestService.Handlers
     public class GetJobsByFilterHandler : IRequestHandler<GetJobsByFilterRequest, GetJobsByFilterResponse>
     {
         private readonly IRepository _repository;
-        private readonly IAddressService _addressService;
-        private readonly IDistanceCalculator _distanceCalculator;
-        private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
+        private readonly IJobService _jobService;
         public GetJobsByFilterHandler(
             IRepository repository,
-            IAddressService addressService,
-            IDistanceCalculator distanceCalculator,
-            IOptionsSnapshot<ApplicationConfig> applicationConfig)
+            IJobService jobService)
         {
             _repository = repository;
-            _addressService = addressService;
-            _distanceCalculator = distanceCalculator;
-            _applicationConfig = applicationConfig;
+            _jobService = jobService;
         }
 
         public async Task<GetJobsByFilterResponse> Handle(GetJobsByFilterRequest request, CancellationToken cancellationToken)
         {
             GetJobsByFilterResponse result = new GetJobsByFilterResponse();
             List<JobSummary> jobSummaries = _repository.GetOpenJobsSummaries();
-            List<string> distinctPostCodes = null;
 
-            if (jobSummaries.Count == 0)
+            await _jobService.GetJobSummaries(request.Postcode, jobSummaries, cancellationToken);
+
+            if(jobSummaries.Count==0)
             {
                 return result;
             }
 
-            distinctPostCodes = jobSummaries.Select(d => d.PostCode).Distinct().ToList();
-            if (!distinctPostCodes.Contains(request.Postcode))
-            {
-                distinctPostCodes.Add(request.Postcode);
-            }
-            
-            var postcodeCoordinatesResponse = await _addressService.GetPostcodeCoordinatesAsync(distinctPostCodes, cancellationToken);
-
-            if (postcodeCoordinatesResponse == null)
-            {
-                return result;
-            }
-            
-            var volunteerPostcodeCoordinates = postcodeCoordinatesResponse.PostcodeCoordinates.Where(w => w.Postcode == request.Postcode).FirstOrDefault();
-            if (volunteerPostcodeCoordinates == null)
-            {
-                return result;
-            }
-
-            foreach (JobSummary jobSummary in jobSummaries)
-            {
-                var jobPostcodeCoordinates = postcodeCoordinatesResponse.PostcodeCoordinates.Where(w => w.Postcode == jobSummary.PostCode).FirstOrDefault();
-                if (jobPostcodeCoordinates != null)
-                {
-                    jobSummary.DistanceInMiles = _distanceCalculator.GetDistanceInMiles(volunteerPostcodeCoordinates.Longitude, volunteerPostcodeCoordinates.Latitude, jobPostcodeCoordinates.Longitude, jobPostcodeCoordinates.Latitude);
-                }
-            }
             result = new GetJobsByFilterResponse()
             {
                 JobSummaries = jobSummaries.Where(w => w.DistanceInMiles<=request.DistanceInMiles).ToList()

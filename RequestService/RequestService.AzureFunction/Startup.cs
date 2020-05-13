@@ -83,6 +83,7 @@ namespace RequestService.AzureFunction
             builder.Services.AddTransient<ICommunicationService, CommunicationService>();
             builder.Services.AddTransient<IRepository, Repository>();
             builder.Services.AddTransient<IDistanceCalculator, DistanceCalculator>();
+            builder.Services.AddTransient<IJobService, JobService>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     ConfigureDbContextOptionsBuilder(options, connectionStrings.RequestService),
