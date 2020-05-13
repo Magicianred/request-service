@@ -19,7 +19,6 @@ namespace RequestService.AzureFunction
         {
             try
             {
-                NewRelic.Api.Agent.NewRelic.SetTransactionName("AddressService", nameof(HealthCheck));
                 log.LogInformation("C# HTTP trigger function processed health check request.");
 
                 return new OkObjectResult("I'm alive!");
