@@ -1,6 +1,8 @@
 ﻿using RequestService.Repo.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Data.SqlClient;
+using Microsoft.Azure.Services.AppAuthentication;
 
 namespace RequestService.Repo
 {
@@ -13,11 +15,20 @@ namespace RequestService.Repo
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            SqlConnection conn = (SqlConnection)Database.GetDbConnection();
+
+            if (conn.DataSource.Contains("database.windows.net"))
+            {
+                conn.AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync("https://database.windows.net/").Result;
+            }
+
         }
 
         public virtual DbSet<PersonalDetails> PersonalDetails { get; set; }
         public virtual DbSet<Request> Request { get; set; }
         public virtual DbSet<SupportActivities> SupportActivities { get; set; }
+
+        public virtual DbQuery<DailyReport> DailyReport { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
@@ -25,6 +36,8 @@ namespace RequestService.Repo
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Query<DailyReport>().ToQuery(() => DailyReport.FromSql("TwoHourlyReport"));
+
             modelBuilder.Entity<PersonalDetails>(entity =>
             {
                 entity.HasKey(e => e.RequestId);

@@ -16,6 +16,9 @@ namespace RequestService.Repo.EntityFramework.Entities
         public DateTime DateRequested { get; set; }
         public bool IsFulfillable { get; set; }
         public bool CommunicationSent { get; set; }
+
+        public byte? FulfillableStatus { get; set; }
+
         public virtual PersonalDetails PersonalDetails { get; set; }
         public virtual ICollection<SupportActivities> SupportActivities { get; set; }
     }
