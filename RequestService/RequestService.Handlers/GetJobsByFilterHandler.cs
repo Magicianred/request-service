@@ -32,7 +32,7 @@ namespace RequestService.Handlers
             jobSummaries.Add(new HelpMyStreet.Utils.Models.JobSummary()
             {
                 UniqueIdentifier = Guid.NewGuid(),
-                Critical = true,
+                IsHealthCritical = true,
                 Details = "Job Details",
                 DueDate = DateTime.Now.AddDays(5),
                 SupportActivity = SupportActivities.DogWalking,

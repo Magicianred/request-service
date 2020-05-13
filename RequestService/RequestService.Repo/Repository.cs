@@ -262,5 +262,32 @@ namespace RequestService.Repo
             }
             return response;
         }
+
+        public List<JobSummary> GetJobsAllocatedToUser(int volunteerUserID)
+        {
+            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.NewRequest)
+                                    .Where(w => w.VolunteerUserId == volunteerUserID 
+                                                && w.JobStatus.Value == HelpMyStreet.Utils.Enums.JobStatuses.InProgress.ToString()
+                                            ).ToList();
+
+            List<JobSummary> response = new List<JobSummary>();
+            foreach (EntityFramework.Entities.Job j in jobSummaries)
+            {
+                response.Add(new JobSummary()
+                {
+                    IsHealthCritical = j.IsHealthCritical,
+                    DueDate = j.DueDate,
+                    Details = j.Details,
+                    JobID = j.Id,
+                    VolunteerUserID = j.VolunteerUserId,
+                    JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses) j.JobStatusId,
+                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities) j.SupportActivityId,
+                    PostCode = j.NewRequest.PostCode
+                });
+            }
+            return response;
+            
+        }
     }
 }
