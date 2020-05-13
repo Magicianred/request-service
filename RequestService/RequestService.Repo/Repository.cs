@@ -271,8 +271,23 @@ namespace RequestService.Repo
                                                 && w.JobStatus.Value == HelpMyStreet.Utils.Enums.JobStatuses.InProgress.ToString()
                                             ).ToList();
 
+            return GetJobSummaries(jobSummaries);
+            
+        }
+
+        public List<JobSummary> GetOpenJobsSummaries()
+        {
+            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.NewRequest)
+                                    .Where(w => w.JobStatus.Value == HelpMyStreet.Utils.Enums.JobStatuses.Open.ToString()
+                                            ).ToList();
+            return GetJobSummaries(jobSummaries);
+        }
+
+        public List<JobSummary> GetJobSummaries(List<EntityFramework.Entities.Job> jobs)
+        {
             List<JobSummary> response = new List<JobSummary>();
-            foreach (EntityFramework.Entities.Job j in jobSummaries)
+            foreach (EntityFramework.Entities.Job j in jobs)
             {
                 response.Add(new JobSummary()
                 {
@@ -281,13 +296,12 @@ namespace RequestService.Repo
                     Details = j.Details,
                     JobID = j.Id,
                     VolunteerUserID = j.VolunteerUserId,
-                    JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses) j.JobStatusId,
-                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities) j.SupportActivityId,
+                    JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)j.JobStatusId,
+                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)j.SupportActivityId,
                     PostCode = j.NewRequest.PostCode
                 });
             }
             return response;
-            
         }
     }
 }

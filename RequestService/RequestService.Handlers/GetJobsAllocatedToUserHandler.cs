@@ -41,43 +41,49 @@ namespace RequestService.Handlers
 
         public async Task<GetJobsAllocatedToUserResponse> Handle(GetJobsAllocatedToUserRequest request, CancellationToken cancellationToken)
         {
+            GetJobsAllocatedToUserResponse result = new GetJobsAllocatedToUserResponse();
             List<JobSummary> jobSummaries = _repository.GetJobsAllocatedToUser(request.VolunteerUserID);
 
-            if(jobSummaries.Count>0)
+            if (jobSummaries.Count == 0)
             {
-                //Calculate the distance
-                GetUserByIDResponse userByIDResponse = await _userService.GetUser(request.VolunteerUserID, cancellationToken);
-                if(userByIDResponse != null && userByIDResponse.User!=null)
+                return result;
+            }
+
+            GetUserByIDResponse userByIDResponse = await _userService.GetUser(request.VolunteerUserID, cancellationToken);
+            if (userByIDResponse == null || userByIDResponse.User == null)
+            {
+                return result;
+            }
+
+            string postCode = userByIDResponse.User.PostalCode;
+            List<string> distinctPostCodes = jobSummaries.Select(d => d.PostCode).Distinct().ToList();
+            if (!distinctPostCodes.Contains(postCode))
+            {
+                distinctPostCodes.Add(postCode);
+            }
+
+            var postcodeCoordinatesResponse = await _addressService.GetPostcodeCoordinatesAsync(distinctPostCodes, cancellationToken);
+
+            if (postcodeCoordinatesResponse == null)
+            {
+                return result;
+            }
+
+            var volunteerPostcodeCoordinates = postcodeCoordinatesResponse.PostcodeCoordinates.Where(w => w.Postcode == postCode).FirstOrDefault();
+
+            if (volunteerPostcodeCoordinates != null)
+            {
+                foreach (JobSummary jobSummary in jobSummaries)
                 {
-                    string postCode = userByIDResponse.User.PostalCode;
-
-                    List<string> distinctPostCodes = jobSummaries.Select(d => d.PostCode).Distinct().ToList();
-                    if(!distinctPostCodes.Contains(postCode))
+                    var jobPostcodeCoordinates = postcodeCoordinatesResponse.PostcodeCoordinates.Where(w => w.Postcode == jobSummary.PostCode).FirstOrDefault();
+                    if (jobPostcodeCoordinates != null)
                     {
-                        distinctPostCodes.Add(postCode);
-                    }
-
-                    var postcodeCoordinatesResponse = await _addressService.GetPostcodeCoordinatesAsync(distinctPostCodes, cancellationToken);
-                    if(postcodeCoordinatesResponse != null)
-                    {
-                        var volunteerPostcodeCoordinates = postcodeCoordinatesResponse.PostcodeCoordinates.Where(w => w.Postcode == postCode).FirstOrDefault();
-
-                        if (volunteerPostcodeCoordinates != null)
-                        {
-                            foreach (JobSummary jobSummary in jobSummaries)
-                            {
-                                var jobPostcodeCoordinates = postcodeCoordinatesResponse.PostcodeCoordinates.Where(w => w.Postcode == jobSummary.PostCode).FirstOrDefault();
-                                if (jobPostcodeCoordinates != null)
-                                {
-                                    jobSummary.DistanceInMiles = _distanceCalculator.GetDistanceInMiles(volunteerPostcodeCoordinates.Longitude, volunteerPostcodeCoordinates.Latitude, jobPostcodeCoordinates.Longitude,jobPostcodeCoordinates.Latitude);
-                                }
-                            }
-                        }
+                        jobSummary.DistanceInMiles = _distanceCalculator.GetDistanceInMiles(volunteerPostcodeCoordinates.Longitude, volunteerPostcodeCoordinates.Latitude, jobPostcodeCoordinates.Longitude, jobPostcodeCoordinates.Latitude);
                     }
                 }
             }
 
-            GetJobsAllocatedToUserResponse result = new GetJobsAllocatedToUserResponse()
+            result = new GetJobsAllocatedToUserResponse()
             {
                 JobSummaries = jobSummaries
             };
