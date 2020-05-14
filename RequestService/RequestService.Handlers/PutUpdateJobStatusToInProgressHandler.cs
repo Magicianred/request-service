@@ -19,11 +19,9 @@ namespace RequestService.Handlers
     public class PutUpdateJobStatusToInProgressHandler : IRequestHandler<PutUpdateJobStatusToInProgressRequest, PutUpdateJobStatusToInProgressResponse>
     {
         private readonly IRepository _repository;
-        private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
-        public PutUpdateJobStatusToInProgressHandler(IRepository repository, IOptionsSnapshot<ApplicationConfig> applicationConfig)
+        public PutUpdateJobStatusToInProgressHandler(IRepository repository)
         {
             _repository = repository;
-            _applicationConfig = applicationConfig;
         }
 
         public async Task<PutUpdateJobStatusToInProgressResponse> Handle(PutUpdateJobStatusToInProgressRequest request, CancellationToken cancellationToken)

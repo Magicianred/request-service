@@ -18,12 +18,10 @@ namespace RequestService.Repo
     public class Repository : IRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
 
-        public Repository(ApplicationDbContext context, IMapper mapper)
+        public Repository(ApplicationDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<string> GetRequestPostCodeAsync(int requestId, CancellationToken cancellationToken)
