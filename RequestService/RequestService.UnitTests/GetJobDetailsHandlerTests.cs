@@ -24,7 +24,9 @@ namespace RequestService.UnitTests
             _classUnderTest = new GetJobDetailsHandler(_repository.Object);
             _response = new GetJobDetailsResponse()
             {
-                Details = "DETAILS"
+                Details = "DETAILS",
+                JobID = 1,
+                
             };
         }
 
@@ -43,7 +45,7 @@ namespace RequestService.UnitTests
             };
 
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-
+            Assert.AreEqual(_request.JobID, response.JobID);
             Assert.AreEqual(_response, response);
         }
 
