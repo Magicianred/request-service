@@ -260,5 +260,99 @@ namespace RequestService.Repo
             }
             return response;
         }
+
+        public List<JobSummary> GetJobsAllocatedToUser(int volunteerUserID)
+        {
+            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.NewRequest)
+                                    .Where(w => w.VolunteerUserId == volunteerUserID 
+                                                && w.JobStatus.Value == HelpMyStreet.Utils.Enums.JobStatuses.InProgress.ToString()
+                                            ).ToList();
+
+            return GetJobSummaries(jobSummaries);
+            
+        }
+
+        public List<JobSummary> GetOpenJobsSummaries()
+        {
+            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.NewRequest)
+                                    .Where(w => w.JobStatus.Value == HelpMyStreet.Utils.Enums.JobStatuses.Open.ToString()
+                                            ).ToList();
+            return GetJobSummaries(jobSummaries);
+        }
+
+        public List<JobSummary> GetJobSummaries(List<EntityFramework.Entities.Job> jobs)
+        {
+            List<JobSummary> response = new List<JobSummary>();
+            foreach (EntityFramework.Entities.Job j in jobs)
+            {
+                response.Add(new JobSummary()
+                {
+                    IsHealthCritical = j.IsHealthCritical,
+                    DueDate = j.DueDate,
+                    Details = j.Details,
+                    JobID = j.Id,
+                    VolunteerUserID = j.VolunteerUserId,
+                    JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)j.JobStatusId,
+                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)j.SupportActivityId,
+                    PostCode = j.NewRequest.PostCode
+                });
+            }
+            return response;
+        }
+
+        private RequestPersonalDetails GetPerson(Person person)
+        {
+            return new RequestPersonalDetails()
+            {
+                FirstName = person.FirstName,
+                LastName = person.LastName,
+                EmailAddress = person.EmailAddress,
+                MobileNumber = person.MobilePhone,
+                OtherNumber = person.OtherPhone,
+                Address = new Address()
+                {
+                    AddressLine1 = person.AddressLine1,
+                    AddressLine2 = person.AddressLine2,
+                    AddressLine3 = person.AddressLine3,
+                    Locality = person.Locality,
+                    Postcode = person.Postcode
+                }
+            };
+        }
+
+        public GetJobDetailsResponse GetJobDetails(int jobID)
+        {
+            GetJobDetailsResponse response = new GetJobDetailsResponse();
+            var efJob = _context.Job
+                        .Include(i => i.NewRequest)
+                        .ThenInclude(i => i.PersonIdRecipientNavigation)
+                        .Include(i => i.NewRequest)
+                        .ThenInclude(i=> i.PersonIdRequesterNavigation)
+                        .Where(w => w.Id == jobID).FirstOrDefault();
+
+            if(efJob == null)
+            {
+                return response;
+            }
+
+            response = new GetJobDetailsResponse()
+            {
+                OtherDetails = efJob.NewRequest.OtherDetails,
+                SpecialCommunicationNeeds = efJob.NewRequest.SpecialCommunicationNeeds,
+                Recipient = GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),
+                Requestor = GetPerson(efJob.NewRequest.PersonIdRequesterNavigation),
+                Details = efJob.Details,
+                HealthCritical = efJob.IsHealthCritical,
+                JobID = efJob.Id,
+                VolunteerUserID = efJob.VolunteerUserId,
+                JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)efJob.JobStatusId,
+                SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
+                DueDate= efJob.DueDate
+            };
+
+            return response;
+        }
     }
 }

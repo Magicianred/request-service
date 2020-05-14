@@ -1,5 +1,7 @@
-﻿using HelpMyStreet.Contracts.AddressService.Response;
+﻿using HelpMyStreet.Contracts.AddressService.Request;
+using HelpMyStreet.Contracts.AddressService.Response;
 using HelpMyStreet.Contracts.Shared;
+using HelpMyStreet.Utils.Utils;
 using Marvin.StreamExtensions;
 using Newtonsoft.Json;
 using RequestService.Core.Config;
@@ -12,6 +14,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Utf8Json.Resolvers;
 
 namespace RequestService.Core.Services
 {
@@ -22,6 +25,34 @@ namespace RequestService.Core.Services
         {
             _httpClientWrapper = httpClientWrapper;
         }
+
+        public async Task<GetPostcodeCoordinatesResponse> GetPostcodeCoordinatesAsync(List<string> postCodes, CancellationToken cancellationToken)
+        {
+            string path = $"api/GetPostcodeCoordinates";
+
+            GetPostcodeCoordinatesRequest getPostcodeCoordinatesRequest = new GetPostcodeCoordinatesRequest()
+            {
+                Postcodes = postCodes
+            };
+
+            var streamContent = HttpContentUtils.SerialiseToJsonAndCompress(getPostcodeCoordinatesRequest);
+
+            ResponseWrapper<GetPostcodeCoordinatesResponse, AddressServiceErrorCode> getPostcodeCoordinatesResponseWithWrapper;
+            using (HttpResponseMessage response = await _httpClientWrapper.PostAsync(HttpClientConfigName.AddressService, path, streamContent, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                Stream stream = await response.Content.ReadAsStreamAsync();
+                getPostcodeCoordinatesResponseWithWrapper = await Utf8Json.JsonSerializer.DeserializeAsync<ResponseWrapper<GetPostcodeCoordinatesResponse, AddressServiceErrorCode>>(stream, StandardResolver.AllowPrivate);
+            }
+
+            if (!getPostcodeCoordinatesResponseWithWrapper.IsSuccessful)
+            {
+                throw new Exception($"Calling Address Service GetPostcodeCoordinatesAsync endpoint unsuccessful: {getPostcodeCoordinatesResponseWithWrapper.Errors.FirstOrDefault()?.ErrorMessage}");
+            }
+
+            return getPostcodeCoordinatesResponseWithWrapper.Content;
+        }
+
         public async Task<bool> IsValidPostcode(string postcode, CancellationToken cancellationToken)
         {
             string path = $"api/getpostcode?postcode={postcode}";            

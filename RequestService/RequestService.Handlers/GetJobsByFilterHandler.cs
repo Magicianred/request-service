@@ -13,36 +13,38 @@ using HelpMyStreet.Contracts.CommunicationService.Request;
 using Microsoft.Extensions.Options;
 using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Models;
+using UserService.Core.Utils;
 
 namespace RequestService.Handlers
 {
     public class GetJobsByFilterHandler : IRequestHandler<GetJobsByFilterRequest, GetJobsByFilterResponse>
     {
         private readonly IRepository _repository;
-        private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
-        public GetJobsByFilterHandler(IRepository repository, IOptionsSnapshot<ApplicationConfig> applicationConfig)
+        private readonly IJobService _jobService;
+        public GetJobsByFilterHandler(
+            IRepository repository,
+            IJobService jobService)
         {
             _repository = repository;
-            _applicationConfig = applicationConfig;
+            _jobService = jobService;
         }
 
         public async Task<GetJobsByFilterResponse> Handle(GetJobsByFilterRequest request, CancellationToken cancellationToken)
         {
-            List<HelpMyStreet.Utils.Models.JobSummary> jobSummaries = new List<HelpMyStreet.Utils.Models.JobSummary>();
-            jobSummaries.Add(new HelpMyStreet.Utils.Models.JobSummary()
-            {
-                UniqueIdentifier = Guid.NewGuid(),
-                Critical = true,
-                Details = "Job Details",
-                DueDate = DateTime.Now.AddDays(5),
-                SupportActivity = SupportActivities.DogWalking,
-                JobStatus = JobStatuses.InProgress,
-                PostCode = "NG1 6DQ"
-            });
+            GetJobsByFilterResponse result = new GetJobsByFilterResponse();
+            List<JobSummary> jobSummaries = _repository.GetOpenJobsSummaries();
 
-            GetJobsByFilterResponse result = new GetJobsByFilterResponse()
+            await _jobService.GetJobSummaries(request.Postcode, jobSummaries, cancellationToken);
+
+            if(jobSummaries.Count==0)
             {
-                JobSummaries = jobSummaries
+                return result;
+            }
+
+            result = new GetJobsByFilterResponse()
+            {
+                JobSummaries = jobSummaries.Where(w => w.DistanceInMiles<=request.DistanceInMiles).ToList()
             };
             return result;
         }
