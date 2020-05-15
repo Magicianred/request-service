@@ -21,31 +21,31 @@ namespace RequestService.Core.Services
             _distanceCalculator = distanceCalculator;
         }
 
-        public async Task GetJobSummaries(string postCode, List<JobSummary> jobSummaries, CancellationToken cancellationToken)
+        public async Task<List<JobSummary>> AttachedDistanceToJobSummaries(string volunteerPostCode, List<JobSummary> jobSummaries, CancellationToken cancellationToken)
         {
             if (jobSummaries.Count == 0)
             {
-                return;
+                return null;
             }
 
             List<string> distinctPostCodes = jobSummaries.Select(d => d.PostCode).Distinct().ToList();
 
-            if (!distinctPostCodes.Contains(postCode))
+            if (!distinctPostCodes.Contains(volunteerPostCode))
             {
-                distinctPostCodes.Add(postCode);
+                distinctPostCodes.Add(volunteerPostCode);
             }
 
             var postcodeCoordinatesResponse = await _addressService.GetPostcodeCoordinatesAsync(distinctPostCodes, cancellationToken);
 
             if (postcodeCoordinatesResponse == null)
             {
-                return;
+                return null;
             }
 
-            var volunteerPostcodeCoordinates = postcodeCoordinatesResponse.PostcodeCoordinates.Where(w => w.Postcode == postCode).FirstOrDefault();
+            var volunteerPostcodeCoordinates = postcodeCoordinatesResponse.PostcodeCoordinates.Where(w => w.Postcode == volunteerPostCode).FirstOrDefault();
             if (volunteerPostcodeCoordinates == null)
             {
-                return;
+                return null;
             }
 
             foreach (JobSummary jobSummary in jobSummaries)
@@ -56,6 +56,7 @@ namespace RequestService.Core.Services
                     jobSummary.DistanceInMiles = _distanceCalculator.GetDistanceInMiles(volunteerPostcodeCoordinates.Longitude, volunteerPostcodeCoordinates.Latitude, jobPostcodeCoordinates.Longitude, jobPostcodeCoordinates.Latitude);
                 }
             }
+            return jobSummaries;
         }
     }
 }

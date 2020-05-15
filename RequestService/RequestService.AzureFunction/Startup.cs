@@ -78,7 +78,7 @@ namespace RequestService.AzureFunction
             builder.Services.AddMediatR(typeof(LogRequestHandler).Assembly);
             builder.Services.AddAutoMapper(typeof(AddressDetailsProfile).Assembly);
             builder.Services.AddTransient<IHttpClientWrapper, HttpClientWrapper>();
-            builder.Services.AddTransient<IUserService, Core.Services.UserService>();
+            builder.Services.AddTransient<IUserService, RequestService.Core.Services.UserService>();
             builder.Services.AddTransient<IAddressService, AddressService>();
             builder.Services.AddTransient<ICommunicationService, CommunicationService>();
             builder.Services.AddTransient<IRepository, Repository>();
@@ -98,7 +98,6 @@ namespace RequestService.AzureFunction
             ApplicationDbContext dbContext = new ApplicationDbContext(dbContextOptionsBuilder.Options);
 
             dbContext.Database.Migrate();
-            dbContext.PopulateLookupTables();
         }
 
         private void ConfigureDbContextOptionsBuilder(DbContextOptionsBuilder options, string connectionString)

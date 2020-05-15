@@ -36,8 +36,8 @@ namespace RequestService.Handlers
             {
                 return result;
             }
-            string postCode = userByIDResponse.User.PostalCode;
-            await _jobService.GetJobSummaries(postCode, jobSummaries, cancellationToken);
+            string volunteerPostCode = userByIDResponse.User.PostalCode;
+            jobSummaries = await _jobService.AttachedDistanceToJobSummaries(volunteerPostCode, jobSummaries, cancellationToken);
 
             if (jobSummaries.Count == 0)
             {

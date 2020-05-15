@@ -11,6 +11,7 @@ using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
+using RequestService.Core.Exceptions;
 
 namespace RequestService.AzureFunction
 {
@@ -35,6 +36,11 @@ namespace RequestService.AzureFunction
                 log.LogInformation("C# HTTP trigger function processed a request.");
                 GetJobsByFilterResponse response = await _mediator.Send(req); 
                 return new OkObjectResult(ResponseWrapper<GetJobsByFilterResponse, RequestServiceErrorCode>.CreateSuccessfulResponse(response));
+            }
+            catch(PostCodeException)
+            {
+                log.LogError($"{req.Postcode} is an invalid postcode");
+                return new ObjectResult(ResponseWrapper<GetJobsByFilterResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.ValidationError, "Invalid Postcode")) { StatusCode = StatusCodes.Status400BadRequest };
             }
             catch (Exception exc)
             {
