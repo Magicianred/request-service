@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netcoreapp2.1</TargetFramework>
@@ -16,8 +16,8 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="HelpMyStreet.Contracts" Version="1.1.105" />
-		<PackageReference Include="HelpMyStreet.Utils" Version="1.1.105" />
+		<PackageReference Include="HelpMyStreet.Contracts" Version="1.1.108" />
+		<PackageReference Include="HelpMyStreet.Utils" Version="1.1.108" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
 	</ItemGroup>
