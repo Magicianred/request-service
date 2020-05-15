@@ -21,10 +21,7 @@ namespace RequestService.Repo.EntityFramework.Entities
         public bool IsHealthCritical { get; set; }
 
         public virtual Request NewRequest { get; set; }
-        public virtual SupportActivity SupportActivity { get; set; }
-
-        public virtual JobStatus JobStatus { get; set; }
-
+        
         public virtual ICollection<RequestJobStatus> RequestJobStatus { get; set; }
     }
 }

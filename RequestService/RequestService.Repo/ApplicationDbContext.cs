@@ -25,107 +25,12 @@ namespace RequestService.Repo
             }
         }
 
-        public void PopulateLookupTables()
-        {
-            PopulateLookupSupportActivity();
-            PopulateJobStatus();
-        }
-
-        private void PopulateLookupSupportActivity()
-        {
-            if (SupportActivity.Count()==0)
-            { 
-                var supportActivities = new SupportActivity[]
-                {
-                    new SupportActivity
-                    {
-                        Value="Shopping"
-                    },
-                    new SupportActivity
-                    {
-                        Value="CollectingPrescriptions"
-                    },
-                    new SupportActivity
-                    {
-                        Value="Errands"
-                    },
-                    new SupportActivity
-                    {
-                        Value="MedicalAppointmentTransport"
-                    },
-                    new SupportActivity
-                    {
-                        Value="DogWalking"
-                    },
-                    new SupportActivity
-                    {
-                        Value="MealPreparation"
-                    },
-                    new SupportActivity
-                    {
-                        Value="PhoneCalls_Friendly"
-                    },
-                    new SupportActivity
-                    {
-                        Value="PhoneCalls_Anxious"
-                    },
-                    new SupportActivity
-                    {
-                        Value="HomeworkSupport"
-                    },
-                    new SupportActivity
-                    {
-                        Value="CheckingIn"
-                    },
-                    new SupportActivity
-                    {
-                        Value="Other"
-                    }
-                };
-                foreach (SupportActivity supportActivity in supportActivities)
-                {
-                    SupportActivity.Add(supportActivity);
-                }
-                this.SaveChanges();
-            }
-        }
-
-        private void PopulateJobStatus()
-        {
-            if (JobStatus.Count() == 0)
-            {
-                var jobstatuses = new JobStatus[]
-                {
-                    new JobStatus()
-                    {
-                        Value = "Open"
-                    },
-                    new JobStatus()
-                    {
-                        Value = "InProgress"
-                    },
-                    new JobStatus()
-                    {
-                        Value = "Done"
-                    }
-                };
-                foreach (JobStatus jobStatus in jobstatuses)
-                {
-                    JobStatus.Add(jobStatus);
-                }
-                this.SaveChanges();
-            }
-        }
-
-
         public virtual DbSet<Job> Job { get; set; }
-        public virtual DbSet<JobStatus> JobStatus { get; set; }
         public virtual DbSet<Person> Person { get; set; }
         public virtual DbSet<PersonalDetails> PersonalDetails { get; set; }
         public virtual DbSet<Request> Request { get; set; }
         public virtual DbSet<RequestJobStatus> RequestJobStatus { get; set; }
         public virtual DbSet<SupportActivities> SupportActivities { get; set; }
-        public virtual DbSet<SupportActivity> SupportActivity { get; set; }
         public virtual DbQuery<DailyReport> DailyReport { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -157,33 +62,6 @@ namespace RequestService.Repo
                     .HasForeignKey(d => d.RequestId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_NewRequest_NewRequestID");
-
-                entity.HasOne(d => d.SupportActivity)
-                    .WithMany(p => p.Job)
-                    .HasForeignKey(d => d.SupportActivityId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SupportActivity_SupportActivityID");
-
-                entity.HasOne(d => d.JobStatus)
-                    .WithMany(p => p.Job)
-                    .HasForeignKey(d => d.JobStatusId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Job_JobStatusID");
-
-            });
-
-            modelBuilder.Entity<JobStatus>(entity =>
-            {
-                entity.ToTable("JobStatus", "Lookup");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Value)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Person>(entity =>
@@ -334,26 +212,6 @@ namespace RequestService.Repo
                     .HasForeignKey(d => d.JobId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Job_JobID");
-
-                entity.HasOne(d => d.JobStatus)
-                    .WithMany(p => p.RequestJobStatus)
-                    .HasForeignKey(d => d.JobStatusId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_JobStatus_JobStatusID");
-            });
-
-            modelBuilder.Entity<SupportActivity>(entity =>
-            {
-                entity.ToTable("SupportActivity", "Lookup");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Value)
-                    .IsRequired()
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<SupportActivities>(entity =>

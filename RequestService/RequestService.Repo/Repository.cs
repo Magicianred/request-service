@@ -263,10 +263,12 @@ namespace RequestService.Repo
 
         public List<JobSummary> GetJobsAllocatedToUser(int volunteerUserID)
         {
+            byte jobStatusID_InProgress = (byte)HelpMyStreet.Utils.Enums.JobStatuses.InProgress;
+
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
                                     .Include(i => i.NewRequest)
                                     .Where(w => w.VolunteerUserId == volunteerUserID 
-                                                && w.JobStatus.Value == HelpMyStreet.Utils.Enums.JobStatuses.InProgress.ToString()
+                                                && w.JobStatusId == jobStatusID_InProgress
                                             ).ToList();
 
             return GetJobSummaries(jobSummaries);
@@ -275,9 +277,11 @@ namespace RequestService.Repo
 
         public List<JobSummary> GetOpenJobsSummaries()
         {
+            byte jobStatusID_Open = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Open;
+
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
                                     .Include(i => i.NewRequest)
-                                    .Where(w => w.JobStatus.Value == HelpMyStreet.Utils.Enums.JobStatuses.Open.ToString()
+                                    .Where(w => w.JobStatusId == jobStatusID_Open
                                             ).ToList();
             return GetJobSummaries(jobSummaries);
         }

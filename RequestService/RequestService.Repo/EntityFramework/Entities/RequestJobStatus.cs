@@ -13,6 +13,5 @@ namespace RequestService.Repo.EntityFramework.Entities
         public int? CreatedByUserId { get; set; }
 
         public virtual Job Job { get; set; }
-        public virtual JobStatus JobStatus { get; set; }
     }
 }

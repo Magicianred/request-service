@@ -98,7 +98,6 @@ namespace RequestService.AzureFunction
             ApplicationDbContext dbContext = new ApplicationDbContext(dbContextOptionsBuilder.Options);
 
             dbContext.Database.Migrate();
-            dbContext.PopulateLookupTables();
         }
 
         private void ConfigureDbContextOptionsBuilder(DbContextOptionsBuilder options, string connectionString)

@@ -9,6 +9,6 @@ namespace RequestService.Core.Services
 {
     public interface IJobService
     {
-        Task GetJobSummaries(string postCode, List<JobSummary> jobSummaries, CancellationToken cancellationToken);
+        Task<List<JobSummary>> AttachedDistanceToJobSummaries(string volunteerPostCode, List<JobSummary> jobSummaries, CancellationToken cancellationToken);
     }
 }
