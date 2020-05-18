@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Models;
+using System.Linq;
 
 namespace RequestService.Handlers
 {
@@ -46,7 +47,7 @@ namespace RequestService.Handlers
 
             result = new GetJobsAllocatedToUserResponse()
             {
-                JobSummaries = jobSummaries
+                JobSummaries = jobSummaries.OrderBy(a => a.DueDate).ThenByDescending(a=>a.IsHealthCritical).ToList()
             };
             return result;
         }

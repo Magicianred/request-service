@@ -62,7 +62,10 @@ namespace RequestService.Handlers
 
             result = new GetJobsByFilterResponse()
             {
-                JobSummaries = jobSummaries.Where(w => w.DistanceInMiles<=request.DistanceInMiles).ToList()
+                JobSummaries = jobSummaries
+                                    .Where(w => w.DistanceInMiles<=request.DistanceInMiles)
+                                    .OrderBy(a=>a.DistanceInMiles).ThenBy(a=>a.DueDate).ThenByDescending(a => a.IsHealthCritical)
+                                    .ToList()
             };
             return result;
         }
