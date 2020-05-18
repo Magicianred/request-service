@@ -24,10 +24,17 @@ namespace RequestService.Core.Services
             { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" }
         };
 
-        public static string BuildHelpRequestedEmail(PersonalDetailsDto requestorDetails, SupportActivityDTO supportActivity, string postcode)
+        public static string BuildHelpRequestedEmail(bool forRequestor, 
+            bool isHealthCritical, 
+            HelpMyStreet.Utils.Models.RequestPersonalDetails requestorDetails, 
+            HelpMyStreet.Utils.Enums.SupportActivities supportActivity, 
+            string postcode, 
+            string jobDetails,
+            string specialCommunicationNeeds,
+            string otherDetails)
         {
-            string onBehalf = requestorDetails.OnBehalfOfAnother ? "Yes" : "No";
-            string healthOrWellbeingConcern = requestorDetails.OnBehalfOfAnother ? "Yes" : "No";
+            string onBehalf = forRequestor ? "No" : "Yes";
+            string healthOrWellbeingConcern = isHealthCritical ? "Yes" : "No";
 
             string html = BuildHeader();
             html += BuildTitle("Help Requested");
@@ -59,21 +66,17 @@ namespace RequestService.Core.Services
                 $"</div>" +
             $"<div>&#xA0;</div><div style='text-align: left;'>" +
             $"<span style='font-size: 14px;'>Postcode : {postcode} &#xA0;</span><br>" +
-            $"<span style='font-size: 14px;'>First Name: {requestorDetails.RequestorFirstName} </span><br>" +
-            $"<span style='font-size: 14px;'>Last Name: {requestorDetails.RequestorLastName} </span><br>" +
-            $"<span style='font-size: 14px;'>Email Address: {requestorDetails.RequestorEmailAddress} </span><br>" +
-            $"<span style='font-size: 14px;'>Phone Number: {requestorDetails.RequestorPhoneNumber} </span><br>" +
+            $"<span style='font-size: 14px;'>First Name: {requestorDetails.FirstName} </span><br>" +
+            $"<span style='font-size: 14px;'>Last Name: {requestorDetails.LastName} </span><br>" +
+            $"<span style='font-size: 14px;'>Email Address: {requestorDetails.EmailAddress} </span><br>" +
+            $"<span style='font-size: 14px;'>Phone Number: {requestorDetails.MobileNumber} </span><br>" +
+            $"<span style='font-size: 14px;'>Alternative Number: {requestorDetails.OtherNumber} </span><br>" +
             $"<span style='font-size: 14px;'>On Behalf of someone: {onBehalf} </span><br>" +
-            $"<span style='font-size: 14px;'>Health or Wellbeing Concern: {healthOrWellbeingConcern} </span><br>" +
-            $"<span style='font-size: 14px;'>Further Details: {requestorDetails.FurtherDetails} </span><br>" +
-            $"<span style='font-size: 14px;'>Help needed for: </span><br>" +
-                 $"<ul>";
-            foreach (var activity in supportActivity.SupportActivities)
-            {
-                html += $"<li style='text-align: left;'><strong><span style='font-size: 14px;'>{_mappings[activity]}</span></strong></li>";
-            }
-
-            html += $"</ul>" +
+            $"<span style='font-size: 14px;'>Critical to Health or Wellbeing Concern: {healthOrWellbeingConcern} </span><br>" +
+            $"<span style='font-size: 14px;'>Further Details: {jobDetails} </span><br>" +
+            $"<span style='font-size: 14px;'>Communication Details: {specialCommunicationNeeds} </span><br>" +
+            $"<span style='font-size: 14px;'>Other Details: {otherDetails} </span><br>" +
+            $"<span style='font-size: 14px;'>Help needed for <strong><span style='font-size: 14px;'>{_mappings[supportActivity]}</span></strong> </span><br>" +
             $"</div>" +
             $"<div><br>" +
             $"<span style='font-size: 14px;'> So that you can co-ordinate your efforts, if this message has gone to more than one Street Champion," +
