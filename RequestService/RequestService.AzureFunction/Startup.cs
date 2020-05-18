@@ -75,7 +75,7 @@ namespace RequestService.AzureFunction
             connectionStringSettings.Bind(connectionStrings);
 
 
-            builder.Services.AddMediatR(typeof(LogRequestHandler).Assembly);
+            builder.Services.AddMediatR(typeof(PostNewRequestForHelpHandler).Assembly);
             builder.Services.AddAutoMapper(typeof(AddressDetailsProfile).Assembly);
             builder.Services.AddTransient<IHttpClientWrapper, HttpClientWrapper>();
             builder.Services.AddTransient<IUserService, RequestService.Core.Services.UserService>();
