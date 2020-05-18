@@ -24,17 +24,10 @@ namespace RequestService.Core.Services
             { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" }
         };
 
-        public static string BuildHelpRequestedEmail(bool forRequestor, 
-            bool isHealthCritical, 
-            HelpMyStreet.Utils.Models.RequestPersonalDetails requestorDetails, 
-            HelpMyStreet.Utils.Enums.SupportActivities supportActivity, 
-            string postcode, 
-            string jobDetails,
-            string specialCommunicationNeeds,
-            string otherDetails)
+        public static string BuildHelpRequestedEmail(EmailJobDTO emailJobDTO)
         {
-            string onBehalf = forRequestor ? "No" : "Yes";
-            string healthOrWellbeingConcern = isHealthCritical ? "Yes" : "No";
+            string onBehalf = emailJobDTO.OnBehalfOfSomeone ? "Yes" : "No";
+            string healthOrWellbeingConcern = emailJobDTO.IsHealthCritical ? "Yes" : "No";
 
             string html = BuildHeader();
             html += BuildTitle("Help Requested");
@@ -50,7 +43,7 @@ namespace RequestService.Core.Services
                 "<tbody><tr> <td align='left' style='font-size:0px;padding:15px 15px 15px 15px;word-break:break-word;'>" +
                 " <div style='font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:1.5;text-align:left;color:#000000;'>" +
                 $"<div><span style='font-size: 14px;'>" +
-                $"Hi. You’re receiving this email because you signed up as a Street Champion at HelpMyStreet.org. A request for help has come in for {postcode}. The details of the request are below.</span></div>" +
+                $"Hi. You’re receiving this email because you signed up as a Street Champion at HelpMyStreet.org. A request for help has come in for {emailJobDTO.PostCode}. The details of the request are below.</span></div>" +
                 $"<div>&#xA0;</div>" +
                 $"<div>" +
                 $"<span style='font-size: 14px;'>" +
@@ -65,18 +58,18 @@ namespace RequestService.Core.Services
                 $"</span>" +
                 $"</div>" +
             $"<div>&#xA0;</div><div style='text-align: left;'>" +
-            $"<span style='font-size: 14px;'>Postcode : {postcode} &#xA0;</span><br>" +
-            $"<span style='font-size: 14px;'>First Name: {requestorDetails.FirstName} </span><br>" +
-            $"<span style='font-size: 14px;'>Last Name: {requestorDetails.LastName} </span><br>" +
-            $"<span style='font-size: 14px;'>Email Address: {requestorDetails.EmailAddress} </span><br>" +
-            $"<span style='font-size: 14px;'>Phone Number: {requestorDetails.MobileNumber} </span><br>" +
-            $"<span style='font-size: 14px;'>Alternative Number: {requestorDetails.OtherNumber} </span><br>" +
+            $"<span style='font-size: 14px;'>Postcode : {emailJobDTO.PostCode} &#xA0;</span><br>" +
+            $"<span style='font-size: 14px;'>First Name: {emailJobDTO.Requestor.FirstName} </span><br>" +
+            $"<span style='font-size: 14px;'>Last Name: {emailJobDTO.Requestor.LastName} </span><br>" +
+            $"<span style='font-size: 14px;'>Email Address: {emailJobDTO.Requestor.EmailAddress} </span><br>" +
+            $"<span style='font-size: 14px;'>Phone Number: {emailJobDTO.Requestor.MobileNumber} </span><br>" +
+            $"<span style='font-size: 14px;'>Alternative Number: {emailJobDTO.Requestor.OtherNumber} </span><br>" +
             $"<span style='font-size: 14px;'>On Behalf of someone: {onBehalf} </span><br>" +
             $"<span style='font-size: 14px;'>Critical to Health or Wellbeing Concern: {healthOrWellbeingConcern} </span><br>" +
-            $"<span style='font-size: 14px;'>Further Details: {jobDetails} </span><br>" +
-            $"<span style='font-size: 14px;'>Communication Details: {specialCommunicationNeeds} </span><br>" +
-            $"<span style='font-size: 14px;'>Other Details: {otherDetails} </span><br>" +
-            $"<span style='font-size: 14px;'>Help needed for <strong><span style='font-size: 14px;'>{_mappings[supportActivity]}</span></strong> </span><br>" +
+            $"<span style='font-size: 14px;'>Help needed for <strong><span style='font-size: 14px;'>{_mappings[emailJobDTO.Activity]}</span></strong> </span><br>" +
+            $"<span style='font-size: 14px;'>Details: {emailJobDTO.OtherDetails} </span><br>" +
+            $"<span style='font-size: 14px;'>Further Details: {emailJobDTO.FurtherDetails} </span><br>" +
+            $"<span style='font-size: 14px;'>Communication Needs: {emailJobDTO.SpecialCommunicationNeeds} </span><br>" +
             $"</div>" +
             $"<div><br>" +
             $"<span style='font-size: 14px;'> So that you can co-ordinate your efforts, if this message has gone to more than one Street Champion," +

@@ -87,14 +87,7 @@ namespace RequestService.Handlers
                 EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, job, postcode);
 
                 bool commsSent = await SendEmailAsync(
-                  request.HelpRequest.ForRequestor
-                , job.HealthCritical
-                , postcode
-                , request.HelpRequest.Requestor
-                , job.SupportActivity
-                , job.Details
-                , request.HelpRequest.SpecialCommunicationNeeds
-                , request.HelpRequest.OtherDetails
+                    emailJob
                 , cancellationToken);
                 await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
             }
@@ -103,18 +96,13 @@ namespace RequestService.Handlers
             return response;
         }
 
+
+
         private async Task<bool> SendEmailAsync(
-            bool forRequestor, 
-            bool isHealthCritical, 
-            string postCode, 
-            HelpMyStreet.Utils.Models.RequestPersonalDetails requestorDetails, 
-            SupportActivities supportActivity,
-            string jobDetails,
-            string specialCommunicationNeeds,
-            string otherDetails,
+            EmailJobDTO emailJobDTO,
             CancellationToken cancellationToken)
         {
-            var champions = await _userService.GetChampionsByPostcode(postCode, cancellationToken);
+            var champions = await _userService.GetChampionsByPostcode(emailJobDTO.PostCode, cancellationToken);
 
             List<int> ChampionIds = champions.Users.Select(x => x.ID).ToList();
             List<int> ccList = new List<int>();
@@ -125,17 +113,17 @@ namespace RequestService.Handlers
                     Subject = "MANUAL ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
                     ToAddress = _applicationConfig.Value.ManualReferEmail,
                     ToName = _applicationConfig.Value.ManualReferName,
-                    BodyHTML = EmailBuilder.BuildHelpRequestedEmail(forRequestor, isHealthCritical, requestorDetails, supportActivity, postCode, jobDetails,specialCommunicationNeeds,otherDetails)
+                    BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO)
                 };
                 bool manualEmailSent = await _communicationService.SendEmail(request, cancellationToken);
 
-                if (!string.IsNullOrEmpty(requestorDetails.EmailAddress))
+                if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
                 {
                     SendEmailRequest confirmationNoChampion = new SendEmailRequest()
                     {
                         Subject = "Thank you for registering your request via HelpMyStreet.org",
-                        ToAddress = requestorDetails.EmailAddress,
-                        ToName = $"{requestorDetails.FirstName} {requestorDetails.LastName}",
+                        ToAddress = emailJobDTO.Requestor.EmailAddress,
+                        ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
                         BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(false)
                     };
                     await _communicationService.SendEmail(confirmationNoChampion, cancellationToken);
@@ -178,36 +166,29 @@ namespace RequestService.Handlers
                 },
                 Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
                 BodyText = $"Help Requested \r\n Hi {selectedChampion.UserPersonalDetails.FirstName} {selectedChampion.UserPersonalDetails.LastName}, \r\n " +
-                $"{requestorDetails.FirstName} {requestorDetails.LastName} has requested some help with {supportActivity.ToString()} \r\n" +
-                $"Here Are some details to get in touch with {requestorDetails.FirstName} {requestorDetails.LastName}" +
-                $"Email Address: {requestorDetails.EmailAddress} \r\n" +
-                $"Phone Number: {requestorDetails.MobileNumber} \r\n" +
-                $"Alternative Number: {requestorDetails.OtherNumber} \r\n" +
-                $"Further Details: {jobDetails} \r\n" +
-                $"On Behalf of Someone: {forRequestor} \r\n" +
-                $"Critical to Health or Wellbeing Concern: {isHealthCritical} \r\n" +
+                $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName} has requested some help with {emailJobDTO.Activity.ToString()} \r\n" +
+                $"Here Are some details to get in touch with {emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}" +
+                $"Email Address: {emailJobDTO.Requestor.EmailAddress} \r\n" +
+                $"Phone Number: {emailJobDTO.Requestor.MobileNumber} \r\n" +
+                $"Alternative Number: {emailJobDTO.Requestor.OtherNumber} \r\n" +
+                $"On Behalf of Someone: {emailJobDTO.OnBehalfOfSomeone} \r\n" +
+                $"Critical to Health or Wellbeing Concern: {emailJobDTO.IsHealthCritical} \r\n" +
+                $"Details: {emailJobDTO.OtherDetails} \r\n" +
+                $"Communication Needs: {emailJobDTO.SpecialCommunicationNeeds} \r\n" +
+                $"Further Details: {emailJobDTO.FurtherDetails} \r\n" +
                 $"Thank you \r\n" +
                 $"HelpMyStreet \r\n",
-                BodyHTML = EmailBuilder.BuildHelpRequestedEmail(
-                    forRequestor,
-                    isHealthCritical,
-                    requestorDetails, 
-                    supportActivity, 
-                    postCode,
-                    jobDetails,
-                    specialCommunicationNeeds,
-                    otherDetails
-                    )
+                BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO)
             };
 
             bool emailSent = await _communicationService.SendEmailToUsersAsync(emailRequest, cancellationToken);
-            if (!string.IsNullOrEmpty(requestorDetails.EmailAddress))
+            if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
             {
                 SendEmailRequest confimration = new SendEmailRequest()
                 {
                     Subject = "Thank you for registering your request via HelpMyStreet.org",
-                    ToAddress = requestorDetails.EmailAddress,
-                    ToName = $"{requestorDetails.FirstName} {requestorDetails.LastName}",
+                    ToAddress = emailJobDTO.Requestor.EmailAddress,
+                    ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
                     BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true)
                 };
 
