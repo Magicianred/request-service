@@ -19,11 +19,9 @@ namespace RequestService.Handlers
     public class PutUpdateJobStatusToOpenHandler : IRequestHandler<PutUpdateJobStatusToOpenRequest, PutUpdateJobStatusToOpenResponse>
     {
         private readonly IRepository _repository;
-        private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
-        public PutUpdateJobStatusToOpenHandler(IRepository repository, IOptionsSnapshot<ApplicationConfig> applicationConfig)
+        public PutUpdateJobStatusToOpenHandler(IRepository repository)
         {
             _repository = repository;
-            _applicationConfig = applicationConfig;
         }
 
         public async Task<PutUpdateJobStatusToOpenResponse> Handle(PutUpdateJobStatusToOpenRequest request, CancellationToken cancellationToken)

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Models;
+using System.Linq;
 
 namespace RequestService.Handlers
 {
@@ -36,8 +37,8 @@ namespace RequestService.Handlers
             {
                 return result;
             }
-            string postCode = userByIDResponse.User.PostalCode;
-            await _jobService.GetJobSummaries(postCode, jobSummaries, cancellationToken);
+            string volunteerPostCode = userByIDResponse.User.PostalCode;
+            jobSummaries = await _jobService.AttachedDistanceToJobSummaries(volunteerPostCode, jobSummaries, cancellationToken);
 
             if (jobSummaries.Count == 0)
             {
@@ -46,7 +47,7 @@ namespace RequestService.Handlers
 
             result = new GetJobsAllocatedToUserResponse()
             {
-                JobSummaries = jobSummaries
+                JobSummaries = jobSummaries.OrderBy(a => a.DueDate).ThenByDescending(a=>a.IsHealthCritical).ToList()
             };
             return result;
         }
