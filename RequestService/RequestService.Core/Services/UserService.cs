@@ -1,4 +1,5 @@
-﻿using Marvin.StreamExtensions;
+﻿using HelpMyStreet.Utils.Models;
+using Marvin.StreamExtensions;
 using Newtonsoft.Json;
 using RequestService.Core.Config;
 using RequestService.Core.Dto;
@@ -46,6 +47,19 @@ namespace RequestService.Core.Services
                 championsResponse = JsonConvert.DeserializeObject<GetChampionsByPostcodeResponse>(content);
             }
             return championsResponse;
+        }
+
+        public async Task<GetUserByIDResponse> GetUser(int userID, CancellationToken cancellationToken)
+        {
+            string path = $"api/GetUserByID?ID={userID}";
+            GetUserByIDResponse userIDResponse;
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.UserService, path, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync();
+                userIDResponse = JsonConvert.DeserializeObject<GetUserByIDResponse>(content);
+            }
+            return userIDResponse;
         }
     }
 }

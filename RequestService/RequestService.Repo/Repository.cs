@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using HelpMyStreet.Contracts.ReportService.Response;
+using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Models;
 using Microsoft.EntityFrameworkCore;
 using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
@@ -16,12 +18,10 @@ namespace RequestService.Repo
     public class Repository : IRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
 
-        public Repository(ApplicationDbContext context, IMapper mapper)
+        public Repository(ApplicationDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<string> GetRequestPostCodeAsync(int requestId, CancellationToken cancellationToken)
@@ -120,6 +120,241 @@ namespace RequestService.Repo
                     });
                 }
             }
+
+            return response;
+        }
+
+        private Person GetPersonFromPersonalDetails(RequestPersonalDetails requestPersonalDetails)
+        {
+            return new Person()
+            {
+                FirstName = requestPersonalDetails.FirstName,
+                LastName = requestPersonalDetails.LastName,
+                EmailAddress = requestPersonalDetails.EmailAddress,
+                AddressLine1 = requestPersonalDetails.Address.AddressLine1,
+                AddressLine2 = requestPersonalDetails.Address.AddressLine2,
+                AddressLine3 = requestPersonalDetails.Address.AddressLine3,
+                Locality = requestPersonalDetails.Address.Locality,
+                Postcode = requestPersonalDetails.Address.Postcode,
+                MobilePhone = requestPersonalDetails.MobileNumber,
+                OtherPhone = requestPersonalDetails.OtherNumber,
+            };
+        }
+
+        public async Task<int> NewHelpRequestAsync(PostNewRequestForHelpRequest postNewRequestForHelpRequest, Fulfillable fulfillable)
+        {
+            Person requester = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Requestor);
+            Person recipient;
+
+            if (postNewRequestForHelpRequest.HelpRequest.ForRequestor)
+            {
+                recipient = requester;
+            }
+            else
+            {
+                recipient = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Recipient);
+            }
+
+            _context.Person.Add(requester);
+            _context.Person.Add(recipient);
+
+            Request request = new Request()
+            {
+                ReadPrivacyNotice = postNewRequestForHelpRequest.HelpRequest.ReadPrivacyNotice,
+                SpecialCommunicationNeeds = postNewRequestForHelpRequest.HelpRequest.SpecialCommunicationNeeds,
+                AcceptedTerms = postNewRequestForHelpRequest.HelpRequest.AcceptedTerms,
+                OtherDetails = postNewRequestForHelpRequest.HelpRequest.OtherDetails,
+                PostCode = postNewRequestForHelpRequest.HelpRequest.Recipient.Address.Postcode,
+                ForRequestor = postNewRequestForHelpRequest.HelpRequest.ForRequestor,
+                PersonIdRecipientNavigation = recipient,
+                PersonIdRequesterNavigation = requester,
+                FulfillableStatus = (byte) fulfillable,
+                CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId
+            };
+
+            _context.Request.Add(request);
+            foreach(HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
+            {
+                EntityFramework.Entities.Job EFcoreJob = new EntityFramework.Entities.Job()
+                {
+                    NewRequest = request,
+                    Details = job.Details,
+                    IsHealthCritical = job.HealthCritical,
+                    SupportActivityId = (byte)job.SupportActivity,
+                    DueDate = DateTime.Now.AddDays(job.DueDays),
+                    JobStatusId = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Open
+                };
+                _context.Job.Add(EFcoreJob);
+                _context.RequestJobStatus.Add(new RequestJobStatus()
+                {
+                    DateCreated = DateTime.Now,
+                    JobStatusId = (byte) HelpMyStreet.Utils.Enums.JobStatuses.Open,
+                    Job = EFcoreJob
+                });
+            }
+            await _context.SaveChangesAsync();
+            return request.Id;
+
+        }
+
+        private void AddJobStatus(int jobID, int? createdByUserID, int? volunteerUserID, HelpMyStreet.Utils.Enums.JobStatuses jobStatus)
+        {
+            _context.RequestJobStatus.Add(new RequestJobStatus()
+            {
+                CreatedByUserId = createdByUserID,
+                VolunteerUserId = volunteerUserID,
+                JobId = jobID,
+                JobStatusId = (byte)jobStatus
+            });
+        }
+
+        public async Task<bool> UpdateJobStatusOpenAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
+        {
+            bool response = false;
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job != null)
+            {
+                job.JobStatusId = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Open;
+                job.VolunteerUserId = null;
+                AddJobStatus(jobID, createdByUserID, null, HelpMyStreet.Utils.Enums.JobStatuses.Open);
+                int result = await _context.SaveChangesAsync(cancellationToken);
+                if (result == 2)
+                {
+                    response = true;
+                }
+            }
+            return response;
+        }
+
+        public async Task<bool> UpdateJobStatusInProgressAsync(int jobID, int createdByUserID, int volunteerUserID, CancellationToken cancellationToken)
+        {
+            bool response = false;
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job != null)
+            {
+                job.JobStatusId = (byte)HelpMyStreet.Utils.Enums.JobStatuses.InProgress;
+                job.VolunteerUserId = volunteerUserID;
+                AddJobStatus(jobID, createdByUserID, volunteerUserID, HelpMyStreet.Utils.Enums.JobStatuses.InProgress);
+                int result = await _context.SaveChangesAsync(cancellationToken);
+                if (result == 2)
+                {
+                    response = true;
+                }
+            }
+            return response;
+        }
+
+        public async Task<bool> UpdateJobStatusDoneAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
+        {
+            bool response = false;
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job != null)
+            {
+                job.JobStatusId = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Done;
+                AddJobStatus(jobID, createdByUserID, null, HelpMyStreet.Utils.Enums.JobStatuses.InProgress);
+                int result = await _context.SaveChangesAsync(cancellationToken);
+                if (result == 2)
+                {
+                    response = true;
+                }
+            }
+            return response;
+        }
+
+        public List<JobSummary> GetJobsAllocatedToUser(int volunteerUserID)
+        {
+            byte jobStatusID_InProgress = (byte)HelpMyStreet.Utils.Enums.JobStatuses.InProgress;
+
+            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.NewRequest)
+                                    .Where(w => w.VolunteerUserId == volunteerUserID 
+                                                && w.JobStatusId == jobStatusID_InProgress
+                                            ).ToList();
+
+            return GetJobSummaries(jobSummaries);
+            
+        }
+
+        public List<JobSummary> GetOpenJobsSummaries()
+        {
+            byte jobStatusID_Open = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Open;
+
+            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.NewRequest)
+                                    .Where(w => w.JobStatusId == jobStatusID_Open
+                                            ).ToList();
+            return GetJobSummaries(jobSummaries);
+        }
+
+        public List<JobSummary> GetJobSummaries(List<EntityFramework.Entities.Job> jobs)
+        {
+            List<JobSummary> response = new List<JobSummary>();
+            foreach (EntityFramework.Entities.Job j in jobs)
+            {
+                response.Add(new JobSummary()
+                {
+                    IsHealthCritical = j.IsHealthCritical,
+                    DueDate = j.DueDate,
+                    Details = j.Details,
+                    JobID = j.Id,
+                    VolunteerUserID = j.VolunteerUserId,
+                    JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)j.JobStatusId,
+                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)j.SupportActivityId,
+                    PostCode = j.NewRequest.PostCode
+                });
+            }
+            return response;
+        }
+
+        private RequestPersonalDetails GetPerson(Person person)
+        {
+            return new RequestPersonalDetails()
+            {
+                FirstName = person.FirstName,
+                LastName = person.LastName,
+                EmailAddress = person.EmailAddress,
+                MobileNumber = person.MobilePhone,
+                OtherNumber = person.OtherPhone,
+                Address = new Address()
+                {
+                    AddressLine1 = person.AddressLine1,
+                    AddressLine2 = person.AddressLine2,
+                    AddressLine3 = person.AddressLine3,
+                    Locality = person.Locality,
+                    Postcode = person.Postcode
+                }
+            };
+        }
+
+        public GetJobDetailsResponse GetJobDetails(int jobID)
+        {
+            GetJobDetailsResponse response = new GetJobDetailsResponse();
+            var efJob = _context.Job
+                        .Include(i => i.NewRequest)
+                        .ThenInclude(i => i.PersonIdRecipientNavigation)
+                        .Include(i => i.NewRequest)
+                        .ThenInclude(i=> i.PersonIdRequesterNavigation)
+                        .Where(w => w.Id == jobID).FirstOrDefault();
+
+            if(efJob == null)
+            {
+                return response;
+            }
+
+            response = new GetJobDetailsResponse()
+            {
+                OtherDetails = efJob.NewRequest.OtherDetails,
+                SpecialCommunicationNeeds = efJob.NewRequest.SpecialCommunicationNeeds,
+                Recipient = GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),
+                Requestor = GetPerson(efJob.NewRequest.PersonIdRequesterNavigation),
+                Details = efJob.Details,
+                HealthCritical = efJob.IsHealthCritical,
+                JobID = efJob.Id,
+                VolunteerUserID = efJob.VolunteerUserId,
+                JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)efJob.JobStatusId,
+                SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
+                DueDate= efJob.DueDate
+            };
 
             return response;
         }
