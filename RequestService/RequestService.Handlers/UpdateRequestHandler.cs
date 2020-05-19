@@ -31,7 +31,35 @@ namespace RequestService.Handlers
 
         public async Task<Unit> Handle(UpdateRequestRequest request, CancellationToken cancellationToken)
         {
-           var personalDetails =  await UpdatePersonalDetailsAsync(request, cancellationToken);
+            SendEmailRequest testrequest = new SendEmailRequest()
+            {
+                Subject = $"Help Needed in your Area - {DateTime.Now.ToString("dd/MM/yy")}",
+                ToAddress = "usmaan@factor-50.co.uk",
+                ToName = "usmaan",
+                BodyHTML = EmailBuilder.BuildDailyDigestEmail(new List<OpenJobRequestDTO>
+                {
+                    new OpenJobRequestDTO
+                    {
+                        Distance = 12.3M,
+                        DueDate = DateTime.Now,
+                        IsCritical = true,
+                        Postcode = "DE3 9GU",
+                        SupportActivity = SupportActivities.CheckingIn
+                    },
+                       new OpenJobRequestDTO
+                    {
+                        Distance = 12.3M,
+                        DueDate = DateTime.Now,
+                        IsCritical = false,
+                        Postcode = "DE3 9GU",
+                        SupportActivity = SupportActivities.DogWalking
+                    }
+                })
+            };
+            bool manualEmailSent = await _communicationService.SendEmail(testrequest, cancellationToken);
+
+
+            var personalDetails =  await UpdatePersonalDetailsAsync(request, cancellationToken);
 
            var supportDetails = await UpdateSupportActivitiesAsync(request.RequestID, request.SupportActivitiesRequired.SupportActivities, cancellationToken);
 

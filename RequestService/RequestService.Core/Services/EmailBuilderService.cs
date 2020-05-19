@@ -151,6 +151,72 @@ namespace RequestService.Core.Services
             return html;
         }
 
+        public static string BuildDailyDigestEmail(List<OpenJobRequestDTO> jobs)
+        {
+            string html = BuildHeader();
+            html += BuildTitle($"Help Needed in your Area - {DateTime.Now.ToString("dd/MM/yy")}");
+
+            html += "<table align='center' border='0' cellpadding='0' cellspacing='0' class='' style='width:600px;' width='600' > " +
+                "<tr> <td style='line-height:0px;font-size:0px;mso-line-height-rule:exactly;'> <![endif]--> " +
+                "<div style='background:#FFFFFF;background-color:#FFFFFF;Margin:0px auto;max-width:600px;'> <table align='center' border='0' cellpadding='0'" +
+                " cellspacing='0' role='presentation' style='background:#FFFFFF;background-color:#FFFFFF;width:100%;'>" +
+                " <tbody> <tr> <td style='direction:ltr;font-size:0px;padding:9px 0px 9px 0px;text-align:center;vertical-align:top;'> <!--[if mso | IE]>" +
+                " <table role='presentation' border='0' cellpadding='0' cellspacing='0'> <tr> <td class='' style='vertical-align:top;width:600px;' >" +
+                " <![endif]--> <div class='mj-column-per-100 outlook-group-fix' style='font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;'>" +
+                " <table border='0' cellpadding='0' cellspacing='0' role='presentation' style='vertical-align:top;' width='100%'> " +
+                "<tbody><tr> <td align='left' style='font-size:0px;padding:15px 15px 15px 15px;word-break:break-word;'>" +
+                " <div style='font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:1.5;text-align:left;color:#000000;'>" +
+                $"<div><span style='font-size: 14px;'>" +
+                $"The following help is needed near you:</span></div>" +
+
+            $"<div>&#xA0;</div><div style='text-align: left;'>" +
+             $"<ul>";
+            foreach (var job in jobs)
+            {
+                html += $"<li style='text-align: left;'><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance} miles away) - Due {job.DueDate.ToString("dd/MM/yy")}";
+                if (job.IsCritical)
+                {
+                    html += "<strong> - CRITICAL </strong>";
+                }
+                 html += "</span> </li>";
+            }
+
+            html += $"</ul>" +
+            $"</div>" +
+            $"<div><br>" +
+            $"<span style='font-size: 14px;'> " +
+            $"Please log in to your account on <a href='https://www.helpmystreet.org/'>helpmystreet.org</a> and visit the “Open Requests” tab on your profile to see more details of these requests and accept any that you can help with." +
+            $"</span>" +
+            $"</div>" +
+             $"<div><br>" +
+            $"<span style='font-size: 14px;'>" +
+            $"Note: if you’re not yet verified, then you’ll need to do that before you can accept requests. It only takes a few minutes though – and helps to keep everyone safe. Find out more and start the process by logging in and visiting your “My Profile” tab." +
+            $" </span>" +
+            $"</div>" +
+            $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"Thanks!</span></div> " +
+            $"</div> " +
+               $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"Best regards,</span></div> " +
+            $"</div> " +
+                 $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"The HelpMyStreet Team</span></div> " +
+            $"</div> " +
+                      $"<div>" +
+            $"<span style='font-size: 12px;'><br>" +
+            $"if you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span></div> " +
+            $"</div> " +
+            $"</td> </tr> </tbody></table> </div> " +
+            $"<!--[if mso | IE]> </td> </tr> </table> <![endif]--> </td> </tr> </tbody> " +
+            $"</table> </div> <!--[if mso | IE]> </td> </tr> </table> <![endif]-->" +
+            $" </div> </body></html>";
+
+            return html;
+        }
+
 
         private static string BuildTitle(string title)
         {
