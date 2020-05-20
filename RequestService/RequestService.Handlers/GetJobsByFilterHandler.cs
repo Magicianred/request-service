@@ -50,8 +50,11 @@ namespace RequestService.Handlers
             }
         
 
-            GetJobsByFilterResponse result = new GetJobsByFilterResponse();
+            GetJobsByFilterResponse result = new GetJobsByFilterResponse() { JobSummaries = new List<JobSummary>() };
             List<JobSummary> jobSummaries = _repository.GetOpenJobsSummaries();
+
+            if (jobSummaries.Count == 0)
+                return result;
 
             jobSummaries = await _jobService.AttachedDistanceToJobSummaries(request.Postcode, jobSummaries, cancellationToken);
 
