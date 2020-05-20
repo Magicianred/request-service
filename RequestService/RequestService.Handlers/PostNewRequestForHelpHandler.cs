@@ -168,6 +168,7 @@ namespace RequestService.Handlers
                 BodyText = $"Help Requested \r\n Hi {selectedChampion.UserPersonalDetails.FirstName} {selectedChampion.UserPersonalDetails.LastName}, \r\n " +
                 $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName} has requested some help with {emailJobDTO.Activity.ToString()} \r\n" +
                 $"Here Are some details to get in touch with {emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}" +
+                $"Due Date: {emailJobDTO.DueDate} \r\n" +
                 $"Email Address: {emailJobDTO.Requestor.EmailAddress} \r\n" +
                 $"Phone Number: {emailJobDTO.Requestor.MobileNumber} \r\n" +
                 $"Alternative Number: {emailJobDTO.Requestor.OtherNumber} \r\n" +

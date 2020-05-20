@@ -67,6 +67,7 @@ namespace RequestService.Core.Services
             $"<span style='font-size: 14px;'>On Behalf of someone: {onBehalf} </span><br>" +
             $"<span style='font-size: 14px;'>Critical to Health or Wellbeing Concern: {healthOrWellbeingConcern} </span><br>" +
             $"<span style='font-size: 14px;'>Help needed for <strong><span style='font-size: 14px;'>{_mappings[emailJobDTO.Activity]}</span></strong> </span><br>" +
+            $"<span style='font-size: 14px;'>Due Date: {emailJobDTO.DueDate} </span><br>" +
             $"<span style='font-size: 14px;'>Details: {emailJobDTO.OtherDetails} </span><br>" +
             $"<span style='font-size: 14px;'>Further Details: {emailJobDTO.FurtherDetails} </span><br>" +
             $"<span style='font-size: 14px;'>Communication Needs: {emailJobDTO.SpecialCommunicationNeeds} </span><br>" +
