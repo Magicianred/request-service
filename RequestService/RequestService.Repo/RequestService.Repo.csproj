@@ -7,6 +7,7 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="9.0.0" />
 		<PackageReference Include="HelpMyStreet.Contracts" Version="1.1.112" />
+		<PackageReference Include="HelpMyStreet.PostcodeCoordinates.EF" Version="1.1.113" />
 		<PackageReference Include="HelpMyStreet.Utils" Version="1.1.112" />
 		<PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.4.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
