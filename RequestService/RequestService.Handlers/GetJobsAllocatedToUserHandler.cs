@@ -29,8 +29,11 @@ namespace RequestService.Handlers
 
         public async Task<GetJobsAllocatedToUserResponse> Handle(GetJobsAllocatedToUserRequest request, CancellationToken cancellationToken)
         {
-            GetJobsAllocatedToUserResponse result = new GetJobsAllocatedToUserResponse();
+            GetJobsAllocatedToUserResponse result = new GetJobsAllocatedToUserResponse() { JobSummaries = new List<JobSummary>() };
             List<JobSummary> jobSummaries = _repository.GetJobsAllocatedToUser(request.VolunteerUserID);
+
+            if (jobSummaries.Count == 0) 
+                return result;
 
             GetUserByIDResponse userByIDResponse = await _userService.GetUser(request.VolunteerUserID, cancellationToken);
             if (userByIDResponse == null || userByIDResponse.User == null)

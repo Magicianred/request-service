@@ -300,7 +300,9 @@ namespace RequestService.Repo
                     VolunteerUserID = j.VolunteerUserId,
                     JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)j.JobStatusId,
                     SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)j.SupportActivityId,
-                    PostCode = j.NewRequest.PostCode
+                    PostCode = j.NewRequest.PostCode,
+                    OtherDetails = j.NewRequest.OtherDetails,
+                    SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds
                 });
             }
             return response;
