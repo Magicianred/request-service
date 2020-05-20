@@ -15,6 +15,7 @@ namespace RequestService.Core.Dto
         public string FurtherDetails { get; set; }
         public string SpecialCommunicationNeeds { get; set; }
         public string OtherDetails { get; set; }
+        public string DueDate { get; set; }
         public HelpMyStreet.Utils.Models.RequestPersonalDetails Requestor { get; set; }
 
         public static EmailJobDTO GetEmailJobDTO(PostNewRequestForHelpRequest request, HelpMyStreet.Utils.Models.Job job, string postCode)
@@ -28,7 +29,8 @@ namespace RequestService.Core.Dto
                 Activity = job.SupportActivity,
                 Requestor = request.HelpRequest.Requestor,
                 SpecialCommunicationNeeds = request.HelpRequest.SpecialCommunicationNeeds,
-                FurtherDetails = request.HelpRequest.OtherDetails
+                FurtherDetails = request.HelpRequest.OtherDetails,
+                DueDate = DateTime.Now.AddDays(job.DueDays).ToString("dd/MM/yyyy")
             };
         }
     }
