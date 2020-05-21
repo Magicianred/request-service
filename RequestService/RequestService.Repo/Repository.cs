@@ -367,7 +367,8 @@ namespace RequestService.Repo
                 VolunteerUserID = efJob.VolunteerUserId,
                 JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)efJob.JobStatusId,
                 SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
-                DueDate= efJob.DueDate
+                DueDate= efJob.DueDate,
+                ForRequestor = efJob.NewRequest.ForRequestor.Value
             };
 
             return response;
