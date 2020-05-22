@@ -12,9 +12,8 @@ namespace RequestService.Core.Services
     {
         Task<int> GetChampionCountByPostcode(string postcode, CancellationToken cancellationToken);
         Task<GetChampionsByPostcodeResponse> GetChampionsByPostcode(string postcode, CancellationToken cancellationToken);
-
         Task<GetUserByIDResponse> GetUser(int userID, CancellationToken cancellationToken);
-
+        Task<GetHelpersByPostcodeResponse> GetHelpersByPostCodeAsync(string postcode, CancellationToken cancellationToken);
     }
 
 }

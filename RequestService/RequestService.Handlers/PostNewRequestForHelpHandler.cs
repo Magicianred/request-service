@@ -103,6 +103,7 @@ namespace RequestService.Handlers
             CancellationToken cancellationToken)
         {
             var champions = await _userService.GetChampionsByPostcode(emailJobDTO.PostCode, cancellationToken);
+            var helpers = await _userService.GetHelpersByPostCodeAsync(emailJobDTO.PostCode, cancellationToken);
 
             List<int> ChampionIds = champions.Users.Select(x => x.ID).ToList();
             List<int> ccList = new List<int>();

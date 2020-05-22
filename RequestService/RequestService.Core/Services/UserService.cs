@@ -49,6 +49,19 @@ namespace RequestService.Core.Services
             return championsResponse;
         }
 
+        public async Task<GetHelpersByPostcodeResponse> GetHelpersByPostCodeAsync(string postcode, CancellationToken cancellationToken)
+        {
+            string path = $"api/GetHelpersByPostCode?postcode={postcode}";
+            GetHelpersByPostcodeResponse helpersResponse;
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.UserService, path, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync();
+                helpersResponse = JsonConvert.DeserializeObject<GetHelpersByPostcodeResponse>(content);
+            }
+            return helpersResponse;
+        }
+
         public async Task<GetUserByIDResponse> GetUser(int userID, CancellationToken cancellationToken)
         {
             string path = $"api/GetUserByID?ID={userID}";
