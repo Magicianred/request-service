@@ -5,5 +5,6 @@
 
         public string ManualReferEmail { get; set; }
         public string ManualReferName { get; set; }
+        public double DistanceInMilesForDailyDigest { get; set; }
     }
 }

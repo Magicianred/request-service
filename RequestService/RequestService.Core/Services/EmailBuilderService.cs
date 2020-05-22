@@ -171,7 +171,7 @@ namespace RequestService.Core.Services
              $"<ul>";
             foreach (var job in jobs)
             {
-                html += $"<li style='text-align: left;'><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance} miles away) - Due {job.DueDate.ToString("dd/MM/yy")}";
+                html += $"<li style='text-align: left;'><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.DistanceInMiles} miles away) - Due {job.DueDate.ToString("dd/MM/yy")}";
                 if (job.IsCritical)
                 {
                     html += "<strong> - CRITICAL </strong>";
