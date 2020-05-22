@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq;
+using HelpMyStreet.PostcodeCoordinates.EF.Extensions;
 
 namespace RequestService.Repo
 {
@@ -230,7 +231,10 @@ namespace RequestService.Repo
                     .HasForeignKey(d => d.RequestId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SupportActivities_RequestID");
-            });            
+            });
+
+            modelBuilder.SetupPostcodeCoordinateTables();
+            modelBuilder.SetupPostcodeCoordinateDefaultIndexes();
         }
     }
 }
