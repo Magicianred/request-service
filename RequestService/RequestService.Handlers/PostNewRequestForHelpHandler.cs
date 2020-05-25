@@ -58,9 +58,8 @@ namespace RequestService.Handlers
             CopyRequestorAsRecipient(request);
             string postcode = request.HelpRequest.Recipient.Address.Postcode;
 
-         //   var postcodeValid = await _addressService.IsValidPostcode(postcode, cancellationToken);
+            var postcodeValid = await _addressService.IsValidPostcode(postcode, cancellationToken);
 
-            var postcodeValid = true;
             if (!postcodeValid || postcode.Length > 10)
             {
                 return new PostNewRequestForHelpResponse

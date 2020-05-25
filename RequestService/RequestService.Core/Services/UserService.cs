@@ -63,7 +63,6 @@ namespace RequestService.Core.Services
                 }
             };
 
-            string json = JsonConvert.SerializeObject(request);
             using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.UserService, path, request, cancellationToken).ConfigureAwait(false))
             {
                 response.EnsureSuccessStatusCode();
