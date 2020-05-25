@@ -18,6 +18,7 @@ namespace RequestService.Core.Dto
         public bool IsStreetChampionOfPostcode { get; set; }
         public bool IsVerified { get; set; }
         public List<SupportActivities> SupportedActivites { get; set; }
+        public double DistanceFromPostcode { get; set; }
 
     }
 

@@ -25,7 +25,7 @@ namespace RequestService.Core.Services
         };
 
 
-        public static string BuildHelpRequestedEmail(EmailJobDTO emailJobDTO)
+        public static string BuildHelpRequestedEmail(EmailJobDTO emailJobDTO, string baseUrl)
         {
             string html = BuildHeader();
             html += BuildTitle("Help Requested");
@@ -36,11 +36,11 @@ namespace RequestService.Core.Services
             string sectionTwo = "";
             if (emailJobDTO.IsStreetChampionOfPostcode)
             {
-                sectionTwo = "As Street Champion for this postcode, it would be great if you could help to ensure that someone else responds to this request, even if you aren’t able to. You can find the contact details of other Street Champions and helpers that cover your postcodes in your <a href='https://www.helpmystreet.org/account/streets'>My Streets page</a>.";
+                sectionTwo = $"As Street Champion for this postcode, it would be great if you could help to ensure that someone else responds to this request, even if you aren’t able to. You can find the contact details of other Street Champions and helpers that cover your postcodes in your <a href='{baseUrl}/account/streets'>My Streets page</a>.";
             }
             string sectionThree = "";
             if (!emailJobDTO.IsVerified) {
-                sectionThree =  "Note: As you’re not yet verified, you’ll need to do that before you can accept requests or see more details. It only takes a few minutes though – and helps to keep everyone safe. Find out more and start the process from your <a href='https://www.helpmystreet.org/account/profile'>My Profile page</a>.";
+                sectionThree =  $"Note: As you’re not yet verified, you’ll need to do that before you can accept requests or see more details. It only takes a few minutes though – and helps to keep everyone safe. Find out more and start the process from your <a href='{baseUrl}/account/profile'>My Profile page</a>.";
             }
             
                                
@@ -65,7 +65,7 @@ namespace RequestService.Core.Services
                 $"</div> " +
                 $"<div>&#xA0;</div><div style='text-align: left;'>" +
                 $"<ul>" + 
-                $"<li style='text-align: left;'><span style='font-size: 14px;'><strong>{_mappings[emailJobDTO.Activity]}</strong> in {emailJobDTO.PostCode} - Due {emailJobDTO.DueDate}";
+                $"<li style='text-align: left;'><span style='font-size: 14px;'><strong>{_mappings[emailJobDTO.Activity]}</strong> in {emailJobDTO.PostCode} ({emailJobDTO.DistanceFromPostcode.ToString("N1")} miles away) - Due {emailJobDTO.DueDate}";
                 if (emailJobDTO.IsHealthCritical)
                 {
                     html += "<strong> - CRITICAL </strong>";
@@ -74,14 +74,14 @@ namespace RequestService.Core.Services
              $"</ul>" +
             $"</div>" +
                 $"<div>" +
-                $"<span style='font-size: 14px;'>Please visit your <a href='https://www.helpmystreet.org/account/open-requests?j={emailJobDTO.EncodedJobID}' >Open Requests</a> page to view more details of the request and accept it if you’re able to help. " +
+                $"<span style='font-size: 14px;'>Please visit your <a href='{baseUrl}/account/open-requests?j={emailJobDTO.EncodedJobID}' >Open Requests</a> page to view more details of the request and accept it if you’re able to help. " +
                 $"</span>" +                
                 $"</div><br>" +
 
 
                 $"<div style='margin:15px 0px 30px 0px;'>" +
                 $"<span>" +
-                $"<a style='font-size: 18px; background-color:#25ac10; padding: 13px 40px; border-radius:32px; border:2px solid #25ac10; font-weight:bold; color:#FFFFFF; text-decoration:none;' href='https://www.helpmystreet.org/account/open-requests?j={emailJobDTO.EncodedJobID}'> Open Requests </a>" +
+                $"<a style='font-size: 18px; background-color:#25ac10; padding: 13px 40px; border-radius:32px; border:2px solid #25ac10; font-weight:bold; color:#FFFFFF; text-decoration:none;' href='{baseUrl}/account/open-requests?j={emailJobDTO.EncodedJobID}'> Open Requests </a>" +
                 $"</span>" +
                 $"</div>" +
 

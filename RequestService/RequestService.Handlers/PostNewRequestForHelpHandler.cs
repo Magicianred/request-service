@@ -107,7 +107,7 @@ namespace RequestService.Handlers
                     ToAddress = _applicationConfig.Value.ManualReferEmail,
                     ToName = _applicationConfig.Value.ManualReferName,
                     Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
-                    BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO)
+                    BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
                 };
                  await _communicationService.SendEmail(emailRequest, cancellationToken);
             }
@@ -117,12 +117,14 @@ namespace RequestService.Handlers
             {
                 emailJobDTO.IsVerified = user.IsVerified;
                 emailJobDTO.IsStreetChampionOfPostcode = user.IsStreetChampionOfPostcode;
+                emailJobDTO.DistanceFromPostcode = user.DistanceFromPostcode;
+
                 SendEmailRequest emailRequest = new SendEmailRequest
                 {
                     ToAddress = user.Email,
                     ToName = user.DisplayName,
                     Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",                    
-                    BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO)
+                    BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
                 };
                 emailsSent.Add(await _communicationService.SendEmail(emailRequest, cancellationToken));          
             };

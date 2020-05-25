@@ -16,7 +16,7 @@ namespace RequestService.Core.Dto
         public HelpMyStreet.Utils.Models.RequestPersonalDetails Requestor { get; set; }
         public bool IsStreetChampionOfPostcode { get; set; }
         public bool IsVerified { get; set; }
-
+        public double DistanceFromPostcode { get; set; }
         public string EncodedJobID { get; set; }
   
 
