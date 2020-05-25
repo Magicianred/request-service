@@ -1,4 +1,5 @@
-﻿using HelpMyStreet.Utils.Models;
+﻿using HelpMyStreet.Utils.Enums;
+using HelpMyStreet.Utils.Models;
 using Marvin.StreamExtensions;
 using Newtonsoft.Json;
 using RequestService.Core.Config;
@@ -47,6 +48,29 @@ namespace RequestService.Core.Services
                 championsResponse = JsonConvert.DeserializeObject<GetChampionsByPostcodeResponse>(content);
             }
             return championsResponse;
+        }
+
+        public async Task<GetHelpersByPostcodeAndTaskTypeResponse> GetHelpersByPostcodeAndTaskType(string postcode, List<SupportActivities> activities, CancellationToken cancellationToken)
+        {
+            string path = $"api/GetHelpersByPostcodeAndTaskType";
+            GetHelpersByPostcodeAndTaskTypeResponse helperResponse;
+            GetHelpersByPostcodeAndTaskTypeRequest request = new GetHelpersByPostcodeAndTaskTypeRequest
+            {
+                Postcode = postcode,
+                RequestedTasks = new TasksRequested
+                {
+                    SupportActivities = activities
+                }
+            };
+
+            string json = JsonConvert.SerializeObject(request);
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.UserService, path, request, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync();
+                helperResponse = JsonConvert.DeserializeObject<GetHelpersByPostcodeAndTaskTypeResponse>(content);
+            }
+            return helperResponse;
         }
 
         public async Task<GetUserByIDResponse> GetUser(int userID, CancellationToken cancellationToken)
