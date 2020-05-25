@@ -109,7 +109,7 @@ namespace RequestService.Handlers
                     Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
                     BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO)
                 };
-                return await _communicationService.SendEmail(emailRequest, cancellationToken);
+                 await _communicationService.SendEmail(emailRequest, cancellationToken);
             }
 
             List<bool> emailsSent = new List<bool>();
