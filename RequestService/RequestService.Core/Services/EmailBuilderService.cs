@@ -36,7 +36,7 @@ namespace RequestService.Core.Services
             string sectionTwo = "";
             if (emailJobDTO.IsStreetChampionOfPostcode)
             {
-                sectionTwo = $"As Street Champion for this postcode, it would be great if you could help to ensure that someone else responds to this request, even if you aren’t able to. You can find the contact details of other Street Champions and helpers that cover your postcodes in your <a href='{baseUrl}/account/streets'>My Streets page</a>.";
+                sectionTwo = $"As Street Champion for this postcode, it would be great if you could help to ensure that someone responds to the request, even if you aren't able to do so yourself. You can find the contact details of other Street Champions and helpers that cover your postcodes in your <a href='{baseUrl}/account/streets'>My Streets page</a>.";
             }
             string sectionThree = "";
             if (!emailJobDTO.IsVerified) {
@@ -56,7 +56,7 @@ namespace RequestService.Core.Services
                 "<tbody><tr> <td align='left' style='font-size:0px;padding:15px 15px 15px 15px;word-break:break-word;'>" +
                 " <div style='font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:1.5;text-align:left;color:#000000;'>" +
                 $"<div><span style='font-size: 14px;'>" +
-                $"Hi. You’re receiving this email because you signed up as a Volunteer at HelpMyStreet.org.</span></div>" +
+                $"Hi. You’re receiving this email because you signed up as a Volunteer at <a href='{baseUrl}'>HelpMyStreet.org</a>.</span></div>" +
                 $"<div>&#xA0;</div>" +
                 $"<div>" +
                 $"<span style='font-size: 14px;'>" +
@@ -79,40 +79,39 @@ namespace RequestService.Core.Services
                 $"</div><br>" +
 
 
-                $"<div style='margin:15px 0px 30px 0px;'>" +
+                $"<div style='margin:15px 0px 15px 0px;'>" +
                 $"<span>" +
                 $"<a style='font-size: 18px; background-color:#25ac10; padding: 13px 40px; border-radius:32px; border:2px solid #25ac10; font-weight:bold; color:#FFFFFF; text-decoration:none;' href='{baseUrl}/account/open-requests?j={emailJobDTO.EncodedJobID}'> Open Requests </a>" +
                 $"</span>" +
                 $"</div>" +
 
                 $"<div>" +
-                $"<span style='font-size: 14px;'>" +
+                $"<span style='font-size: 14px;'><br>" +
                 $"{sectionTwo}" + 
                 $"</span>" +
                 $"</div>" +
 
                 $"<div>" +
-                $"<span style='font-size: 14px;'>" +
+                $"<span style='font-size: 14px;'><br>" +
                 $"{sectionThree}" +
                 $"</span>" +
                 $"</div>" +
 
             $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
-            $"Thanks so much!</span></div> " +
-            $"</div> " +
+            $"Thanks so much!</span></div> " +          
                  $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
-            $"The HelpMyStreet Team</span></div> " +
-            $"</div> " +
-
-                 $"<div>" +
+            $"The HelpMyStreet Team</span></div> " +   
+            $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
             $"P.S If you visit the site and this request is no longer visible, it’s probably been accepted by another user. Take a look around to see if there is anything else you can help with or keep an eye open for future notifications.</span></div> " +
             $"</div> " +
-                      $"<div>" +
+            $"<div>" +
             $"<span style='font-size: 12px;'><br>" +
-            $"if you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span></div> " +       
+            $"If you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org." +
+            $"</span>" +
+            $"</div> " +
             $"</div> " +
             $"</td> </tr> </tbody></table> </div> " +
             $"<!--[if mso | IE]> </td> </tr> </table> <![endif]--> </td> </tr> </tbody> " +
@@ -148,8 +147,7 @@ namespace RequestService.Core.Services
                 $"<div>" +
                 $"<span style='font-size: 14px;'>" +
                 $"{body}" + 
-                $"</span></div>" +
-                $"<div>&#xA0;</div>" +    
+                $"</span></div>" + 
                 "<div>" + 
                 $"<span style='font-size: 14px;'><br>" +
                 $"Thanks so much!</span></div> " +
@@ -157,11 +155,11 @@ namespace RequestService.Core.Services
                 $"<span style='font-size: 14px;'><br>" +
                 $"The HelpMyStreet Team</span></div> " +
                 $"</div> " +               
-            $"</div> " +
                       $"<div>" +
             $"<span style='font-size: 12px;'><br>" +
             $"If you think you have received this email in error, please let the HelpMyStreet team know by contacting support@helpmystreet.org</span></div> " +
             $"</div> " +
+          $"</div> " +
             $"</td> </tr> </tbody></table> </div> " +
             $"<!--[if mso | IE]> </td> </tr> </table> <![endif]--> </td> </tr> </tbody> " +
             $"</table> </div> <!--[if mso | IE]> </td> </tr> </table> <![endif]-->" +
