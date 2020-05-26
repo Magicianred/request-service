@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
 using RequestService.Core.Dto;
+using System.Reflection.Metadata.Ecma335;
+using HelpMyStreet.Contracts.UserService.Response;
 
 namespace RequestService.Handlers
 {
@@ -102,102 +104,122 @@ namespace RequestService.Handlers
             EmailJobDTO emailJobDTO,
             CancellationToken cancellationToken)
         {
-            var champions = await _userService.GetChampionsByPostcode(emailJobDTO.PostCode, cancellationToken);
-            var helpers = await _userService.GetHelpersByPostCodeAsync(emailJobDTO.PostCode, cancellationToken);
-
-            List<int> ChampionIds = champions.Users.Select(x => x.ID).ToList();
-            List<int> ccList = new List<int>();
-            if (champions.Users.Count == 0)
+            var volunteers = await _userService.GetVolunteersByPostcodeAndActivityAsync(emailJobDTO.PostCode, emailJobDTO.Activity, cancellationToken);
+            
+            if(volunteers==null || volunteers.Volunteers==null || volunteers.Volunteers.Count()==0)
             {
-                SendEmailRequest request = new SendEmailRequest()
+                return false;
+            }
+            foreach(VolunteerSummary volunteer in volunteers.Volunteers)
+            {
+                SendEmailToUserRequest request = new SendEmailToUserRequest()
                 {
-                    Subject = "MANUAL ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
-                    ToAddress = _applicationConfig.Value.ManualReferEmail,
-                    ToName = _applicationConfig.Value.ManualReferName,
-                    BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO)
+                    ToUserID = volunteer.UserID,
+                    BodyHTML = EmailBuilder.BuildNewHelpRequestedEmail(emailJobDTO, volunteer.DistanceInMiles, volunteer.IsVerified),
+                    Subject = "MANUAL ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org"
                 };
-                bool manualEmailSent = await _communicationService.SendEmail(request, cancellationToken);
-
-                if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
-                {
-                    SendEmailRequest confirmationNoChampion = new SendEmailRequest()
-                    {
-                        Subject = "Thank you for registering your request via HelpMyStreet.org",
-                        ToAddress = emailJobDTO.Requestor.EmailAddress,
-                        ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
-                        BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(false)
-                    };
-                    await _communicationService.SendEmail(confirmationNoChampion, cancellationToken);
-                }
-                return manualEmailSent;
+                await _communicationService.SendEmailToUserAsync(request, cancellationToken);
             }
 
 
-            int toUserId = ChampionIds.First();
-            if (champions.Users.Count > 1)
-            {
-                Random random = new Random();
-                var randomElementIndex = random.Next(0, (ChampionIds.Count - 1));
-                toUserId = ChampionIds.ElementAt(randomElementIndex);
-                ChampionIds.RemoveAt(randomElementIndex);
+            return true;
+        } 
+            //var champions = await _userService.GetChampionsByPostcode(emailJobDTO.PostCode, cancellationToken);
 
-                if (champions.Users.Count > 3)
-                {
-                    var randomCCElementIndex = random.Next(0, (ChampionIds.Count - 1));
-                    ccList.Add(ChampionIds.ElementAt(randomCCElementIndex));
-                    ChampionIds.RemoveAt(randomCCElementIndex);
+            //List<int> ChampionIds = champions.Users.Select(x => x.ID).ToList();
+            //List<int> ccList = new List<int>();
+            //if (champions.Users.Count == 0)
+            //{
+            //    SendEmailRequest request = new SendEmailRequest()
+            //    {
+            //        Subject = "MANUAL ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
+            //        ToAddress = _applicationConfig.Value.ManualReferEmail,
+            //        ToName = _applicationConfig.Value.ManualReferName,
+            //        BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO)
+            //    };
+            //    bool manualEmailSent = await _communicationService.SendEmail(request, cancellationToken);
 
-                    randomCCElementIndex = random.Next(0, (ChampionIds.Count - 1));
-                    ccList.Add(ChampionIds.ElementAt(randomCCElementIndex));
-                    ChampionIds.RemoveAt(randomCCElementIndex);
-                }
-                else
-                {
-                    ccList = ChampionIds.Select(x => x).ToList();
-                }
-            }
+            //    if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
+            //    {
+            //        SendEmailRequest confirmationNoChampion = new SendEmailRequest()
+            //        {
+            //            Subject = "Thank you for registering your request via HelpMyStreet.org",
+            //            ToAddress = emailJobDTO.Requestor.EmailAddress,
+            //            ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
+            //            BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(false)
+            //        };
+            //        await _communicationService.SendEmail(confirmationNoChampion, cancellationToken);
+            //    }
+            //    return manualEmailSent;
+            //}
 
-            var selectedChampion = champions.Users.First(x => x.ID == toUserId);
-            SendEmailToUsersRequest emailRequest = new SendEmailToUsersRequest
-            {
-                Recipients = new Recipients
-                {
-                    ToUserIDs = new List<int> { toUserId },
-                    CCUserIDs = ccList,
-                },
-                Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
-                BodyText = $"Help Requested \r\n Hi {selectedChampion.UserPersonalDetails.FirstName} {selectedChampion.UserPersonalDetails.LastName}, \r\n " +
-                $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName} has requested some help with {emailJobDTO.Activity.ToString()} \r\n" +
-                $"Here Are some details to get in touch with {emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}" +
-                $"Due Date: {emailJobDTO.DueDate} \r\n" +
-                $"Email Address: {emailJobDTO.Requestor.EmailAddress} \r\n" +
-                $"Phone Number: {emailJobDTO.Requestor.MobileNumber} \r\n" +
-                $"Alternative Number: {emailJobDTO.Requestor.OtherNumber} \r\n" +
-                $"On Behalf of Someone: {emailJobDTO.OnBehalfOfSomeone} \r\n" +
-                $"Critical to Health or Wellbeing Concern: {emailJobDTO.IsHealthCritical} \r\n" +
-                $"Details: {emailJobDTO.OtherDetails} \r\n" +
-                $"Communication Needs: {emailJobDTO.SpecialCommunicationNeeds} \r\n" +
-                $"Further Details: {emailJobDTO.FurtherDetails} \r\n" +
-                $"Thank you \r\n" +
-                $"HelpMyStreet \r\n",
-                BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO)
-            };
 
-            bool emailSent = await _communicationService.SendEmailToUsersAsync(emailRequest, cancellationToken);
-            if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
-            {
-                SendEmailRequest confimration = new SendEmailRequest()
-                {
-                    Subject = "Thank you for registering your request via HelpMyStreet.org",
-                    ToAddress = emailJobDTO.Requestor.EmailAddress,
-                    ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
-                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true)
-                };
+            //int toUserId = ChampionIds.First();
+            //if (champions.Users.Count > 1)
+            //{
+            //    Random random = new Random();
+            //    var randomElementIndex = random.Next(0, (ChampionIds.Count - 1));
+            //    toUserId = ChampionIds.ElementAt(randomElementIndex);
+            //    ChampionIds.RemoveAt(randomElementIndex);
 
-                await _communicationService.SendEmail(confimration, cancellationToken);
-            }
-            return emailSent;
-        }
+            //    if (champions.Users.Count > 3)
+            //    {
+            //        var randomCCElementIndex = random.Next(0, (ChampionIds.Count - 1));
+            //        ccList.Add(ChampionIds.ElementAt(randomCCElementIndex));
+            //        ChampionIds.RemoveAt(randomCCElementIndex);
+
+            //        randomCCElementIndex = random.Next(0, (ChampionIds.Count - 1));
+            //        ccList.Add(ChampionIds.ElementAt(randomCCElementIndex));
+            //        ChampionIds.RemoveAt(randomCCElementIndex);
+            //    }
+            //    else
+            //    {
+            //        ccList = ChampionIds.Select(x => x).ToList();
+            //    }
+            //}
+
+            //var selectedChampion = champions.Users.First(x => x.ID == toUserId);
+            //SendEmailToUsersRequest emailRequest = new SendEmailToUsersRequest
+            //{
+            //    Recipients = new Recipients
+            //    {
+            //        ToUserIDs = new List<int> { toUserId },
+            //        CCUserIDs = ccList,
+            //    },
+            //    Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
+            //    BodyText = $"Help Requested \r\n Hi {selectedChampion.UserPersonalDetails.FirstName} {selectedChampion.UserPersonalDetails.LastName}, \r\n " +
+            //    $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName} has requested some help with {emailJobDTO.Activity.ToString()} \r\n" +
+            //    $"Here Are some details to get in touch with {emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}" +
+            //    $"Due Date: {emailJobDTO.DueDate} \r\n" +
+            //    $"Email Address: {emailJobDTO.Requestor.EmailAddress} \r\n" +
+            //    $"Phone Number: {emailJobDTO.Requestor.MobileNumber} \r\n" +
+            //    $"Alternative Number: {emailJobDTO.Requestor.OtherNumber} \r\n" +
+            //    $"On Behalf of Someone: {emailJobDTO.OnBehalfOfSomeone} \r\n" +
+            //    $"Critical to Health or Wellbeing Concern: {emailJobDTO.IsHealthCritical} \r\n" +
+            //    $"Details: {emailJobDTO.OtherDetails} \r\n" +
+            //    $"Communication Needs: {emailJobDTO.SpecialCommunicationNeeds} \r\n" +
+            //    $"Further Details: {emailJobDTO.FurtherDetails} \r\n" +
+            //    $"Thank you \r\n" +
+            //    $"HelpMyStreet \r\n",
+            //    BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO)
+            //};
+
+            //bool emailSent = await _communicationService.SendEmailToUsersAsync(emailRequest, cancellationToken);
+            //if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
+            //{
+            //    SendEmailRequest confimration = new SendEmailRequest()
+            //    {
+            //        Subject = "Thank you for registering your request via HelpMyStreet.org",
+            //        ToAddress = emailJobDTO.Requestor.EmailAddress,
+            //        ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
+            //        BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true)
+            //    };
+
+            //    await _communicationService.SendEmail(confimration, cancellationToken);
+            //}
+            
+            //return emailSent;
+        //}
 
     }
 }

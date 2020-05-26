@@ -1,4 +1,8 @@
-﻿using HelpMyStreet.Utils.Models;
+﻿using HelpMyStreet.Contracts.Shared;
+using HelpMyStreet.Contracts.UserService.Request;
+using HelpMyStreet.Contracts.UserService.Response;
+using HelpMyStreet.Utils.Enums;
+using HelpMyStreet.Utils.Models;
 using Marvin.StreamExtensions;
 using Newtonsoft.Json;
 using RequestService.Core.Config;
@@ -73,6 +77,30 @@ namespace RequestService.Core.Services
                 userIDResponse = JsonConvert.DeserializeObject<GetUserByIDResponse>(content);
             }
             return userIDResponse;
+        }
+
+        public async Task<GetVolunteersByPostcodeAndActivityResponse> GetVolunteersByPostcodeAndActivityAsync(string postcode, SupportActivities activity, CancellationToken cancellationToken)
+        {
+            string path = $"api/GetVolunteersByPostcodeAndActivity";
+
+            GetVolunteersByPostcodeAndActivityRequest request = new GetVolunteersByPostcodeAndActivityRequest()
+            {
+                VolunteerFilter = new VolunteerFilter()
+                {
+                    Postcode = postcode,
+                    Activity = activity
+                }
+            };
+
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            using (HttpResponseMessage response = await _httpClientWrapper.PostAsync(HttpClientConfigName.UserService, path, jsonContent, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var getVolunteersByPostcodeAndActivityResponse = JsonConvert.DeserializeObject<GetVolunteersByPostcodeAndActivityResponse>(jsonResponse);
+                
+                return getVolunteersByPostcodeAndActivityResponse;
+            }
         }
     }
 }

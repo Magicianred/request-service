@@ -24,6 +24,65 @@ namespace RequestService.Core.Services
             { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" }
         };
 
+        /*
+         * Task type, criticality, due date, postcode, distance away
+         */
+
+        public static string BuildNewHelpRequestedEmail(EmailJobDTO emailJobDTO, double distanceInMiles, bool? isVerified)
+        {
+            string healthOrWellbeingConcern = emailJobDTO.IsHealthCritical ? "Yes" : "No";
+
+            string html = BuildHeader();
+            html += BuildTitle("Help Requested");
+
+            html += "<table align='center' border='0' cellpadding='0' cellspacing='0' class='' style='width:600px;' width='600' > " +
+                "<tr> <td style='line-height:0px;font-size:0px;mso-line-height-rule:exactly;'> <![endif]--> " +
+                "<div style='background:#FFFFFF;background-color:#FFFFFF;Margin:0px auto;max-width:600px;'> <table align='center' border='0' cellpadding='0'" +
+                " cellspacing='0' role='presentation' style='background:#FFFFFF;background-color:#FFFFFF;width:100%;'>" +
+                " <tbody> <tr> <td style='direction:ltr;font-size:0px;padding:9px 0px 9px 0px;text-align:center;vertical-align:top;'> <!--[if mso | IE]>" +
+                " <table role='presentation' border='0' cellpadding='0' cellspacing='0'> <tr> <td class='' style='vertical-align:top;width:600px;' >" +
+                " <![endif]--> <div class='mj-column-per-100 outlook-group-fix' style='font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;'>" +
+                " <table border='0' cellpadding='0' cellspacing='0' role='presentation' style='vertical-align:top;' width='100%'> " +
+                "<tbody><tr> <td align='left' style='font-size:0px;padding:15px 15px 15px 15px;word-break:break-word;'>" +
+                " <div style='font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:1.5;text-align:left;color:#000000;'>" +
+                $"<div><span style='font-size: 14px;'>" +
+                $"Hi," +
+                $"You’re receiving this email because you signed up as a Volunteer at HelpMyStreet.org." +
+                $"A new request for help has just arrived[in a postcode that you’re Street Champion for] / [that meets the criteria you said you could help with]: " +
+                $"<div>&#xA0;</div><div style='text-align: left;'>" +
+                $"<span style='font-size: 14px;'>Postcode : {emailJobDTO.PostCode} &#xA0;</span><br>" +
+                $"<span style='font-size: 14px;'>Distance in Miles : {distanceInMiles} &#xA0;</span><br>" +
+                $"<span style='font-size: 14px;'>Task Type: {_mappings[emailJobDTO.Activity]} </span><br>" +
+                $"<span style='font-size: 14px;'>Critical to Health or Wellbeing Concern: {healthOrWellbeingConcern} </span><br>" +
+                $"<span style='font-size: 14px;'>Due Date: {emailJobDTO.DueDate} </span><br>" +
+                $"<span style='font-size: 14px;'>Details: {emailJobDTO.OtherDetails} </span><br>" +
+                $"<span style='font-size: 14px;'>Further Details: {emailJobDTO.FurtherDetails} </span><br>" +
+                $"<span style='font-size: 14px;'>Communication Needs: {emailJobDTO.SpecialCommunicationNeeds} </span><br>" +
+                $"</div>" +
+                $"</br></br>" +
+                $"Please visit your Open Requests page to view more details of the request and accept it if you’re able to help. " +
+                $"[As Street Champion for this postcode, it would be great if you could help to ensure that someone else responds to this request, even if you aren’t able " +
+                $"to.You can find the contact details of other Street Champions and helpers that cover your postcodes in your My Streets page]" +
+                $"</br></br>";
+
+            if(!isVerified.HasValue || !isVerified.Value)
+            {
+                html += $"[Note: As you’re not yet verified, you’ll need to do that before you can accept requests or see more details.It only takes a few minutes though – and helps to keep everyone safe.Find out more and start the process from your My Profile page.]" +
+                        $"</br></br>";
+            }
+
+            html += $"Thanks so much! " +
+               $"</br></br>" +
+                $"The HelpMyStreet Team " +
+               $"</br></br>" +
+                $"P.S If you visit the site and this request is no longer visible, it’s probably been accepted by another user.Take a look around to see if there is anything else " +
+                $"you can help with or keep an eye open for future notifications. " +
+                $"</br></br>" +
+                $"If you think you have received this email in error or if you want to change your status (e.g.stop receiving emails like this), please let the HelpMyStreet team know " +
+                $"by contacting support @helpmystreet.org.";
+            return html;
+        }
+
         public static string BuildHelpRequestedEmail(EmailJobDTO emailJobDTO)
         {
             string onBehalf = emailJobDTO.OnBehalfOfSomeone ? "Yes" : "No";

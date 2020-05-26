@@ -39,6 +39,22 @@ namespace RequestService.Core.Services
             }
         }
 
+        public async Task<bool> SendEmailToUserAsync(SendEmailToUserRequest request, CancellationToken cancellationToken)
+        {
+            string path = $"api/SendEmailToUser";
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            using (HttpResponseMessage response = await _httpClientWrapper.PostAsync(HttpClientConfigName.CommunicationService, path, jsonContent, cancellationToken).ConfigureAwait(false))
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var emailSentResponse = JsonConvert.DeserializeObject<ResponseWrapper<SendEmailResponse, CommunicationServiceErrorCode>>(jsonResponse);
+                if (emailSentResponse.HasContent && emailSentResponse.IsSuccessful)
+                {
+                    return emailSentResponse.Content.Success; ;
+                }
+                return false;
+            }
+        }
+
         public async Task<bool> SendEmailToUsersAsync(SendEmailToUsersRequest request,  CancellationToken cancellationToken)
         {
             string path = $"api/SendEmailToUsers";            

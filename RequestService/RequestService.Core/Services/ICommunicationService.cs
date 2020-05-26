@@ -13,5 +13,8 @@ namespace RequestService.Core.Services
         Task<bool> SendEmailToUsersAsync(SendEmailToUsersRequest request, CancellationToken cancellationToken);
 
         Task<bool> SendEmail(SendEmailRequest request, CancellationToken cancellationToken);
+
+        Task<bool> SendEmailToUserAsync(SendEmailToUserRequest request, CancellationToken cancellationToken);
+
     }
 }
