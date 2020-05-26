@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
 using RequestService.Core.Dto;
+using HelpMyStreet.Contracts.CommunicationService.Request;
 
 namespace RequestService.Handlers
 {
@@ -100,7 +101,7 @@ namespace RequestService.Handlers
         {
            var helperResponse = await _userService.GetHelpersByPostcodeAndTaskType(emailJobDTO.PostCode, new List<SupportActivities> { emailJobDTO.Activity }, cancellationToken);
 
-            if(helperResponse.Users.Count == 0)
+            if(helperResponse.Volunteers == null || helperResponse.Volunteers.Count() == 0)
             {
                 SendEmailRequest emailRequest = new SendEmailRequest
                 {
@@ -113,20 +114,22 @@ namespace RequestService.Handlers
             }
 
             List<bool> emailsSent = new List<bool>();
-            foreach(var user in helperResponse.Users)
+            foreach(var volunteer in helperResponse.Volunteers)
             {
-                emailJobDTO.IsVerified = user.IsVerified;
-                emailJobDTO.IsStreetChampionOfPostcode = user.IsStreetChampionOfPostcode;
-                emailJobDTO.DistanceFromPostcode = user.DistanceFromPostcode;
+                emailJobDTO.IsVerified = volunteer.IsVerified.Value;
+                emailJobDTO.IsStreetChampionOfPostcode = volunteer.IsStreetChampionForGivenPostCode.Value;
+                emailJobDTO.DistanceFromPostcode = volunteer.DistanceInMiles;
 
-                SendEmailRequest emailRequest = new SendEmailRequest
-                {
-                    ToAddress = user.Email,
-                    ToName = user.DisplayName,
+                SendEmailToUsersRequest emailRequest = new SendEmailToUsersRequest
+                {                    
+                    Recipients = new Recipients
+                    {
+                        ToUserIDs = new List<int> { volunteer.UserID }
+                    },
                     Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",                    
                     BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
                 };
-                emailsSent.Add(await _communicationService.SendEmail(emailRequest, cancellationToken));          
+                emailsSent.Add(await _communicationService.SendEmailToUsersAsync(emailRequest, cancellationToken));          
             };
 
             if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))

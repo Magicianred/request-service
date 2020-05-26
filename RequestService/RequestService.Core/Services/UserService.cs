@@ -1,4 +1,6 @@
-﻿using HelpMyStreet.Utils.Enums;
+﻿using HelpMyStreet.Contracts.UserService.Request;
+using HelpMyStreet.Contracts.UserService.Response;
+using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Models;
 using Marvin.StreamExtensions;
 using Newtonsoft.Json;
@@ -50,24 +52,24 @@ namespace RequestService.Core.Services
             return championsResponse;
         }
 
-        public async Task<GetHelpersByPostcodeAndTaskTypeResponse> GetHelpersByPostcodeAndTaskType(string postcode, List<SupportActivities> activities, CancellationToken cancellationToken)
+        public async Task<GetVolunteersByPostcodeAndActivityResponse> GetHelpersByPostcodeAndTaskType(string postcode, List<SupportActivities> activities, CancellationToken cancellationToken)
         {
-            string path = $"api/GetHelpersByPostcodeAndTaskType";
-            GetHelpersByPostcodeAndTaskTypeResponse helperResponse;
-            GetHelpersByPostcodeAndTaskTypeRequest request = new GetHelpersByPostcodeAndTaskTypeRequest
+            string path = $"api/GetVolunteersByPostcodeAndActivity";
+            GetVolunteersByPostcodeAndActivityResponse helperResponse;
+            GetVolunteersByPostcodeAndActivityRequest request = new GetVolunteersByPostcodeAndActivityRequest
             {
-                Postcode = postcode,
-                RequestedTasks = new TasksRequested
+                VolunteerFilter = new VolunteerFilter
                 {
-                    SupportActivities = activities
-                }
+                    Postcode = postcode,
+                    Activities = activities
+                }                                
             };
 
             using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.UserService, path, request, cancellationToken).ConfigureAwait(false))
             {
                 response.EnsureSuccessStatusCode();
                 string content = await response.Content.ReadAsStringAsync();
-                helperResponse = JsonConvert.DeserializeObject<GetHelpersByPostcodeAndTaskTypeResponse>(content);
+                helperResponse = JsonConvert.DeserializeObject<GetVolunteersByPostcodeAndActivityResponse>(content);
             }
             return helperResponse;
         }

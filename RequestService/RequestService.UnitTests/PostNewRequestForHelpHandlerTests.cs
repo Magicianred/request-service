@@ -1,6 +1,7 @@
 using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Contracts.UserService.Response;
 using HelpMyStreet.Utils.Enums;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -29,7 +30,7 @@ namespace RequestService.UnitTests
         private bool _validPostcode;
         private int _championCount;
         private bool _emailSent;
-        private GetHelpersByPostcodeAndTaskTypeResponse _getHelpersByPostcodeAndTaskTypeResponse;
+        private GetVolunteersByPostcodeAndActivityResponse _getVolunteersByPostcodeAndActivityResponse;
         [SetUp]
         public void Setup()
         {
@@ -62,7 +63,8 @@ namespace RequestService.UnitTests
             _applicationConfig.SetupGet(x => x.Value).Returns(new ApplicationConfig
             {
                 ManualReferName = "test",
-                ManualReferEmail = "manual@test.com"
+                ManualReferEmail = "manual@test.com",
+                EmailBaseUrl = "helpmystreettest"
             });
         }
 
@@ -70,7 +72,7 @@ namespace RequestService.UnitTests
         {
             _userService = new Mock<IUserService>();
             _userService.Setup(x => x.GetChampionCountByPostcode(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => _championCount);
-            _userService.Setup(x => x.GetHelpersByPostcodeAndTaskType(It.IsAny<string>(), It.IsAny<List<SupportActivities>>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => _getHelpersByPostcodeAndTaskTypeResponse);
+            _userService.Setup(x => x.GetHelpersByPostcodeAndTaskType(It.IsAny<string>(), It.IsAny<List<SupportActivities>>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => _getVolunteersByPostcodeAndActivityResponse);
         }
 
         private void SetupAddressService()
@@ -86,17 +88,16 @@ namespace RequestService.UnitTests
           _validPostcode = true;
           _championCount = 1;
           _emailSent = true;
-           _getHelpersByPostcodeAndTaskTypeResponse = new GetHelpersByPostcodeAndTaskTypeResponse
+           _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
            {
-                Users = new List<HelperContactInformation>
+                Volunteers = new List<VolunteerSummary>
                 {
-                    new HelperContactInformation
+                    new VolunteerSummary
                     {
-                        DisplayName = "test",
-                        Email = "test",
-                        IsStreetChampionOfPostcode = true,
-                        IsVerified = true,
-                        SupportedActivites = new List<SupportActivities>{SupportActivities.Shopping}
+                        UserID = 1,
+                         IsStreetChampionForGivenPostCode = true,
+                         IsVerified = true,
+                        DistanceInMiles = 1,
                     }
                 }
             };
@@ -132,7 +133,7 @@ namespace RequestService.UnitTests
             _userService.Verify(x => x.GetChampionCountByPostcode("TEST", It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.NewHelpRequestAsync(request, Fulfillable.Accepted_PassToStreetChampion), Times.Once);
             _userService.Verify(x => x.GetHelpersByPostcodeAndTaskType("TEST", new List<SupportActivities> { SupportActivities.Shopping }, It.IsAny<CancellationToken>()), Times.Once);
-            _communicationService.Verify(x => x.SendEmail(It.IsAny<SendEmailRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.IsAny<SendEmailToUsersRequest>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.UpdateCommunicationSentAsync(1, true, It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -179,21 +180,19 @@ namespace RequestService.UnitTests
             _validPostcode = true;
             _championCount = 0;
             _emailSent = true;
-            _getHelpersByPostcodeAndTaskTypeResponse = new GetHelpersByPostcodeAndTaskTypeResponse
+            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
             {
-                Users = new List<HelperContactInformation>
+                Volunteers = new List<VolunteerSummary>
                 {
-                    new HelperContactInformation
+                    new VolunteerSummary
                     {
-                        DisplayName = "test",
-                        Email = "test",
-                        IsStreetChampionOfPostcode = true,
-                        IsVerified = true,
-                        SupportedActivites = new List<SupportActivities>{SupportActivities.Shopping}
+                        UserID = 1,
+                         IsStreetChampionForGivenPostCode = true,
+                         IsVerified = true,
+                        DistanceInMiles = 1,
                     }
                 }
             };
-
             var request = new PostNewRequestForHelpRequest
             {
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
@@ -232,17 +231,16 @@ namespace RequestService.UnitTests
             _validPostcode = true;
             _championCount = 1;
             _emailSent = true;
-            _getHelpersByPostcodeAndTaskTypeResponse = new GetHelpersByPostcodeAndTaskTypeResponse
+            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
             {
-                Users = new List<HelperContactInformation>
+                Volunteers = new List<VolunteerSummary>
                 {
-                    new HelperContactInformation
+                    new VolunteerSummary
                     {
-                        DisplayName = "test",
-                        Email = "test",
-                        IsStreetChampionOfPostcode = true,
-                        IsVerified = true,
-                        SupportedActivites = new List<SupportActivities>{SupportActivities.Shopping}
+                        UserID = 99,
+                         IsStreetChampionForGivenPostCode = true,
+                         IsVerified = true,
+                        DistanceInMiles = 1,
                     }
                 }
             };
@@ -286,9 +284,9 @@ namespace RequestService.UnitTests
             _validPostcode = true;
             _championCount = 1;
             _emailSent = true;
-            _getHelpersByPostcodeAndTaskTypeResponse = new GetHelpersByPostcodeAndTaskTypeResponse
+            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
             {
-                Users = new List<HelperContactInformation>()                
+                Volunteers = new List<VolunteerSummary>()                
             };
 
             var request = new PostNewRequestForHelpRequest
@@ -332,21 +330,20 @@ namespace RequestService.UnitTests
             _validPostcode = true;
             _championCount = 1;
             _emailSent = true;
-            _getHelpersByPostcodeAndTaskTypeResponse = new GetHelpersByPostcodeAndTaskTypeResponse
+            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
             {
-                Users = new List<HelperContactInformation>
+                Volunteers = new List<VolunteerSummary>
                 {
-                    new HelperContactInformation
+                    new VolunteerSummary
                     {
-                        DisplayName = "test",
-                        Email = "sendtoUser@test.com",
-                        IsStreetChampionOfPostcode = true,
-                        IsVerified = true,
-                        SupportedActivites = new List<SupportActivities>{SupportActivities.Shopping}
+                        UserID = 99,
+                         IsStreetChampionForGivenPostCode = true,
+                         IsVerified = true,
+                        DistanceInMiles = 1,
                     }
                 }
             };
-     
+
 
             var request = new PostNewRequestForHelpRequest
             {
@@ -377,7 +374,7 @@ namespace RequestService.UnitTests
 
             var response = await _classUnderTest.Handle(request, new CancellationToken());
 
-            _communicationService.Verify(x => x.SendEmail(It.Is<SendEmailRequest>(ser => ser.ToAddress == "sendtoUser@test.com"), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(ser => ser.Recipients.ToUserIDs.Contains(99)), It.IsAny<CancellationToken>()), Times.Once);
         }
 
 
@@ -389,17 +386,16 @@ namespace RequestService.UnitTests
             _validPostcode = true;
             _championCount = 1;
             _emailSent = true;
-            _getHelpersByPostcodeAndTaskTypeResponse = new GetHelpersByPostcodeAndTaskTypeResponse
+            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
             {
-                Users = new List<HelperContactInformation>
+                Volunteers = new List<VolunteerSummary>
                 {
-                    new HelperContactInformation
+                    new VolunteerSummary
                     {
-                        DisplayName = "test",
-                        Email = "sendtoUser@test.com",
-                        IsStreetChampionOfPostcode = true,
-                        IsVerified = true,
-                        SupportedActivites = new List<SupportActivities>{SupportActivities.Shopping}
+                        UserID = 99,
+                         IsStreetChampionForGivenPostCode = true,
+                         IsVerified = true,
+                        DistanceInMiles = 1,
                     }
                 }
             };
@@ -436,7 +432,7 @@ namespace RequestService.UnitTests
 
             var response = await _classUnderTest.Handle(request, new CancellationToken());
 
-            _communicationService.Verify(x => x.SendEmail(It.Is<SendEmailRequest>(ser => ser.ToAddress == "requestorEmailAdddress"), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(ser => ser.Recipients.ToUserIDs.Contains(99)), It.IsAny<CancellationToken>()), Times.Once);
         }
 
 
@@ -447,11 +443,10 @@ namespace RequestService.UnitTests
             _validPostcode = true;
             _championCount = 1;
             _emailSent = true;
-            _getHelpersByPostcodeAndTaskTypeResponse = new GetHelpersByPostcodeAndTaskTypeResponse
+            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
             {
-                Users = new List<HelperContactInformation>()             
+                Volunteers = new List<VolunteerSummary>()
             };
-
 
             var request = new PostNewRequestForHelpRequest
             {
@@ -494,29 +489,26 @@ namespace RequestService.UnitTests
             _validPostcode = true;
             _championCount = 1;
             _emailSent = true;
-            _getHelpersByPostcodeAndTaskTypeResponse = new GetHelpersByPostcodeAndTaskTypeResponse
+            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
             {
-                Users = new List<HelperContactInformation>
+                Volunteers = new List<VolunteerSummary>
                 {
-                    new HelperContactInformation
+                    new VolunteerSummary
                     {
-                        DisplayName = "test",
-                        Email = "sendToUser1@test.com",
-                        IsStreetChampionOfPostcode = true,
-                        IsVerified = true,
-                        SupportedActivites = new List<SupportActivities>{SupportActivities.Shopping}
+                        UserID = 99,
+                         IsStreetChampionForGivenPostCode = true,
+                         IsVerified = true,
+                        DistanceInMiles = 1,
                     },
-                   new HelperContactInformation
+                    new VolunteerSummary
                     {
-                        DisplayName = "test",
-                        Email = "sendToUser2@test.com",
-                        IsStreetChampionOfPostcode = true,
-                        IsVerified = true,
-                        SupportedActivites = new List<SupportActivities>{SupportActivities.Shopping}
-                    },
+                        UserID = 98,
+                         IsStreetChampionForGivenPostCode = true,
+                         IsVerified = true,
+                        DistanceInMiles = 1,
+                    }
                 }
             };
-
 
             var request = new PostNewRequestForHelpRequest
             {
@@ -549,8 +541,9 @@ namespace RequestService.UnitTests
 
             var response = await _classUnderTest.Handle(request, new CancellationToken());
 
-            _communicationService.Verify(x => x.SendEmail(It.Is<SendEmailRequest>(ser => ser.ToAddress == "sendToUser1@test.com"), It.IsAny<CancellationToken>()), Times.Once);
-            _communicationService.Verify(x => x.SendEmail(It.Is<SendEmailRequest>(ser => ser.ToAddress == "sendToUser2@test.com"), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(ser => ser.Recipients.ToUserIDs.Contains(99)), It.IsAny<CancellationToken>()), Times.Once);
+             _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(ser => ser.Recipients.ToUserIDs.Contains(98)), It.IsAny<CancellationToken>()), Times.Once);
+            
         }
     }
 }

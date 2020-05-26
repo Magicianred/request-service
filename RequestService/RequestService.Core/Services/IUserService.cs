@@ -1,4 +1,5 @@
-﻿using HelpMyStreet.Utils.Enums;
+﻿using HelpMyStreet.Contracts.UserService.Response;
+using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Models;
 using RequestService.Core.Dto;
 using System;
@@ -14,7 +15,7 @@ namespace RequestService.Core.Services
         Task<int> GetChampionCountByPostcode(string postcode, CancellationToken cancellationToken);
         Task<GetChampionsByPostcodeResponse> GetChampionsByPostcode(string postcode, CancellationToken cancellationToken);
         Task<GetUserByIDResponse> GetUser(int userID, CancellationToken cancellationToken);
-        Task<GetHelpersByPostcodeAndTaskTypeResponse> GetHelpersByPostcodeAndTaskType(string postcode, List<SupportActivities> activities, CancellationToken cancellationToken);
+        Task<GetVolunteersByPostcodeAndActivityResponse> GetHelpersByPostcodeAndTaskType(string postcode, List<SupportActivities> activities, CancellationToken cancellationToken);
 
     }
 
