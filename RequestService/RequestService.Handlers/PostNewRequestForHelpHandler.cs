@@ -120,21 +120,18 @@ namespace RequestService.Handlers
                 emailJobDTO.IsStreetChampionOfPostcode = volunteer.IsStreetChampionForGivenPostCode.Value;
                 emailJobDTO.DistanceFromPostcode = volunteer.DistanceInMiles;
 
-                SendEmailToUsersRequest emailRequest = new SendEmailToUsersRequest
-                {                    
-                    Recipients = new Recipients
-                    {
-                        ToUserIDs = new List<int> { volunteer.UserID }
-                    },
+                SendEmailToUserRequest emailRequest = new SendEmailToUserRequest
+                {
+                    ToUserID = volunteer.UserID,
                     Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",                    
                     BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
                 };
-                emailsSent.Add(await _communicationService.SendEmailToUsersAsync(emailRequest, cancellationToken));          
+                emailsSent.Add(await _communicationService.SendEmailToUserAsync(emailRequest, cancellationToken));          
             };
 
             if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
             {
-                SendEmailRequest confimration = new SendEmailRequest()
+                SendEmailRequest confirmation = new SendEmailRequest()
                 {
                     Subject = "Thank you for registering your request via HelpMyStreet.org",
                     ToAddress = emailJobDTO.Requestor.EmailAddress,
@@ -142,7 +139,7 @@ namespace RequestService.Handlers
                     BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true)
                 };
 
-                await _communicationService.SendEmail(confimration, cancellationToken);
+                await _communicationService.SendEmail(confirmation, cancellationToken);
             }
 
             return emailsSent.Count > 0;
