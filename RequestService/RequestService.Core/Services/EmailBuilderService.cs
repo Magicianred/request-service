@@ -105,6 +105,11 @@ namespace RequestService.Core.Services
             $"<span style='font-size: 14px;'><br>" +
             $"The HelpMyStreet Team</span></div> " +
             $"</div> " +
+
+                 $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"P.S If you visit the site and this request is no longer visible, it’s probably been accepted by another user. Take a look around to see if there is anything else you can help with or keep an eye open for future notifications.</span></div> " +
+            $"</div> " +
                       $"<div>" +
             $"<span style='font-size: 12px;'><br>" +
             $"if you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span></div> " +       
