@@ -133,7 +133,7 @@ namespace RequestService.UnitTests
             _userService.Verify(x => x.GetChampionCountByPostcode("TEST", It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.NewHelpRequestAsync(request, Fulfillable.Accepted_PassToStreetChampion), Times.Once);
             _userService.Verify(x => x.GetHelpersByPostcodeAndTaskType("TEST", new List<SupportActivities> { SupportActivities.Shopping }, It.IsAny<CancellationToken>()), Times.Once);
-            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.IsAny<SendEmailToUsersRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.UpdateCommunicationSentAsync(1, true, It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -374,7 +374,7 @@ namespace RequestService.UnitTests
 
             var response = await _classUnderTest.Handle(request, new CancellationToken());
 
-            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(ser => ser.Recipients.ToUserIDs.Contains(99)), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.SendEmailToUserAsync(It.Is<SendEmailToUserRequest>(ser => ser.ToUserID == 99), It.IsAny<CancellationToken>()), Times.Once);
         }
 
 
@@ -432,7 +432,7 @@ namespace RequestService.UnitTests
 
             var response = await _classUnderTest.Handle(request, new CancellationToken());
 
-            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(ser => ser.Recipients.ToUserIDs.Contains(99)), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.SendEmailToUserAsync(It.Is<SendEmailToUserRequest>(ser => ser.ToUserID == 99), It.IsAny<CancellationToken>()), Times.Once);
         }
 
 
