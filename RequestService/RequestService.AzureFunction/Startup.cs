@@ -85,6 +85,7 @@ namespace RequestService.AzureFunction
             builder.Services.AddTransient<IDistanceCalculator, DistanceCalculator>();
             builder.Services.AddTransient<IDailyDigestService, DailyDigestService>();
             builder.Services.AddTransient<IJobService, JobService>();
+            builder.Services.AddTransient<IDailyDigestService, DailyDigestService>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     ConfigureDbContextOptionsBuilder(options, connectionStrings.RequestService),
