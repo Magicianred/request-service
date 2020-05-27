@@ -27,7 +27,7 @@ namespace RequestService.AzureFunction
             _dailyDigestService = dailyDigestService;
         }
 
-        [FunctionName("GetDailyDigest")]
+        [FunctionName("TimedDailyDigest")]
         public async Task Run([TimerTrigger("%TimedDailyDigestCronExpression%")] TimerInfo timerInfo, ILogger log, CancellationToken cancellationToken)
         {
             try
