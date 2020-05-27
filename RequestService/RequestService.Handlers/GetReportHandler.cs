@@ -18,14 +18,10 @@ namespace RequestService.Handlers
     public class GetReportHandler : IRequestHandler<GetReportRequest, GetReportResponse>
     {
         private readonly IRepository _repository;
-        private readonly IUserService _userService;
-        private readonly IAddressService _addressService;
 
-        public GetReportHandler(IRepository repository, IUserService userService, IAddressService addressService)
+        public GetReportHandler(IRepository repository)
         {
             _repository = repository;
-            _userService = userService;
-            _addressService = addressService;
         }
 
         public Task<GetReportResponse> Handle(GetReportRequest request, CancellationToken cancellationToken)

@@ -6,6 +6,7 @@ using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq;
 using HelpMyStreet.PostcodeCoordinates.EF.Extensions;
+using HelpMyStreet.PostcodeCoordinates.EF.Entities;
 
 namespace RequestService.Repo
 {
@@ -33,6 +34,7 @@ namespace RequestService.Repo
         public virtual DbSet<RequestJobStatus> RequestJobStatus { get; set; }
         public virtual DbSet<SupportActivities> SupportActivities { get; set; }
         public virtual DbQuery<DailyReport> DailyReport { get; set; }
+        public virtual DbSet<PostcodeEntity> Postcode { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            

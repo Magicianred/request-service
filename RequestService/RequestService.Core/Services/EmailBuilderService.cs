@@ -36,11 +36,19 @@ namespace RequestService.Core.Services
             string sectionTwo = "";
             if (emailJobDTO.IsStreetChampionOfPostcode)
             {
-                sectionTwo = $"As Street Champion for this postcode, it would be great if you could help to ensure that someone responds to the request, even if you aren't able to do so yourself. You can find the contact details of other Street Champions and helpers that cover your postcodes in your <a href='{baseUrl}/account/streets'>My Streets page</a>.";
+                sectionTwo = $"<div>" +
+                $"<span style='font-size: 14px;'><br>" +
+                    $"As Street Champion for this postcode, it would be great if you could help to ensure that someone responds to the request, even if you aren't able to do so yourself. You can find the contact details of other Street Champions and helpers that cover your postcodes in your <a href='{baseUrl}/account/streets'>My Streets page</a>." +
+                    $"</span>" +
+                $"</div>";
             }
             string sectionThree = "";
             if (!emailJobDTO.IsVerified) {
-                sectionThree =  $"Note: As you’re not yet verified, you’ll need to do that before you can accept requests or see more details. It only takes a few minutes though – and helps to keep everyone safe. Find out more and start the process from your <a href='{baseUrl}/account/profile'>My Profile page</a>.";
+                sectionThree = $"<div>" +
+                $"<span style='font-size: 14px;'><br>" +
+                    $"Note: As you’re not yet verified, you’ll need to do that before you can accept requests or see more details. It only takes a few minutes though – and helps to keep everyone safe. Find out more and start the process from your <a href='{baseUrl}/account/profile'>My Profile page</a>." +
+                          $"</span>" +
+                $"</div>";
             }
             
                                
@@ -78,25 +86,13 @@ namespace RequestService.Core.Services
                 $"</span>" +                
                 $"</div><br>" +
 
-
                 $"<div style='margin:15px 0px 15px 0px;'>" +
                 $"<span>" +
                 $"<a style='font-size: 18px; background-color:#25ac10; padding: 13px 40px; border-radius:32px; border:2px solid #25ac10; font-weight:bold; color:#FFFFFF; text-decoration:none;' href='{baseUrl}/account/open-requests?j={emailJobDTO.EncodedJobID}'> Open Requests </a>" +
                 $"</span>" +
-                $"</div>" +
-
-                $"<div>" +
-                $"<span style='font-size: 14px;'><br>" +
-                $"{sectionTwo}" + 
-                $"</span>" +
-                $"</div>" +
-
-                $"<div>" +
-                $"<span style='font-size: 14px;'><br>" +
-                $"{sectionThree}" +
-                $"</span>" +
-                $"</div>" +
-
+                $"</div>" +       
+                $"{sectionTwo}" +                     
+                $"{sectionThree}" +          
             $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
             $"Thanks so much!</span></div> " +          
@@ -105,7 +101,7 @@ namespace RequestService.Core.Services
             $"The HelpMyStreet Team</span></div> " +   
             $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
-            $"P.S If you visit the site and this request is no longer visible, it’s probably been accepted by another user. Take a look around to see if there is anything else you can help with or keep an eye open for future notifications.</span></div> " +
+            $"P.S. If you visit the site and this request is no longer visible, it’s probably been accepted by another user. Take a look around to see if there is anything else you can help with or keep an eye open for future notifications.</span></div> " +
             $"</div> " +
             $"<div>" +
             $"<span style='font-size: 12px;'><br>" +
@@ -168,6 +164,71 @@ namespace RequestService.Core.Services
             return html;
         }
 
+        public static string BuildDailyDigestEmail(List<OpenJobRequestDTO> jobs, string baseUrl)
+        {
+            string html = BuildHeader();
+            html += BuildTitle($"Help Needed in your Area - {DateTime.Now.ToString("dd/MM/yy")}");
+
+            html += "<table align='center' border='0' cellpadding='0' cellspacing='0' class='' style='width:600px;' width='600' > " +
+                "<tr> <td style='line-height:0px;font-size:0px;mso-line-height-rule:exactly;'> <![endif]--> " +
+                "<div style='background:#FFFFFF;background-color:#FFFFFF;Margin:0px auto;max-width:600px;'> <table align='center' border='0' cellpadding='0'" +
+                " cellspacing='0' role='presentation' style='background:#FFFFFF;background-color:#FFFFFF;width:100%;'>" +
+                " <tbody> <tr> <td style='direction:ltr;font-size:0px;padding:9px 0px 9px 0px;text-align:center;vertical-align:top;'> <!--[if mso | IE]>" +
+                " <table role='presentation' border='0' cellpadding='0' cellspacing='0'> <tr> <td class='' style='vertical-align:top;width:600px;' >" +
+                " <![endif]--> <div class='mj-column-per-100 outlook-group-fix' style='font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;'>" +
+                " <table border='0' cellpadding='0' cellspacing='0' role='presentation' style='vertical-align:top;' width='100%'> " +
+                "<tbody><tr> <td align='left' style='font-size:0px;padding:15px 15px 15px 15px;word-break:break-word;'>" +
+                " <div style='font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:1.5;text-align:left;color:#000000;'>" +
+                $"<div><span style='font-size: 14px;'>" +
+                $"The following help is needed near you:</span></div>" +
+
+            $"<div>&#xA0;</div><div style='text-align: left;'>" +
+             $"<ul>";
+            foreach (var job in jobs)
+            {
+                html += $"<li style='text-align: left; margin-bottom:5px;'><a href={baseUrl}/account/open-requests?j={job.EncodedJobID}><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance.ToString("N1")} miles away) - Due {job.DueDate.ToString("dd/MM/yy")}";
+                if (job.IsCritical)
+                {
+                    html += "<strong> - CRITICAL </strong>";
+                }
+                 html += "</span></a> </li>";
+            }
+
+            html += $"</ul>" +
+            $"</div>" +
+            $"<div><br>" +
+            $"<span style='font-size: 14px;'> " +
+            $"Please log in to your account on <a href='{baseUrl}/account/open-requests'>helpmystreet.org</a> and visit the “Open Requests” tab on your profile to see more details of these requests and accept any that you can help with." +
+            $"</span>" +
+            $"</div>" +
+             $"<div><br>" +
+            $"<span style='font-size: 14px;'>" +
+            $"Note: if you’re not yet verified, then you’ll need to do that before you can accept requests. It only takes a few minutes though – and helps to keep everyone safe. Find out more and start the process by logging in and visiting your “My Profile” tab." +
+            $" </span>" +
+            $"</div>" +
+            $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"Thanks!</span></div> " +        
+               $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"Best regards,</span></div> " +
+            $"</div> " +
+                 $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"The HelpMyStreet Team</span>" +
+            $"</div> " +                                  
+            $"<span style='font-size: 12px;'><br>" +
+            $"If you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span>" +
+            $"</div> " +
+            $"</div> " +
+            $"</td> </tr> </tbody></table> </div> " +
+            $"<!--[if mso | IE]> </td> </tr> </table> <![endif]--> </td> </tr> </tbody> " +
+            $"</table> </div> <!--[if mso | IE]> </td> </tr> </table> <![endif]-->" +
+            $" </div> </body></html>";
+
+            return html;
+        }
+
 
         private static string BuildTitle(string title)
         {
@@ -181,7 +242,7 @@ namespace RequestService.Core.Services
                  " <table border='0' cellpadding='0' cellspacing='0' role='presentation' style='vertical-align:top;' width='100%'>" +
                  " <tbody><tr> <td align='left' style='font-size:0px;padding:15px 15px 15px 15px;word-break:break-word;'>" +
                  " <div style='font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:1.5;text-align:left;color:#000000;'>" +
-                 $" <h1 style='font-family: &apos;Cabin&apos;, sans-serif; text-align: center; line-height: 100%; color: #001489;'><span style='font-size: 36px;'>{title}</span></h1>" +
+                 $" <h1 style='font-family: &apos;Cabin&apos;, sans-serif; text-align: center; line-height: 40px; color: #001489;'><span style='font-size: 36px;'>{title}</span></h1>" +
                  " </div> </td> </tr> </tbody></table> </div>" +
                  " <!--[if mso | IE]> </td> </tr> </table> <![endif]-->" +
                  " </td> </tr> </tbody> </table> </div> <!--[if mso | IE]> </td> </tr> " +
