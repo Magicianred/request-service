@@ -2,6 +2,8 @@ using HelpMyStreet.Contracts.AddressService.Response;
 using HelpMyStreet.Utils.Models;
 using Moq;
 using NUnit.Framework;
+using RequestService.Core.Dto;
+using RequestService.Core.Interfaces.Repositories;
 using RequestService.Core.Services;
 using System.Collections.Generic;
 using System.Threading;
@@ -12,12 +14,12 @@ namespace RequestService.UnitTests
 {
     public class JobServiceTests
     {
-        private MockRepository _mockRepository;
-        Mock<IAddressService> _mockAddressService;
+        private MockRepository _mockRepository;                
         Mock<IDistanceCalculator> _mockDistanceCalculator;
+        Mock<IRepository> _repository;
         private JobService _classUnderTest;
         private double _distance;
-        private GetPostcodeCoordinatesResponse _getPostcodeCoordinatesResponse;
+        private List<LatitudeAndLongitudeDTO> _getPostcodeCoordinatesResponse;
 
         [SetUp]
         public void Setup()
@@ -25,13 +27,13 @@ namespace RequestService.UnitTests
             _mockRepository = new MockRepository(MockBehavior.Loose);
             SetupAddressService();
             SetupDistanceCalculator();
-            _classUnderTest = new JobService(_mockAddressService.Object,_mockDistanceCalculator.Object);
+            _classUnderTest = new JobService(_mockDistanceCalculator.Object, _repository.Object);
         }
 
         private void SetupAddressService()
         {
-            _mockAddressService = _mockRepository.Create<IAddressService>();
-            _mockAddressService.Setup(x => x.GetPostcodeCoordinatesAsync(It.IsAny<List<string>>(), It.IsAny<CancellationToken>()))
+            _repository = _mockRepository.Create<IRepository>();
+            _repository.Setup(x => x.GetLatitudeAndLongitudes(It.IsAny<List<string>>(), It.IsAny<CancellationToken>()))
                  .ReturnsAsync(()=> _getPostcodeCoordinatesResponse);
         }
 
@@ -53,23 +55,22 @@ namespace RequestService.UnitTests
         public async Task WhenPasscodesAreKnownToAddressService_ReturnJobSummaryWithDistance()
         {
             _distance = 50d;
-            List<PostcodeCoordinate> postcodeCoordinates = new List<PostcodeCoordinate>();
-            postcodeCoordinates.Add(new PostcodeCoordinate()
+            List<LatitudeAndLongitudeDTO> postcodeCoordinates = new List<LatitudeAndLongitudeDTO>();
+            postcodeCoordinates.Add(new LatitudeAndLongitudeDTO
             {
                 Latitude = 1d,
                 Longitude = 2,
                 Postcode = "PostCode"
             });
-            postcodeCoordinates.Add(new PostcodeCoordinate()
+            postcodeCoordinates.Add(new LatitudeAndLongitudeDTO
             {
                 Latitude = 1d,
                 Longitude = 2,
                 Postcode = "PostCode2"
             });
-            _getPostcodeCoordinatesResponse = new GetPostcodeCoordinatesResponse()
-            {
-                PostcodeCoordinates = postcodeCoordinates
-            };
+            _getPostcodeCoordinatesResponse = postcodeCoordinates;
+
+
             string postCode = "PostCode2";
             List<JobSummary> jobSummaries = new List<JobSummary>();
             jobSummaries.Add(new JobSummary()
@@ -85,17 +86,15 @@ namespace RequestService.UnitTests
         public async Task WhenVolunteerPasscodesIsNotKnownToAddressService_ReturnNull()
         {
             _distance = 50d;
-            List<PostcodeCoordinate> postcodeCoordinates = new List<PostcodeCoordinate>();
-            postcodeCoordinates.Add(new PostcodeCoordinate()
+            List<LatitudeAndLongitudeDTO> postcodeCoordinates = new List<LatitudeAndLongitudeDTO>();
+            postcodeCoordinates.Add(new LatitudeAndLongitudeDTO()
             {
                 Latitude = 1d,
                 Longitude = 2,
                 Postcode = "PostCode"
             });
-            _getPostcodeCoordinatesResponse = new GetPostcodeCoordinatesResponse()
-            {
-                PostcodeCoordinates = postcodeCoordinates
-            };
+            _getPostcodeCoordinatesResponse = postcodeCoordinates;
+       
             string postCode = "PostCode2";
             List<JobSummary> jobSummaries = new List<JobSummary>();
             jobSummaries.Add(new JobSummary()

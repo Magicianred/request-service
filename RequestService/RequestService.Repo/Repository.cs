@@ -373,5 +373,19 @@ namespace RequestService.Repo
 
             return response;
         }
+
+        public Task<List<LatitudeAndLongitudeDTO>> GetLatitudeAndLongitudes(List<string> postCodes, CancellationToken cancellationToken)
+        {
+            var postcodeDetails = (from a in _context.Postcode
+                                   where postCodes.Any(p => p == a.Postcode)
+                                   select new LatitudeAndLongitudeDTO
+                                   {
+                                       Postcode = a.Postcode,
+                                       Latitude = Convert.ToDouble(a.Latitude),
+                                       Longitude = Convert.ToDouble(a.Longitude)
+                                   }).ToListAsync(cancellationToken);
+
+            return postcodeDetails;
+        }
     }
 }
