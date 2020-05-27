@@ -30,7 +30,7 @@ namespace RequestService.Core.Services
             {
                 return null;
             }
-            
+              
             volunteerPostCode = PostcodeFormatter.FormatPostcode(volunteerPostCode);
 
             List<string> distinctPostCodes = jobSummaries.Select(d => d.PostCode).Distinct().Select(x => PostcodeFormatter.FormatPostcode(x)).ToList();
