@@ -42,8 +42,6 @@ namespace RequestService.Core.Services
 
             var postcodeCoordinatesResponse = await _repository.GetLatitudeAndLongitudes(distinctPostCodes, cancellationToken);
 
-            var psotcode = PostcodeFormatter.FormatPostcode("BA133BN");
-
             if (postcodeCoordinatesResponse == null)
             {
                 return null;
