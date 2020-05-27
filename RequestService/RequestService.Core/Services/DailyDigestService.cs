@@ -46,7 +46,7 @@ namespace RequestService.Core.Services
                 if (!attachedDistances.Any()) continue;
 
                 var jobSummaries = attachedDistances
-                            .Where(w => w.DistanceInMiles <= _applicationConfig.Value.MaxDistanceDailyDigest)
+                            .Where(w => w.DistanceInMiles <= _applicationConfig.Value.DistanceInMilesForDailyDigest)
                             .OrderBy(a => a.DistanceInMiles).ThenBy(a => a.DueDate).ThenByDescending(a => a.IsHealthCritical)
                             .Select(x => new OpenJobRequestDTO
                             {

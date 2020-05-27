@@ -96,7 +96,7 @@ namespace RequestService.UnitTests
             _applicationConfig.Setup(x => x.Value).Returns(() => new ApplicationConfig
             {
                 EmailBaseUrl = "helpmytest.org",
-                MaxDistanceDailyDigest = _maxDistance
+                DistanceInMilesForDailyDigest = _maxDistance
             });
         }
 
