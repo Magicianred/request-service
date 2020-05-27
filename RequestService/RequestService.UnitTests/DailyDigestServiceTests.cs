@@ -29,7 +29,7 @@ namespace RequestService.UnitTests
         private DailyDigestService _classUnderTest;
         private int _maxDistance = 3;
         private List<JobSummary> _jobSummaries;
-        private List<JobSummary> _jobSummariesWithDistnace { get; set; }
+        private List<JobSummary> _jobSummariesWithDistance { get; set; }
         private GetUsersResponse _users;
 
         [SetUp]
@@ -44,7 +44,6 @@ namespace RequestService.UnitTests
             SetupJobService();
             _classUnderTest = new DailyDigestService(_userService.Object, _jobservice.Object, _applicationConfig.Object, _communicationService.Object, _repository.Object);
         }
-
 
         private void SetupObjects()
         {
@@ -64,9 +63,9 @@ namespace RequestService.UnitTests
                 }
             };
             // create copy of _joubSummaries and attach a distance
-            _jobSummariesWithDistnace = _jobSummaries.Select(x => x).ToList();
-            _jobSummariesWithDistnace.First().DistanceInMiles = 21;
-            _jobSummariesWithDistnace.ElementAt(1).DistanceInMiles = 2;
+            _jobSummariesWithDistance = _jobSummaries.Select(x => x).ToList();
+            _jobSummariesWithDistance.First().DistanceInMiles = 21;
+            _jobSummariesWithDistance.ElementAt(1).DistanceInMiles = 2;
 
             _users = new GetUsersResponse
             {
@@ -88,7 +87,7 @@ namespace RequestService.UnitTests
         private void SetupJobService()
         {
             _jobservice = _mockRepository.Create<IJobService>();
-            _jobservice.Setup(x => x.AttachedDistanceToJobSummaries(It.IsAny<string>(), It.IsAny<List<JobSummary>>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => _jobSummariesWithDistnace);
+            _jobservice.Setup(x => x.AttachedDistanceToJobSummaries(It.IsAny<string>(), It.IsAny<List<JobSummary>>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => _jobSummariesWithDistance);
         }
 
         private void SetupConfig()
@@ -120,9 +119,6 @@ namespace RequestService.UnitTests
             _repository.Setup(x => x.GetOpenJobsSummaries())
                  .Returns(() => _jobSummaries);
         }
-
-    
-
 
         [Test]
         public async Task WhenNoUsersAreReturned_IStopExecution()
@@ -167,10 +163,5 @@ namespace RequestService.UnitTests
             await _classUnderTest.SendDailyDigestEmailAsync(new CancellationToken());
             _communicationService.Verify(x => x.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
         }
-
-
-
-
-
     }
 }
