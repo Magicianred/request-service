@@ -43,7 +43,7 @@ namespace RequestService.Core.Services
             foreach (var user in users.UserDetails)
             {
                 var attachedDistances = await _jobService.AttachedDistanceToJobSummaries(user.PostCode, openRequests, cancellationToken);
-                if (!attachedDistances.Any()) continue;
+                if (attachedDistances == null || !attachedDistances.Any()) continue;
 
                 var jobSummaries = attachedDistances
                             .Where(w => w.DistanceInMiles <= _applicationConfig.Value.DistanceInMilesForDailyDigest)

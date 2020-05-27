@@ -143,9 +143,9 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenJobServiceReturnsNoJobSummaries_ISkipUser()
         {
-            _jobservice.Setup(x => x.AttachedDistanceToJobSummaries("T4ST1", It.IsAny<List<JobSummary>>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<JobSummary>());
+            _jobSummariesWithDistance = null;            
             await _classUnderTest.SendDailyDigestEmailAsync(new CancellationToken());
-            _communicationService.Verify(x => x.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
