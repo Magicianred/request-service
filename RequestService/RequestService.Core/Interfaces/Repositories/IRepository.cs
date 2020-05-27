@@ -27,5 +27,7 @@ namespace RequestService.Core.Interfaces.Repositories
         Task UpdatePersonalDetailsAsync(PersonalDetailsDto dto, CancellationToken cancellationToken);
         Task<string> GetRequestPostCodeAsync(int requestId, CancellationToken cancellationToken);
         Task UpdateCommunicationSentAsync(int requestId, bool communicationSent, CancellationToken cancellationToken);
+        Task<List<LatitudeAndLongitudeDTO>> GetLatitudeAndLongitudes(List<string> postCodes, CancellationToken cancellationToken);
+
     }
 }
