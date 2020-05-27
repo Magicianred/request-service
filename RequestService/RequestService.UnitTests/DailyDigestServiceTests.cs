@@ -2,6 +2,7 @@ using HelpMyStreet.Contracts.AddressService.Response;
 using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.UserService.Response;
 using HelpMyStreet.Utils.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
@@ -31,18 +32,26 @@ namespace RequestService.UnitTests
         private List<JobSummary> _jobSummaries;
         private List<JobSummary> _jobSummariesWithDistance { get; set; }
         private GetUsersResponse _users;
+        private Mock<ILogger<DailyDigestService>> _logger;
 
         [SetUp]
         public void Setup()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose);
+            
             SetupObjects();
+            SetupLogger();
             SetupRepository();
             SetupCommunciationService();
             SetupUserService();
             SetupConfig();
             SetupJobService();
-            _classUnderTest = new DailyDigestService(_userService.Object, _jobservice.Object, _applicationConfig.Object, _communicationService.Object, _repository.Object);
+            _classUnderTest = new DailyDigestService(_userService.Object, _jobservice.Object, _applicationConfig.Object, _communicationService.Object, _repository.Object, _logger.Object);
+        }
+
+        private void SetupLogger()
+        {
+            _logger = _mockRepository.Create<ILogger<DailyDigestService>>();
         }
 
         private void SetupObjects()
