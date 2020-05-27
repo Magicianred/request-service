@@ -82,8 +82,7 @@ namespace RequestService.AzureFunction
             builder.Services.AddTransient<IAddressService, AddressService>();
             builder.Services.AddTransient<ICommunicationService, CommunicationService>();
             builder.Services.AddTransient<IRepository, Repository>();
-            builder.Services.AddTransient<IDistanceCalculator, DistanceCalculator>();
-            builder.Services.AddTransient<IDailyDigestService, DailyDigestService>();
+            builder.Services.AddTransient<IDistanceCalculator, DistanceCalculator>();            
             builder.Services.AddTransient<IJobService, JobService>();
             builder.Services.AddTransient<IDailyDigestService, DailyDigestService>();
 
