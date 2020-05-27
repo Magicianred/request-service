@@ -24,13 +24,26 @@ namespace RequestService.Core.Services
             { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" }
         };
 
-        public static string BuildHelpRequestedEmail(EmailJobDTO emailJobDTO)
-        {
-            string onBehalf = emailJobDTO.OnBehalfOfSomeone ? "Yes" : "No";
-            string healthOrWellbeingConcern = emailJobDTO.IsHealthCritical ? "Yes" : "No";
 
+        public static string BuildHelpRequestedEmail(EmailJobDTO emailJobDTO, string baseUrl)
+        {
             string html = BuildHeader();
             html += BuildTitle("Help Requested");
+
+            string sectionOne = "A new request for help has just arrived ";
+            sectionOne += emailJobDTO.IsStreetChampionOfPostcode ? "in a postcode that you're Street Champion for." : "that meets the criteria you said you could help with.";
+
+            string sectionTwo = "";
+            if (emailJobDTO.IsStreetChampionOfPostcode)
+            {
+                sectionTwo = $"As Street Champion for this postcode, it would be great if you could help to ensure that someone responds to the request, even if you aren't able to do so yourself. You can find the contact details of other Street Champions and helpers that cover your postcodes in your <a href='{baseUrl}/account/streets'>My Streets page</a>.";
+            }
+            string sectionThree = "";
+            if (!emailJobDTO.IsVerified) {
+                sectionThree =  $"Note: As you’re not yet verified, you’ll need to do that before you can accept requests or see more details. It only takes a few minutes though – and helps to keep everyone safe. Find out more and start the process from your <a href='{baseUrl}/account/profile'>My Profile page</a>.";
+            }
+            
+                               
 
             html += "<table align='center' border='0' cellpadding='0' cellspacing='0' class='' style='width:600px;' width='600' > " +
                 "<tr> <td style='line-height:0px;font-size:0px;mso-line-height-rule:exactly;'> <![endif]--> " +
@@ -43,55 +56,62 @@ namespace RequestService.Core.Services
                 "<tbody><tr> <td align='left' style='font-size:0px;padding:15px 15px 15px 15px;word-break:break-word;'>" +
                 " <div style='font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:1.5;text-align:left;color:#000000;'>" +
                 $"<div><span style='font-size: 14px;'>" +
-                $"Hi. You’re receiving this email because you signed up as a Street Champion at HelpMyStreet.org. A request for help has come in for {emailJobDTO.PostCode}. The details of the request are below.</span></div>" +
+                $"Hi. You’re receiving this email because you signed up as a Volunteer at <a href='{baseUrl}'>HelpMyStreet.org</a>.</span></div>" +
                 $"<div>&#xA0;</div>" +
                 $"<div>" +
                 $"<span style='font-size: 14px;'>" +
-                $"If you are copied on this message, then you are a “backup” and you don’t need to do anything just now. If you don’t see a response from the Street Champion the message was sent “To” within a day or two though," +
-                $" it would be great if you could check with them, to see if they need any assistance." +
+                $"{sectionOne}" +                
                 $"</span>" +
-                $"</div>" +
-                   $"<div>&#xA0;</div>" +
+                $"</div> " +
+                $"<div>&#xA0;</div><div style='text-align: left;'>" +
+                $"<ul>" + 
+                $"<li style='text-align: left;'><span style='font-size: 14px;'><strong>{_mappings[emailJobDTO.Activity]}</strong> in {emailJobDTO.PostCode} ({emailJobDTO.DistanceFromPostcode.ToString("N1")} miles away) - Due {emailJobDTO.DueDate}";
+                if (emailJobDTO.IsHealthCritical)
+                {
+                    html += "<strong> - CRITICAL </strong>";
+                }
+              html += "</span> </li>" +                 
+             $"</ul>" +
+            $"</div>" +
                 $"<div>" +
-                $"<span style='font-size: 14px;'>If this message has been sent “To” you though, it would be great if you could take the lead on responding to it, " +
-                $"making contact with the sender as soon as you can, or arranging for someone else to do so. </span>" +
+                $"<span style='font-size: 14px;'>Please visit your <a href='{baseUrl}/account/open-requests?j={emailJobDTO.EncodedJobID}' >Open Requests</a> page to view more details of the request and accept it if you’re able to help. " +
+                $"</span>" +                
+                $"</div><br>" +
+
+
+                $"<div style='margin:15px 0px 15px 0px;'>" +
+                $"<span>" +
+                $"<a style='font-size: 18px; background-color:#25ac10; padding: 13px 40px; border-radius:32px; border:2px solid #25ac10; font-weight:bold; color:#FFFFFF; text-decoration:none;' href='{baseUrl}/account/open-requests?j={emailJobDTO.EncodedJobID}'> Open Requests </a>" +
                 $"</span>" +
                 $"</div>" +
-            $"<div>&#xA0;</div><div style='text-align: left;'>" +
-            $"<span style='font-size: 14px;'>Postcode : {emailJobDTO.PostCode} &#xA0;</span><br>" +
-            $"<span style='font-size: 14px;'>First Name: {emailJobDTO.Requestor.FirstName} </span><br>" +
-            $"<span style='font-size: 14px;'>Last Name: {emailJobDTO.Requestor.LastName} </span><br>" +
-            $"<span style='font-size: 14px;'>Email Address: {emailJobDTO.Requestor.EmailAddress} </span><br>" +
-            $"<span style='font-size: 14px;'>Phone Number: {emailJobDTO.Requestor.MobileNumber} </span><br>" +
-            $"<span style='font-size: 14px;'>Alternative Number: {emailJobDTO.Requestor.OtherNumber} </span><br>" +
-            $"<span style='font-size: 14px;'>On Behalf of someone: {onBehalf} </span><br>" +
-            $"<span style='font-size: 14px;'>Critical to Health or Wellbeing Concern: {healthOrWellbeingConcern} </span><br>" +
-            $"<span style='font-size: 14px;'>Help needed for <strong><span style='font-size: 14px;'>{_mappings[emailJobDTO.Activity]}</span></strong> </span><br>" +
-            $"<span style='font-size: 14px;'>Due Date: {emailJobDTO.DueDate} </span><br>" +
-            $"<span style='font-size: 14px;'>Details: {emailJobDTO.OtherDetails} </span><br>" +
-            $"<span style='font-size: 14px;'>Further Details: {emailJobDTO.FurtherDetails} </span><br>" +
-            $"<span style='font-size: 14px;'>Communication Needs: {emailJobDTO.SpecialCommunicationNeeds} </span><br>" +
-            $"</div>" +
-            $"<div><br>" +
-            $"<span style='font-size: 14px;'> So that you can co-ordinate your efforts, if this message has gone to more than one Street Champion," +
-            $"it would be great if all those copied could keep each other informed of any actions they take relating to it (e.g. making contact with the sender).</span>" +
-            $"</div>" +
+
+                $"<div>" +
+                $"<span style='font-size: 14px;'><br>" +
+                $"{sectionTwo}" + 
+                $"</span>" +
+                $"</div>" +
+
+                $"<div>" +
+                $"<span style='font-size: 14px;'><br>" +
+                $"{sectionThree}" +
+                $"</span>" +
+                $"</div>" +
+
             $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
-            $"Thanks so much!</span></div> " +
-            $"</div> " +
+            $"Thanks so much!</span></div> " +          
                  $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
-            $"The HelpMyStreet Team</span></div> " +
+            $"The HelpMyStreet Team</span></div> " +   
+            $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"P.S If you visit the site and this request is no longer visible, it’s probably been accepted by another user. Take a look around to see if there is anything else you can help with or keep an eye open for future notifications.</span></div> " +
             $"</div> " +
-                      $"<div>" +
+            $"<div>" +
             $"<span style='font-size: 12px;'><br>" +
-            $"if you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span></div> " +
-             $"<div>" +
-            $"<span style='font-size: 12px;'>" +
-            $"Once the request has been actioned, please delete any copies of this email that you have, for data protection reasons.</span></div> " +
+            $"If you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org." +
+            $"</span>" +
             $"</div> " +
-                          
             $"</div> " +
             $"</td> </tr> </tbody></table> </div> " +
             $"<!--[if mso | IE]> </td> </tr> </table> <![endif]--> </td> </tr> </tbody> " +
@@ -99,7 +119,7 @@ namespace RequestService.Core.Services
             $" </div> </body></html>";
 
             return html;
-        }
+        }        
 
         public static string BuildConfirmationRequestEmail(bool hasStreetChampion)
         {
@@ -127,8 +147,7 @@ namespace RequestService.Core.Services
                 $"<div>" +
                 $"<span style='font-size: 14px;'>" +
                 $"{body}" + 
-                $"</span></div>" +
-                $"<div>&#xA0;</div>" +    
+                $"</span></div>" + 
                 "<div>" + 
                 $"<span style='font-size: 14px;'><br>" +
                 $"Thanks so much!</span></div> " +
@@ -136,11 +155,11 @@ namespace RequestService.Core.Services
                 $"<span style='font-size: 14px;'><br>" +
                 $"The HelpMyStreet Team</span></div> " +
                 $"</div> " +               
-            $"</div> " +
                       $"<div>" +
             $"<span style='font-size: 12px;'><br>" +
             $"If you think you have received this email in error, please let the HelpMyStreet team know by contacting support@helpmystreet.org</span></div> " +
             $"</div> " +
+          $"</div> " +
             $"</td> </tr> </tbody></table> </div> " +
             $"<!--[if mso | IE]> </td> </tr> </table> <![endif]--> </td> </tr> </tbody> " +
             $"</table> </div> <!--[if mso | IE]> </td> </tr> </table> <![endif]-->" +

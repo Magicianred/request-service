@@ -1,4 +1,7 @@
-﻿using HelpMyStreet.Utils.Models;
+﻿using HelpMyStreet.Contracts.UserService.Request;
+using HelpMyStreet.Contracts.UserService.Response;
+using HelpMyStreet.Utils.Enums;
+using HelpMyStreet.Utils.Models;
 using Marvin.StreamExtensions;
 using Newtonsoft.Json;
 using RequestService.Core.Config;
@@ -47,6 +50,28 @@ namespace RequestService.Core.Services
                 championsResponse = JsonConvert.DeserializeObject<GetChampionsByPostcodeResponse>(content);
             }
             return championsResponse;
+        }
+
+        public async Task<GetVolunteersByPostcodeAndActivityResponse> GetHelpersByPostcodeAndTaskType(string postcode, List<SupportActivities> activities, CancellationToken cancellationToken)
+        {
+            string path = $"api/GetVolunteersByPostcodeAndActivity";
+            GetVolunteersByPostcodeAndActivityResponse helperResponse;
+            GetVolunteersByPostcodeAndActivityRequest request = new GetVolunteersByPostcodeAndActivityRequest
+            {
+                VolunteerFilter = new VolunteerFilter
+                {
+                    Postcode = postcode,
+                    Activities = activities
+                }                                
+            };
+
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.UserService, path, request, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync();
+                helperResponse = JsonConvert.DeserializeObject<GetVolunteersByPostcodeAndActivityResponse>(content);
+            }
+            return helperResponse;
         }
 
         public async Task<GetUserByIDResponse> GetUser(int userID, CancellationToken cancellationToken)
