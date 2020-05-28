@@ -37,14 +37,7 @@ namespace RequestService.Core.Services
 
         public async Task SendDailyDigestEmailAsync( CancellationToken cancellationToken)
         {
-            var users = await _userService.GetUsers(cancellationToken);
-            
-            if (users == null || users.UserDetails == null ||  users.UserDetails.Count() == 0)
-            {
-                _logger.LogWarning($"No Users found when generating daily digest");
-                return;
-            }
-            
+
             var openRequests = _repository.GetOpenJobsSummaries();
             if (openRequests.Count == 0)
             {
@@ -52,6 +45,13 @@ namespace RequestService.Core.Services
                 return;
             }
 
+            var users = await _userService.GetUsers(cancellationToken);            
+            if (users == null || users.UserDetails == null ||  users.UserDetails.Count() == 0)
+            {
+                _logger.LogWarning($"No Users found when generating daily digest");
+                return;
+            }
+                     
             foreach (var user in users.UserDetails)
             {
                 var attachedDistances = await _jobService.AttachedDistanceToJobSummaries(user.PostCode, openRequests, cancellationToken);
