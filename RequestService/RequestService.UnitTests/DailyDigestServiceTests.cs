@@ -134,7 +134,7 @@ namespace RequestService.UnitTests
         {
             _users = new GetUsersResponse();
             await _classUnderTest.SendDailyDigestEmailAsync(new CancellationToken());
-            _repository.Verify(x => x.GetOpenJobsSummaries(), Times.Never);
+            _repository.Verify(x => x.GetOpenJobsSummaries(), Times.Once);
             _jobservice.Verify(x => x.AttachedDistanceToJobSummaries(It.IsAny<string>(), It.IsAny<List<JobSummary>>(), It.IsAny<CancellationToken>()), Times.Never);
             _communicationService.Verify(x => x.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
