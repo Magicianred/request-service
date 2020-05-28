@@ -82,7 +82,7 @@ namespace RequestService.Core.Services
                         {
                             ToUserID = user.UserID,
                             Subject = $"Help needed in your area - {DateTime.Now.ToString("dd/MM/yy")}",
-                            BodyHTML = EmailBuilder.BuildDailyDigestEmail(jobSummaries, _applicationConfig.Value.EmailBaseUrl, user.IsVerified.Value),
+                            BodyHTML = EmailBuilder.BuildDailyDigestEmail(jobSummaries, _applicationConfig.Value.EmailBaseUrl, (user.IsVerified.HasValue && user.IsVerified.Value)),
                         };
 
                         bool emailSent = await _communicationService.SendEmailToUserAsync(request, cancellationToken);
