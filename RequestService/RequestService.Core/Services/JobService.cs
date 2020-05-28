@@ -1,5 +1,7 @@
-﻿using HelpMyStreet.Utils.Models;
+﻿using HelpMyStreet.Utils.Enums;
+using HelpMyStreet.Utils.Models;
 using HelpMyStreet.Utils.Utils;
+using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
@@ -14,14 +16,16 @@ namespace RequestService.Core.Services
     public class JobService : IJobService
     {
         private readonly IRepository _repository;
-   
+        private readonly ICommunicationService _communicationService;
         private readonly IDistanceCalculator _distanceCalculator;
-        public JobService(            
+        public JobService(
             IDistanceCalculator distanceCalculator,
+            ICommunicationService communicationService,
             IRepository repository)
         {
             _repository = repository;
             _distanceCalculator = distanceCalculator;
+            _communicationService = communicationService;
         }
 
         public async Task<List<JobSummary>> AttachedDistanceToJobSummaries(string volunteerPostCode, List<JobSummary> jobSummaries, CancellationToken cancellationToken)
@@ -62,6 +66,30 @@ namespace RequestService.Core.Services
                 }
             }
             return jobSummaries;
+        }
+
+        public async Task<bool> SendUpdateStatusEmail(int jobId, JobStatuses status, CancellationToken cancellationToken)
+        {
+            var jobDetails = _repository.GetJobDetails(jobId);
+
+            var emailRecipient = jobDetails.ForRequestor || !string.IsNullOrEmpty(jobDetails.Requestor.EmailAddress) ? jobDetails.Requestor : jobDetails.Recipient;
+
+            JobStatusUpdateDTO emailDto = new JobStatusUpdateDTO
+            {
+                DateDue = jobDetails.DueDate,
+                ForRequestor = jobDetails.ForRequestor,
+                SupportActivity = jobDetails.SupportActivity,
+                Statuses = status,
+                RequestedFor = emailRecipient.FirstName
+            };
+    
+           return await  _communicationService.SendEmail(new HelpMyStreet.Contracts.CommunicationService.Request.SendEmailRequest
+            {
+                BodyHTML = EmailBuilder.BuildJobStatusUpdatedEmail(emailDto),
+                Subject = "Request status updated",
+                ToAddress = emailRecipient.EmailAddress,
+                ToName = $"{emailRecipient.FirstName} {emailRecipient.LastName}" ,
+            }, cancellationToken);            
         }
     }
 }

@@ -92,7 +92,6 @@ namespace RequestService.Handlers
                 , cancellationToken);
                 await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
             }
-
             
             return response;
         }
