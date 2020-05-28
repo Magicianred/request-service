@@ -57,7 +57,7 @@ namespace RequestService.Core.Services
                 var attachedDistances = await _jobService.AttachedDistanceToJobSummaries(user.PostCode, openRequests, cancellationToken);
                 if (attachedDistances == null || !attachedDistances.Any())
                 {
-                    _logger.LogWarning($"Could not find Latitude and Longtitude for postcode {user.PostCode}, UserID: {user.PostCode}");
+                    _logger.LogWarning($"Could not find Latitude and Longtitude for postcode {user.PostCode}, UserID: {user.UserID}");
                     continue;
                 }
 
@@ -82,8 +82,9 @@ namespace RequestService.Core.Services
                         {
                             ToUserID = user.UserID,
                             Subject = $"Help needed in your area - {DateTime.Now.ToString("dd/MM/yy")}",
-                            BodyHTML = EmailBuilder.BuildDailyDigestEmail(jobSummaries, _applicationConfig.Value.EmailBaseUrl),
+                            BodyHTML = EmailBuilder.BuildDailyDigestEmail(jobSummaries, _applicationConfig.Value.EmailBaseUrl, user.IsVerified.Value),
                         };
+
                         bool emailSent = await _communicationService.SendEmailToUserAsync(request, cancellationToken);
 
                         if (!emailSent) throw new ApplicationException($"Daily Digest email not sent to UserID: {user.UserID}");
