@@ -171,10 +171,21 @@ namespace RequestService.Core.Services
             return html;
         }
 
-        public static string BuildDailyDigestEmail(List<OpenJobRequestDTO> jobs, string baseUrl)
+        public static string BuildDailyDigestEmail(List<OpenJobRequestDTO> jobs, string baseUrl, bool isVerified)
         {
             string html = BuildHeader();
             html += BuildTitle($"Help Needed in your Area - {DateTime.Now.ToString("dd/MM/yy")}");
+            string NotVerifedText = "";
+            if (isVerified)
+            {
+                NotVerifedText = $"<div><br> " +
+                     $"<span style='font-size: 14px;'>" +
+                    $"Note: As you’re not yet verified, you’ll need to do that before you can accept requests or see more details. It only takes a few minutes though – and helps to keep everyone safe. " +
+                    $"Find out more and start the process from your <a href='{baseUrl}/account/profile'> My Profile page.</a>" + 
+                    $" </span>" +
+                $"</div>";
+            }
+
 
             html += "<table align='center' border='0' cellpadding='0' cellspacing='0' class='' style='width:600px;' width='600' > " +
                 "<tr> <td style='line-height:0px;font-size:0px;mso-line-height-rule:exactly;'> <![endif]--> " +
@@ -205,14 +216,10 @@ namespace RequestService.Core.Services
             $"</div>" +
             $"<div><br>" +
             $"<span style='font-size: 14px;'> " +
-            $"Please log in to your account on <a href='{baseUrl}/account/open-requests'>helpmystreet.org</a> and visit the “Open Requests” tab on your profile to see more details of these requests and accept any that you can help with." +
+            $"Please click on the links above to learn more about the requests and accept any that you can help with." +
             $"</span>" +
             $"</div>" +
-             $"<div><br>" +
-            $"<span style='font-size: 14px;'>" +
-            $"Note: if you’re not yet verified, then you’ll need to do that before you can accept requests. It only takes a few minutes though – and helps to keep everyone safe. Find out more and start the process by logging in and visiting your “My Profile” tab." +
-            $" </span>" +
-            $"</div>" +
+            NotVerifedText + 
             $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
             $"Thanks!</span></div> " +        
@@ -223,7 +230,11 @@ namespace RequestService.Core.Services
                  $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
             $"The HelpMyStreet Team</span>" +
-            $"</div> " +                                  
+            $"</div> " +
+                $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"P.S. If you visit the site and this request is no longer visible, it’s probably been accepted by another user. Take a look around to see if there is anything else you can help with or keep an eye open for future notifications.</span></div> " +
+            $"</div> " +
             $"<span style='font-size: 12px;'><br>" +
             $"If you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span>" +
             $"</div> " +
