@@ -275,7 +275,7 @@ namespace RequestService.Core.Services
                 $"</div>" +                         
             $"<div><br>" +
             $"<span style='font-size: 14px;'> " +
-            $"The request you made via <a href='https://www.helpmystreet.org/'>HelpMyStreet.org</a> on {job.DateDue.ToString("dd/MM/yy")} for help{requestorName} with {_mappings[job.SupportActivity]} was updated to {_jobMappings[job.Statuses]} today at {DateTime.Now.ToString("hh:mmtt")}" +  
+            $"The request you made via <a href='https://www.helpmystreet.org/'>HelpMyStreet.org</a> on {job.DateRequested.ToString("dd/MM/yy")} for help{requestorName} with {_mappings[job.SupportActivity]} was updated to {_jobMappings[job.Statuses]} today at {job.CurrentTime}" +  
             $"</span>" +
             $"</div>" +
              $"<div><br>" +

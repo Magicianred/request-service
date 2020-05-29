@@ -354,7 +354,7 @@ namespace RequestService.Repo
             {
                 return response;
             }
-
+            
             response = new GetJobDetailsResponse()
             {
                 OtherDetails = efJob.NewRequest.OtherDetails,
@@ -368,7 +368,8 @@ namespace RequestService.Repo
                 JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)efJob.JobStatusId,
                 SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
                 DueDate= efJob.DueDate,
-                ForRequestor = efJob.NewRequest.ForRequestor.Value
+                ForRequestor = efJob.NewRequest.ForRequestor.Value,
+                DateRequested = efJob.NewRequest.DateRequested                                
             };
 
             return response;
