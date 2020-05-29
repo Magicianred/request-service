@@ -346,15 +346,15 @@ namespace RequestService.Repo
             var efJob = _context.Job
                         .Include(i => i.NewRequest)
                         .ThenInclude(i => i.PersonIdRecipientNavigation)
-                        .Include(i => i.NewRequest)
-                        .ThenInclude(i=> i.PersonIdRequesterNavigation)
+                        .Include(i => i.NewRequest)                        
+                        .ThenInclude(i=> i.PersonIdRequesterNavigation)                    
                         .Where(w => w.Id == jobID).FirstOrDefault();
 
             if(efJob == null)
             {
                 return response;
             }
-
+            
             response = new GetJobDetailsResponse()
             {
                 OtherDetails = efJob.NewRequest.OtherDetails,
@@ -368,7 +368,8 @@ namespace RequestService.Repo
                 JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)efJob.JobStatusId,
                 SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
                 DueDate= efJob.DueDate,
-                ForRequestor = efJob.NewRequest.ForRequestor.Value
+                ForRequestor = efJob.NewRequest.ForRequestor.Value,
+                DateRequested = efJob.NewRequest.DateRequested                                
             };
 
             return response;

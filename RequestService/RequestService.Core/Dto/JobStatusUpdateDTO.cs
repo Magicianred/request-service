@@ -10,11 +10,13 @@ namespace RequestService.Core.Dto
 
         public string RequestedFor { get; set; }
 
-        public DateTime DateDue { get; set; }
+        public DateTime DateRequested { get; set; }
         
         public JobStatuses Statuses { get; set; }
 
         public SupportActivities SupportActivity { get; set; }
+
+        public string CurrentTime { get; set; }
     }
 
 }
