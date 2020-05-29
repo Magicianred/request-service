@@ -1,5 +1,6 @@
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Enums;
 using Moq;
 using NUnit.Framework;
 using RequestService.Core.Interfaces.Repositories;
@@ -13,6 +14,7 @@ namespace RequestService.UnitTests
     public class PutUpdateJobStatusToOpenHandlerTests
     {
         private Mock<IRepository> _repository;
+        private Mock<IJobService> _jobService;
         private PutUpdateJobStatusToOpenHandler _classUnderTest;
         private PutUpdateJobStatusToOpenRequest _request;
         private bool _success;
@@ -21,8 +23,17 @@ namespace RequestService.UnitTests
         public void Setup()
         {
             SetupRepository();
-            _classUnderTest = new PutUpdateJobStatusToOpenHandler(_repository.Object);
+            SetupJobService();
+            _classUnderTest = new PutUpdateJobStatusToOpenHandler(_repository.Object, _jobService.Object);
         }
+
+
+        private void SetupJobService()
+        {
+            _jobService = new Mock<IJobService>();
+            _jobService.Setup(x => x.SendUpdateStatusEmail(It.IsAny<int>(), It.IsAny<JobStatuses>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
+        }
+
 
         private void SetupRepository()
         {
