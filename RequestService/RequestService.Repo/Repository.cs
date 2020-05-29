@@ -346,8 +346,8 @@ namespace RequestService.Repo
             var efJob = _context.Job
                         .Include(i => i.NewRequest)
                         .ThenInclude(i => i.PersonIdRecipientNavigation)
-                        .Include(i => i.NewRequest)                        
-                        .ThenInclude(i=> i.PersonIdRequesterNavigation)                    
+                        .Include(i => i.NewRequest)
+                        .ThenInclude(i=> i.PersonIdRequesterNavigation)
                         .Where(w => w.Id == jobID).FirstOrDefault();
 
             if(efJob == null)
