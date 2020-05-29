@@ -80,7 +80,7 @@ namespace RequestService.Core.Services
 
             JobStatusUpdateDTO emailDto = new JobStatusUpdateDTO
             {
-                DateRequested = jobDetails.DueDate,
+                DateRequested = jobDetails.DateRequested,
                 ForRequestor = jobDetails.ForRequestor,
                 SupportActivity = jobDetails.SupportActivity,
                 Statuses = status,
