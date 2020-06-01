@@ -48,7 +48,8 @@ namespace RequestService.Core.Services
                 return;
             }
 
-            var users = await _userService.GetUsers(cancellationToken);            
+            var users = await _userService.GetUsers(cancellationToken);
+            users.UserDetails = users.UserDetails.Where(x => x.SupportRadiusMiles.HasValue);                
             if (users == null || users.UserDetails == null ||  users.UserDetails.Count() == 0)
             {
                 _logger.LogWarning($"No Users found when generating daily digest");
