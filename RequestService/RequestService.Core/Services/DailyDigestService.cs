@@ -68,25 +68,25 @@ namespace RequestService.Core.Services
 
                 var (criteriaJobs, otherJobs) = attachedDistances.Split(x => user.SupportActivities.Contains(x.SupportActivity) && x.DistanceInMiles < user.SupportRadiusMiles);
 
-                var criteraJobSummaries = criteriaJobs.Select(x => new OpenJobRequestDTO
-                            {
-                                Distance = x.DistanceInMiles,
-                                DueDate = x.DueDate,
-                                IsCritical = x.IsHealthCritical,
-                                Postcode = x.PostCode,
-                                SupportActivity = x.SupportActivity,
-                                EncodedJobID = HelpMyStreet.Utils.Utils.Base64Utils.Base64Encode(x.JobID.ToString()),                                
-                            }).ToList();
+                var criteraJobSummaries = criteriaJobs.OrderOpenJobsForDisplay().Select(x => new OpenJobRequestDTO
+                {
+                    Distance = x.DistanceInMiles,
+                    DueDate = x.DueDate,
+                    IsCritical = x.IsHealthCritical,
+                    Postcode = x.PostCode,
+                    SupportActivity = x.SupportActivity,
+                    EncodedJobID = HelpMyStreet.Utils.Utils.Base64Utils.Base64Encode(x.JobID.ToString()),
+                }).ToList();
 
-                    var otherJobSummaries = otherJobs.Select(x => new OpenJobRequestDTO
-                    {
-                        Distance = x.DistanceInMiles,
-                        DueDate = x.DueDate,
-                        IsCritical = x.IsHealthCritical,
-                        Postcode = x.PostCode,
-                        SupportActivity = x.SupportActivity,
-                        EncodedJobID = HelpMyStreet.Utils.Utils.Base64Utils.Base64Encode(x.JobID.ToString()),                    
-                    }).ToList();
+                var otherJobSummaries = otherJobs.OrderOpenJobsForDisplay().Select(x => new OpenJobRequestDTO
+                {
+                    Distance = x.DistanceInMiles,
+                    DueDate = x.DueDate,
+                    IsCritical = x.IsHealthCritical,
+                    Postcode = x.PostCode,
+                    SupportActivity = x.SupportActivity,
+                    EncodedJobID = HelpMyStreet.Utils.Utils.Base64Utils.Base64Encode(x.JobID.ToString()),
+                }).ToList();
 
                 if (criteraJobSummaries.Count() > 0 || otherJobSummaries.Count() > 0)
                 {
