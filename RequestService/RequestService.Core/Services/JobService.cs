@@ -71,16 +71,21 @@ namespace RequestService.Core.Services
         public async Task<bool> SendUpdateStatusEmail(int jobId, JobStatuses status, CancellationToken cancellationToken)
         {
             var jobDetails = _repository.GetJobDetails(jobId);
-
+            
             var emailRecipient = jobDetails.ForRequestor || !string.IsNullOrEmpty(jobDetails.Requestor.EmailAddress) ? jobDetails.Requestor : jobDetails.Recipient;
+            string requestedFor = jobDetails.ForRequestor ? jobDetails.Requestor.FirstName : jobDetails.Recipient.FirstName;
+
+            var britishZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+            var todaysDate = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.Local, britishZone);
 
             JobStatusUpdateDTO emailDto = new JobStatusUpdateDTO
             {
-                DateDue = jobDetails.DueDate,
+                DateRequested = jobDetails.DateRequested,
                 ForRequestor = jobDetails.ForRequestor,
                 SupportActivity = jobDetails.SupportActivity,
                 Statuses = status,
-                RequestedFor = emailRecipient.FirstName
+                RequestedFor = requestedFor,
+                CurrentTime = todaysDate.ToString("hh:mmtt")                
             };
     
            return await  _communicationService.SendEmail(new HelpMyStreet.Contracts.CommunicationService.Request.SendEmailRequest
