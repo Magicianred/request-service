@@ -207,7 +207,7 @@ namespace RequestService.Core.Services
             $"Requests meeting the criteria you set when you signed up:";
             if (criteriaJobs.Count == 0)
             {
-                html += "<div style='font-style: italic;'>There are no open requests at present which meet the criteria you specified when you signed up</div>";
+                html += "<div style='font-style: italic;'><br>There are no open requests at present which meet the criteria you specified when you signed up</div>";
             }
             else {
 
@@ -232,7 +232,7 @@ namespace RequestService.Core.Services
             $"Other Requests:";
             if (otherJobs.Count == 0)
             {
-                html += "<div style='font-style: italic;'>There are no further open requests nearby at present</div>";
+                html += "<div style='font-style: italic;'><br>There are no further open requests nearby at present</div>";
             }
             else
             {
