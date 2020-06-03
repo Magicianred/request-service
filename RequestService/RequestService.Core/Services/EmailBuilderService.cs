@@ -21,6 +21,7 @@ namespace RequestService.Core.Services
             { HelpMyStreet.Utils.Enums.SupportActivities.HomeworkSupport, "Homework" },
             { HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn, "Check In" },
             { HelpMyStreet.Utils.Enums.SupportActivities.FaceMask, "Face Covering" },
+            { HelpMyStreet.Utils.Enums.SupportActivities.WellbeingPackage, "Wellbeing Package" },
             { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" }
         };
 
