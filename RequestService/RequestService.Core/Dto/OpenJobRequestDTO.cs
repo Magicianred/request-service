@@ -11,9 +11,7 @@ namespace RequestService.Core.Dto
            public DateTime DueDate { get; set; }
            public double Distance { get; set; }
            public string Postcode { get; set; }
-        public string EncodedJobID { get; set; }
-
-    
+           public string EncodedJobID { get; set; }    
     }
 
 }
