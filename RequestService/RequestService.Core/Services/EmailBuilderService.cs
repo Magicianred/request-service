@@ -21,8 +21,16 @@ namespace RequestService.Core.Services
             { HelpMyStreet.Utils.Enums.SupportActivities.HomeworkSupport, "Homework" },
             { HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn, "Check In" },
             { HelpMyStreet.Utils.Enums.SupportActivities.FaceMask, "Face Covering" },
+            { HelpMyStreet.Utils.Enums.SupportActivities.WellbeingPackage, "Wellbeing Package" },
             { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" }
         };
+
+        private static Dictionary<HelpMyStreet.Utils.Enums.JobStatuses, string> _jobMappings = new Dictionary<HelpMyStreet.Utils.Enums.JobStatuses, string>() {
+            { HelpMyStreet.Utils.Enums.JobStatuses.Done, "Done" },
+            { HelpMyStreet.Utils.Enums.JobStatuses.Open, "Open" },
+            { HelpMyStreet.Utils.Enums.JobStatuses.InProgress, "In Progress" },
+        };
+
 
 
         public static string BuildHelpRequestedEmail(EmailJobDTO emailJobDTO, string baseUrl)
@@ -164,10 +172,23 @@ namespace RequestService.Core.Services
             return html;
         }
 
-        public static string BuildDailyDigestEmail(List<OpenJobRequestDTO> jobs, string baseUrl)
+        public static string BuildDailyDigestEmail(List<OpenJobRequestDTO> criteriaJobs, List<OpenJobRequestDTO> otherJobs , string baseUrl, bool isVerified)
         {
             string html = BuildHeader();
             html += BuildTitle($"Help Needed in your Area - {DateTime.Now.ToString("dd/MM/yy")}");
+                        
+
+            string NotVerifedText = "";
+            if (isVerified)
+            {
+                NotVerifedText = $"<div><br> " +
+                     $"<span style='font-size: 14px;'>" +
+                    $"Note: As you’re not yet verified, you’ll need to do that before you can accept requests or see more details. It only takes a few minutes though – and helps to keep everyone safe. " +
+                    $"Find out more and start the process from your <a href='{baseUrl}/account/profile'> My Profile page.</a>" + 
+                    $" </span>" +
+                $"</div>";
+            }
+
 
             html += "<table align='center' border='0' cellpadding='0' cellspacing='0' class='' style='width:600px;' width='600' > " +
                 "<tr> <td style='line-height:0px;font-size:0px;mso-line-height-rule:exactly;'> <![endif]--> " +
@@ -182,30 +203,65 @@ namespace RequestService.Core.Services
                 $"<div><span style='font-size: 14px;'>" +
                 $"The following help is needed near you:</span></div>" +
 
-            $"<div>&#xA0;</div><div style='text-align: left;'>" +
-             $"<ul>";
-            foreach (var job in jobs)
+            $"<div>&#xA0;</div>" +
+            $"<div style='text-align: left; font-size: 14px;'>" +
+            $"Requests meeting the criteria you set when you signed up:";
+            if (criteriaJobs.Count == 0)
             {
-                html += $"<li style='text-align: left; margin-bottom:5px;'><a href={baseUrl}/account/open-requests?j={job.EncodedJobID}><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance.ToString("N1")} miles away) - Due {job.DueDate.ToString("dd/MM/yy")}";
-                if (job.IsCritical)
+                html += "<div style='font-style: italic;'><br>There are no open requests at present which meet the criteria you specified when you signed up</div>";
+            }
+            else {
+
+                html += $"<ul>";
+                foreach (var job in criteriaJobs)
                 {
-                    html += "<strong> - CRITICAL </strong>";
+                    string dueDateStyles = "";
+                    if (job.DueDate.Date <= DateTime.Today) dueDateStyles = "color: #ff4e00; font-weight:600;";
+                    if (job.DueDate.Date == DateTime.Today.AddDays(1)) dueDateStyles = "color: #ff4e00;";
+                    html += $"<li style='text-align: left; margin-bottom:5px;'><a href={baseUrl}/account/open-requests?j={job.EncodedJobID}><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance.ToString("N1")} miles away) - <span style='{dueDateStyles}'>Due {job.DueDate.ToString("dd/MM/yy")}</span>";
+                    if (job.IsCritical)
+                    {
+                        html += "<strong> - CRITICAL </strong>";
+                    }
+                    html += "</span></a> </li>";
                 }
-                 html += "</span></a> </li>";
+                html += $"</ul>";
             }
 
-            html += $"</ul>" +
-            $"</div>" +
+            html += $"</div>" + 
+            $"<div style='text-align: left; font-size: 14px;'><br>" +
+            $"Other Requests:";
+            if (otherJobs.Count == 0)
+            {
+                html += "<div style='font-style: italic;'><br>There are no further open requests nearby at present</div>";
+            }
+            else
+            {
+
+                html += $"<ul>";
+                foreach (var job in otherJobs)
+                {
+                    string dueDateStyles = "";
+                    if (job.DueDate.Date <= DateTime.Today) dueDateStyles = "color: #ff4e00; font-weight:600;";
+                    if (job.DueDate.Date == DateTime.Today.AddDays(1)) dueDateStyles = "color: #ff4e00;";
+                    html += $"<li style='text-align: left; margin-bottom:5px;'><a href={baseUrl}/account/open-requests?j={job.EncodedJobID}><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance.ToString("N1")} miles away) - <span style='{dueDateStyles}'>Due {job.DueDate.ToString("dd/MM/yy")}</span>";
+                    if (job.IsCritical)
+                    {
+                        html += "<strong> - CRITICAL </strong>";
+                    }
+                    html += "</span></a> </li>";
+                }
+                html += $"</ul>";
+
+            }
+
+            html += $"</div>" +
             $"<div><br>" +
             $"<span style='font-size: 14px;'> " +
-            $"Please log in to your account on <a href='{baseUrl}/account/open-requests'>helpmystreet.org</a> and visit the “Open Requests” tab on your profile to see more details of these requests and accept any that you can help with." +
+            $"Please click on the links above to learn more about the requests and accept any that you can help with." +
             $"</span>" +
             $"</div>" +
-             $"<div><br>" +
-            $"<span style='font-size: 14px;'>" +
-            $"Note: if you’re not yet verified, then you’ll need to do that before you can accept requests. It only takes a few minutes though – and helps to keep everyone safe. Find out more and start the process by logging in and visiting your “My Profile” tab." +
-            $" </span>" +
-            $"</div>" +
+            NotVerifedText + 
             $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
             $"Thanks!</span></div> " +        
@@ -216,7 +272,11 @@ namespace RequestService.Core.Services
                  $"<div>" +
             $"<span style='font-size: 14px;'><br>" +
             $"The HelpMyStreet Team</span>" +
-            $"</div> " +                                  
+            $"</div> " +
+                $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"P.S. If you visit the site and this request is no longer visible, it’s probably been accepted by another user. Take a look around to see if there is anything else you can help with or keep an eye open for future notifications.</span></div> " +
+            $"</div> " +
             $"<span style='font-size: 12px;'><br>" +
             $"If you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span>" +
             $"</div> " +
@@ -228,6 +288,63 @@ namespace RequestService.Core.Services
 
             return html;
         }
+
+
+        public static string BuildJobStatusUpdatedEmail(JobStatusUpdateDTO job)
+        {
+            string html = BuildHeader();
+            html += BuildTitle($"Request status updated");
+
+            string requestorName = "";
+            if(job.ForRequestor == false)
+            {
+                requestorName = $" for {job.RequestedFor}";
+            }
+
+            html += "<table align='center' border='0' cellpadding='0' cellspacing='0' class='' style='width:600px;' width='600' > " +
+                "<tr> <td style='line-height:0px;font-size:0px;mso-line-height-rule:exactly;'> <![endif]--> " +
+                "<div style='background:#FFFFFF;background-color:#FFFFFF;Margin:0px auto;max-width:600px;'> <table align='center' border='0' cellpadding='0'" +
+                " cellspacing='0' role='presentation' style='background:#FFFFFF;background-color:#FFFFFF;width:100%;'>" +
+                " <tbody> <tr> <td style='direction:ltr;font-size:0px;padding:9px 0px 9px 0px;text-align:center;vertical-align:top;'> <!--[if mso | IE]>" +
+                " <table role='presentation' border='0' cellpadding='0' cellspacing='0'> <tr> <td class='' style='vertical-align:top;width:600px;' >" +
+                " <![endif]--> <div class='mj-column-per-100 outlook-group-fix' style='font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;'>" +
+                " <table border='0' cellpadding='0' cellspacing='0' role='presentation' style='vertical-align:top;' width='100%'> " +
+                "<tbody><tr> <td align='left' style='font-size:0px;padding:15px 15px 15px 15px;word-break:break-word;'>" +
+                " <div style='font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:11px;line-height:1.5;text-align:left;color:#000000;'>" +
+                $"<div>" +
+                $"<span style='font-size: 14px;'>" +
+                $"Hi,</span>" +
+                $"</div>" +                         
+            $"<div><br>" +
+            $"<span style='font-size: 14px;'> " +
+            $"The request you made via <a href='https://www.helpmystreet.org/'>HelpMyStreet.org</a> on {job.DateRequested.ToString("dd/MM/yy")} for help{requestorName} with {_mappings[job.SupportActivity]} was updated to {_jobMappings[job.Statuses]} today at {job.CurrentTime}" +  
+            $"</span>" +
+            $"</div>" +
+             $"<div><br>" +
+            $"<span style='font-size: 14px;'>" +
+            $"If you need to get in touch with us regarding this request or have any feedback for us, please feel free to contact us on <a href='mailto:support@helpmystreet.org'>support@helpmystreet.org</a>" +
+            $" </span>" +
+            $"</div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"Best regards,</span> " +
+            $"</div> " +
+                 $"<div>" +
+            $"<span style='font-size: 14px;'><br>" +
+            $"The HelpMyStreet Team</span>" +
+            $"</div> " +
+            $"<div> " +
+            $"<span style='font-size: 12px;'><br>" +
+            $"If you think you have received this email in error or if you want to change your status (e.g. stop receiving emails like this), please let the HelpMyStreet team know by contacting support@helpmystreet.org.</span>" +
+            $"</div> " +
+            $"</div> " +
+            $"</td> </tr> </tbody></table> </div> " +
+            $"<!--[if mso | IE]> </td> </tr> </table> <![endif]--> </td> </tr> </tbody> " +
+            $"</table> </div> <!--[if mso | IE]> </td> </tr> </table> <![endif]-->" +
+            $" </div> </body></html>";
+
+            return html;
+        }
+
 
 
         private static string BuildTitle(string title)
