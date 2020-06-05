@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200605135008_AddQuestionTables")]
+    partial class AddQuestionTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,10 +184,6 @@ namespace RequestService.Repo.Migrations
                     b.Property<int>("QuestionId")
                         .HasColumnName("QuestionID");
 
-                    b.Property<int>("Order")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(1);
-
                     b.HasKey("ActivityId", "QuestionId");
 
                     b.HasIndex("QuestionId");
@@ -322,9 +320,6 @@ namespace RequestService.Repo.Migrations
                         .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdditionalData")
-                        .IsUnicode(false);
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -337,50 +332,6 @@ namespace RequestService.Repo.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Question","Request");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Please tell us more about the help or support you're requesting",
-                            QuestionType = (byte)3,
-                            Required = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Please tell us about any specific requirements (e.g. colour, style etc.)",
-                            QuestionType = (byte)3,
-                            Required = true
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "How many face coverings do you need?",
-                            QuestionType = (byte)1,
-                            Required = true
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Who will be using the face coverings?",
-                            QuestionType = (byte)4,
-                            Required = true
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
-                            QuestionType = (byte)4,
-                            Required = false
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Is this request critical to someone’s health or wellbeing?",
-                            QuestionType = (byte)4,
-                            Required = false
-                        });
                 });
 
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.Request", b =>

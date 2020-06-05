@@ -8,6 +8,7 @@ using System.Linq;
 using HelpMyStreet.PostcodeCoordinates.EF.Extensions;
 using HelpMyStreet.PostcodeCoordinates.EF.Entities;
 
+
 namespace RequestService.Repo
 {
     public class ApplicationDbContext : DbContext
@@ -35,7 +36,10 @@ namespace RequestService.Repo
         public virtual DbSet<SupportActivities> SupportActivities { get; set; }
         public virtual DbQuery<DailyReport> DailyReport { get; set; }
         public virtual DbSet<PostcodeEntity> Postcode { get; set; }
+        public virtual DbSet<ActivityQuestions> ActivityQuestions { get; set; }
+        public virtual DbSet<Question> Question { get; set; }
 
+        public virtual DbSet<RequestQuestions> RequestQuestions { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
         }
@@ -234,6 +238,74 @@ namespace RequestService.Repo
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SupportActivities_RequestID");
             });
+            modelBuilder.Entity<ActivityQuestions>(entity =>
+            {
+                entity.HasKey(e => new { e.ActivityId, e.QuestionId });
+
+                entity.ToTable("ActivityQuestions", "Request");
+
+                entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
+
+                entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
+
+                entity.Property(e => e.Order)
+                .IsRequired()
+                .HasDefaultValue(1);
+
+             
+
+                entity.HasOne(d => d.Question)
+                    .WithMany(p => p.ActivityQuestions)
+                    .HasForeignKey(d => d.QuestionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);                
+            });
+
+            modelBuilder.Entity<Question>(entity =>
+            {
+                entity.ToTable("Question", "Request");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AdditionalData).IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+                
+                entity.HasData(new EntityFramework.Entities.Question{ Id = 1, Name = "Please tell us more about the help or support you're requesting", QuestionType = 3, Required = true, });
+                entity.HasData(new EntityFramework.Entities.Question { Id = 2, Name = "Please tell us about any specific requirements (e.g. colour, style etc.)", QuestionType = 3, Required = true, });
+                entity.HasData(new EntityFramework.Entities.Question { Id = 3, Name = "How many face coverings do you need?", QuestionType = 1, Required = true, });
+                entity.HasData(new EntityFramework.Entities.Question { Id = 4, Name = "Who will be using the face coverings?", QuestionType = 4, Required = true, });
+                entity.HasData(new EntityFramework.Entities.Question { Id = 5, Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?", QuestionType = 4, Required = false, });
+                entity.HasData(new EntityFramework.Entities.Question { Id = 6, Name = "Is this request critical to someone’s health or wellbeing?", QuestionType = 4, Required = false, });
+
+            });
+            modelBuilder.Entity<RequestQuestions>(entity =>
+            {
+                entity.HasKey(e => new { e.RequestId, e.QuestionId });
+
+                entity.ToTable("RequestQuestions", "Request");
+
+                entity.Property(e => e.RequestId).HasColumnName("RequestID");
+
+                entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
+
+                entity.Property(e => e.Answer)
+                    .IsRequired()
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Question)
+                    .WithMany(p => p.RequestQuestions)
+                    .HasForeignKey(d => d.QuestionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.RequestQuestions)
+                    .HasForeignKey(d => d.RequestId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+            });
+
 
             modelBuilder.SetupPostcodeCoordinateTables();
             modelBuilder.SetupPostcodeCoordinateDefaultIndexes();
