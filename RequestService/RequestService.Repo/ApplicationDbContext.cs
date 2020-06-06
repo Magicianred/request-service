@@ -7,7 +7,11 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System.Linq;
 using HelpMyStreet.PostcodeCoordinates.EF.Extensions;
 using HelpMyStreet.PostcodeCoordinates.EF.Entities;
-
+using HelpMyStreet.Utils.Models;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using Question = RequestService.Repo.EntityFramework.Entities.Question;
+using Job = RequestService.Repo.EntityFramework.Entities.Job;
 
 namespace RequestService.Repo
 {
@@ -273,12 +277,12 @@ namespace RequestService.Repo
                     .HasMaxLength(255)
                     .IsUnicode(false);
                 
-                entity.HasData(new EntityFramework.Entities.Question{ Id = 1, Name = "Please tell us more about the help or support you're requesting", QuestionType = 3, Required = true, });
-                entity.HasData(new EntityFramework.Entities.Question { Id = 2, Name = "Please tell us about any specific requirements (e.g. colour, style etc.)", QuestionType = 3, Required = true, });
-                entity.HasData(new EntityFramework.Entities.Question { Id = 3, Name = "How many face coverings do you need?", QuestionType = 1, Required = true, });
-                entity.HasData(new EntityFramework.Entities.Question { Id = 4, Name = "Who will be using the face coverings?", QuestionType = 4, Required = true, });
-                entity.HasData(new EntityFramework.Entities.Question { Id = 5, Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?", QuestionType = 4, Required = false, });
-                entity.HasData(new EntityFramework.Entities.Question { Id = 6, Name = "Is this request critical to someone’s health or wellbeing?", QuestionType = 4, Required = false, });
+                entity.HasData(new EntityFramework.Entities.Question{ Id = (int)HelpMyStreet.Utils.Enums.Questions.SupportRequesting, Name = "Please tell us more about the help or support you're requesting", QuestionType = 3, Required = true, });
+                entity.HasData(new EntityFramework.Entities.Question { Id = (int)HelpMyStreet.Utils.Enums.Questions.FaceMask_SpecificRequirements, Name = "Please tell us about any specific requirements (e.g. colour, style etc.)", QuestionType = 3, Required = true, });
+                entity.HasData(new EntityFramework.Entities.Question { Id = (int)HelpMyStreet.Utils.Enums.Questions.FaceMask_Amount, Name = "How many face coverings do you need?", QuestionType = 1, Required = true, });
+                entity.HasData(new EntityFramework.Entities.Question { Id = (int)HelpMyStreet.Utils.Enums.Questions.FaceMask_Recipient, Name = "Who will be using the face coverings?", QuestionType = 4, Required = true, });
+                entity.HasData(new EntityFramework.Entities.Question { Id = (int)HelpMyStreet.Utils.Enums.Questions.FaceMask_Cost, Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?", QuestionType = 4, Required = false, });
+                entity.HasData(new EntityFramework.Entities.Question { Id = (int)HelpMyStreet.Utils.Enums.Questions.IsHealthCritical, Name = "Is this request critical to someone’s health or wellbeing?", QuestionType = 4, Required = false, });
 
             });
             modelBuilder.Entity<RequestQuestions>(entity =>
@@ -309,6 +313,71 @@ namespace RequestService.Repo
 
             modelBuilder.SetupPostcodeCoordinateTables();
             modelBuilder.SetupPostcodeCoordinateDefaultIndexes();
+        }
+
+        private string GetAdditionalData(HelpMyStreet.Utils.Enums.Questions question)
+        {
+            List<AdditonalQuestionData> additionalData = new List<AdditonalQuestionData>();
+            switch (question)
+            {
+                case HelpMyStreet.Utils.Enums.Questions.FaceMask_Recipient:
+                    additionalData = new List<AdditonalQuestionData>
+                    {
+                        new AdditonalQuestionData
+                        {
+                            Key = "keyworkers",
+                            Value = "KeyWorkers"
+                        },
+                        new AdditonalQuestionData
+                        {
+                            Key = "somonekeyworkers",
+                            Value = "Someone helping key workers stay safe in their role (e.g. care home residents, visitors etc."
+                        },
+                        new AdditonalQuestionData
+                        {
+                            Key = "someone",
+                            Value = "Someone else"
+                        },
+                    };                                            
+                    break;
+                case HelpMyStreet.Utils.Enums.Questions.FaceMask_Cost:
+                    additionalData = new List<AdditonalQuestionData>
+                    {
+                        new AdditonalQuestionData
+                        {
+                            Key = "Yes",
+                            Value = "Yes"
+                        },
+                        new AdditonalQuestionData
+                        {
+                            Key = "No",
+                            Value = "No"
+                        },
+                        new AdditonalQuestionData
+                        {
+                            Key = "Contribution",
+                            Value = "I can make a contribution"
+                        },
+                    };
+                    break;     
+                case HelpMyStreet.Utils.Enums.Questions.IsHealthCritical:
+                    additionalData = new List<AdditonalQuestionData>
+                    {
+                        new AdditonalQuestionData
+                        {
+                            Key = "Yes",
+                            Value = "Yes"
+                        },
+                        new AdditonalQuestionData
+                        {
+                            Key = "No",
+                            Value = "No"
+                        }                 
+                    };
+                    break;
+            }
+
+            return JsonConvert.SerializeObject(additionalData);
         }
     }
 }
