@@ -171,6 +171,7 @@ namespace RequestService.Repo
                 ForRequestor = postNewRequestForHelpRequest.HelpRequest.ForRequestor,
                 PersonIdRecipientNavigation = recipient,
                 PersonIdRequesterNavigation = requester,
+                RequestorType = (byte) postNewRequestForHelpRequest.HelpRequest.RequestorType,
                 FulfillableStatus = (byte) fulfillable,
                 CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId
             };

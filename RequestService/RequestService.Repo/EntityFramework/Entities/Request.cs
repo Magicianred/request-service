@@ -25,6 +25,7 @@ namespace RequestService.Repo.EntityFramework.Entities
         public bool? ReadPrivacyNotice { get; set; }
         public bool? AcceptedTerms { get; set; }
         public bool? ForRequestor { get; set; }
+        public byte? RequestorType { get; set; }
         public int? PersonIdRequester { get; set; }
         public int? PersonIdRecipient { get; set; }
 
