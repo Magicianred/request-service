@@ -42,7 +42,7 @@ namespace RequestService.Handlers
         {
             request.HelpRequest.Requestor.Address.Postcode = HelpMyStreet.Utils.Utils.PostcodeFormatter.FormatPostcode(request.HelpRequest.Requestor.Address.Postcode);
 
-            if (request.HelpRequest.RequestorType == RequestorType.Myself)
+            if (request.HelpRequest.RequestorType != RequestorType.OnBehalf)
             {
                 request.HelpRequest.Recipient = request.HelpRequest.Requestor;                
             }
@@ -58,8 +58,8 @@ namespace RequestService.Handlers
 
             CopyRequestorAsRecipient(request);
             string postcode = request.HelpRequest.Recipient.Address.Postcode;
-            var postcodeValid = true;
-             //var postcodeValid = await _addressService.IsValidPostcode(postcode, cancellationToken);
+     
+            var postcodeValid = await _addressService.IsValidPostcode(postcode, cancellationToken);
 
             if (!postcodeValid || postcode.Length > 10)
             {
