@@ -388,6 +388,7 @@ namespace RequestService.Repo
             
             response = new GetJobDetailsResponse()
             {
+                PostCode = efJob.NewRequest.PostCode,
                 OtherDetails = efJob.NewRequest.OtherDetails,
                 SpecialCommunicationNeeds = efJob.NewRequest.SpecialCommunicationNeeds,
                 Recipient = GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),

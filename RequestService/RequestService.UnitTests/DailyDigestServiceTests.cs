@@ -1,6 +1,7 @@
 using HelpMyStreet.Contracts.AddressService.Response;
 using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.UserService.Response;
+using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -83,12 +84,17 @@ namespace RequestService.UnitTests
                     new UserDetails
                     {
                        UserID = 1,
-                       PostCode = "T4ST1"
+                       PostCode = "T4ST1",
+                       SupportRadiusMiles = 2,
+                       SupportActivities = new List<SupportActivities> { SupportActivities.Errands}
+                       
                     },
                     new UserDetails
                     {
                        UserID = 2,
-                       PostCode = "T4ST2"
+                       PostCode = "T4ST2",
+                       SupportRadiusMiles = 2,
+                       SupportActivities = new List<SupportActivities> { SupportActivities.Shopping}
                     }
                 }
             };
