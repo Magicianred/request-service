@@ -21,6 +21,7 @@ namespace RequestService.Core.Services
             { HelpMyStreet.Utils.Enums.SupportActivities.HomeworkSupport, "Homework" },
             { HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn, "Check In" },
             { HelpMyStreet.Utils.Enums.SupportActivities.FaceMask, "Face Covering" },
+            { HelpMyStreet.Utils.Enums.SupportActivities.WellbeingPackage, "Wellbeing Package" },
             { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" }
         };
 
@@ -171,10 +172,12 @@ namespace RequestService.Core.Services
             return html;
         }
 
-        public static string BuildDailyDigestEmail(List<OpenJobRequestDTO> jobs, string baseUrl, bool isVerified)
+        public static string BuildDailyDigestEmail(List<OpenJobRequestDTO> criteriaJobs, List<OpenJobRequestDTO> otherJobs , string baseUrl, bool isVerified)
         {
             string html = BuildHeader();
             html += BuildTitle($"Help Needed in your Area - {DateTime.Now.ToString("dd/MM/yy")}");
+                        
+
             string NotVerifedText = "";
             if (isVerified)
             {
@@ -200,20 +203,59 @@ namespace RequestService.Core.Services
                 $"<div><span style='font-size: 14px;'>" +
                 $"The following help is needed near you:</span></div>" +
 
-            $"<div>&#xA0;</div><div style='text-align: left;'>" +
-             $"<ul>";
-            foreach (var job in jobs)
+            $"<div>&#xA0;</div>" +
+            $"<div style='text-align: left; font-size: 14px;'>" +
+            $"Requests meeting the criteria you set when you signed up:";
+            if (criteriaJobs.Count == 0)
             {
-                html += $"<li style='text-align: left; margin-bottom:5px;'><a href={baseUrl}/account/open-requests?j={job.EncodedJobID}><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance.ToString("N1")} miles away) - Due {job.DueDate.ToString("dd/MM/yy")}";
-                if (job.IsCritical)
+                html += "<div style='font-style: italic;'><br>There are no open requests at present which meet the criteria you specified when you signed up</div>";
+            }
+            else {
+
+                html += $"<ul>";
+                foreach (var job in criteriaJobs)
                 {
-                    html += "<strong> - CRITICAL </strong>";
+                    string dueDateStyles = "";
+                    if (job.DueDate.Date <= DateTime.Today) dueDateStyles = "color: #ff4e00; font-weight:600;";
+                    if (job.DueDate.Date == DateTime.Today.AddDays(1)) dueDateStyles = "color: #ff4e00;";
+                    html += $"<li style='text-align: left; margin-bottom:5px;'><a href={baseUrl}/account/open-requests?j={job.EncodedJobID}><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance.ToString("N1")} miles away) - <span style='{dueDateStyles}'>Due {job.DueDate.ToString("dd/MM/yy")}</span>";
+                    if (job.IsCritical)
+                    {
+                        html += "<strong> - CRITICAL </strong>";
+                    }
+                    html += "</span></a> </li>";
                 }
-                 html += "</span></a> </li>";
+                html += $"</ul>";
             }
 
-            html += $"</ul>" +
-            $"</div>" +
+            html += $"</div>" + 
+            $"<div style='text-align: left; font-size: 14px;'><br>" +
+            $"Other Requests:";
+            if (otherJobs.Count == 0)
+            {
+                html += "<div style='font-style: italic;'><br>There are no further open requests nearby at present</div>";
+            }
+            else
+            {
+
+                html += $"<ul>";
+                foreach (var job in otherJobs)
+                {
+                    string dueDateStyles = "";
+                    if (job.DueDate.Date <= DateTime.Today) dueDateStyles = "color: #ff4e00; font-weight:600;";
+                    if (job.DueDate.Date == DateTime.Today.AddDays(1)) dueDateStyles = "color: #ff4e00;";
+                    html += $"<li style='text-align: left; margin-bottom:5px;'><a href={baseUrl}/account/open-requests?j={job.EncodedJobID}><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance.ToString("N1")} miles away) - <span style='{dueDateStyles}'>Due {job.DueDate.ToString("dd/MM/yy")}</span>";
+                    if (job.IsCritical)
+                    {
+                        html += "<strong> - CRITICAL </strong>";
+                    }
+                    html += "</span></a> </li>";
+                }
+                html += $"</ul>";
+
+            }
+
+            html += $"</div>" +
             $"<div><br>" +
             $"<span style='font-size: 14px;'> " +
             $"Please click on the links above to learn more about the requests and accept any that you can help with." +
