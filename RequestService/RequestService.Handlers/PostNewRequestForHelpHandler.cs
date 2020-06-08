@@ -103,6 +103,8 @@ namespace RequestService.Handlers
         {
             var faceMaskJobs = jobs.Where(x => x.SupportActivity == HelpMyStreet.Utils.Enums.SupportActivities.FaceMask);
 
+            List<HelpMyStreet.Utils.Models.Job> additionalJobs = new List<HelpMyStreet.Utils.Models.Job>();
+
             foreach (var faceMaskJob in faceMaskJobs)
             {
                 var faceMaskAmountQuestion = faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).FirstOrDefault();
@@ -122,7 +124,7 @@ namespace RequestService.Handlers
                     {
                         var job = JsonConvert.DeserializeObject<HelpMyStreet.Utils.Models.Job>(JsonConvert.SerializeObject(faceMaskJob)); // creating clone
                         job.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = chunkSize.ToString();
-                        jobs.Add(job);
+                        additionalJobs.Add(job);
                         facemaskQuantityRemaining -= chunkSize;
                     }
 
@@ -130,10 +132,12 @@ namespace RequestService.Handlers
                     {
                         var job = JsonConvert.DeserializeObject<HelpMyStreet.Utils.Models.Job>(JsonConvert.SerializeObject(faceMaskJob)); // creating clone
                         job.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = facemaskQuantityRemaining.ToString();
-                        jobs.Add(job);
+                        additionalJobs.Add(job);
                     }
                 }
             }
+
+            jobs.AddRange(additionalJobs);
 
             return jobs;
         }
