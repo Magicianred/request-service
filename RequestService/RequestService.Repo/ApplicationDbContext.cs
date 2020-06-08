@@ -246,7 +246,7 @@ namespace RequestService.Repo
             {
                 entity.HasKey(e => new { e.ActivityId, e.QuestionId });
 
-                entity.ToTable("ActivityQuestions", "Request");
+                entity.ToTable("ActivityQuestions", "QuestionSet");
 
                 entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
 
@@ -268,7 +268,7 @@ namespace RequestService.Repo
 
             modelBuilder.Entity<Question>(entity =>
             {
-                entity.ToTable("Question", "Request");
+                entity.ToTable("Question", "QuestionSet");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
