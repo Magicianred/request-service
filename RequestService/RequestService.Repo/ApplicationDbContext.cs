@@ -43,7 +43,7 @@ namespace RequestService.Repo
         public virtual DbSet<ActivityQuestions> ActivityQuestions { get; set; }
         public virtual DbSet<Question> Question { get; set; }
 
-        public virtual DbSet<RequestQuestions> RequestQuestions { get; set; }
+        public virtual DbSet<JobQuestions> JobQuestions { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
         }
@@ -256,9 +256,7 @@ namespace RequestService.Repo
 
                 entity.Property(e => e.Order)
                 .IsRequired()
-                .HasDefaultValue(1);
-
-             
+                .HasDefaultValue(1);             
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.ActivityQuestions)
@@ -283,14 +281,13 @@ namespace RequestService.Repo
                 
               
             });
-            modelBuilder.Entity<RequestQuestions>(entity =>
+            modelBuilder.Entity<JobQuestions>(entity =>
             {
-                entity.HasKey(e => new { e.RequestId, e.QuestionId });
+                entity.HasKey(e => new { e.JobId, e.QuestionId });
 
-                entity.ToTable("RequestQuestions", "Request");
+                entity.ToTable("JobQuestions", "Request");
 
-                entity.Property(e => e.RequestId).HasColumnName("RequestID");
-
+                entity.Property(e => e.JobId).HasColumnName("JobID");
                 entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
 
                 entity.Property(e => e.Answer)
@@ -298,13 +295,13 @@ namespace RequestService.Repo
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Question)
-                    .WithMany(p => p.RequestQuestions)
+                    .WithMany(p => p.JobQuestions)
                     .HasForeignKey(d => d.QuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
-                entity.HasOne(d => d.Request)
-                    .WithMany(p => p.RequestQuestions)
-                    .HasForeignKey(d => d.RequestId)
+                entity.HasOne(d => d.Job)
+                    .WithMany(p => p.JobQuestions)
+                    .HasForeignKey(d => d.JobId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
