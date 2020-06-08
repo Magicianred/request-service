@@ -310,6 +310,8 @@ namespace RequestService.Repo
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
                                     .Include(i => i.NewRequest)
+                                    .ThenInclude(nr => nr.RequestQuestions)
+                                    .ThenInclude(rq => rq.Question)
                                     .Where(w => w.VolunteerUserId == volunteerUserID 
                                                 && w.JobStatusId == jobStatusID_InProgress
                                             ).ToList();
@@ -320,10 +322,13 @@ namespace RequestService.Repo
 
         public List<JobSummary> GetOpenJobsSummaries()
         {
+            
             byte jobStatusID_Open = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Open;
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
                                     .Include(i => i.NewRequest)
+                                    .ThenInclude(nr => nr.RequestQuestions)     
+                                    .ThenInclude(rq => rq.Question)
                                     .Where(w => w.JobStatusId == jobStatusID_Open
                                             ).ToList();
             return GetJobSummaries(jobSummaries);
@@ -346,10 +351,24 @@ namespace RequestService.Repo
                     SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)j.SupportActivityId,
                     PostCode = j.NewRequest.PostCode,
                     OtherDetails = j.NewRequest.OtherDetails,                    
-                    SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds                    
+                    SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds,
+                    Questions = MapToQuestions(j.NewRequest.RequestQuestions)                    
                 });
             }
             return response;
+        }
+
+        private List<HelpMyStreet.Utils.Models.Question> MapToQuestions(ICollection<RequestQuestions> questions)
+        {
+            return questions.Select(x => new HelpMyStreet.Utils.Models.Question
+            {
+                Id = x.QuestionId,
+                Answer = x.Answer,
+                Name = x.Question.Name,
+                Required = x.Question.Required,
+                Type = (QuestionType)x.Question.QuestionType,
+                AddtitonalData = JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData),
+            }).ToList();
         }
 
         private RequestPersonalDetails GetPerson(Person person)
@@ -402,7 +421,8 @@ namespace RequestService.Repo
                 SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
                 DueDate= efJob.DueDate,
                 ForRequestor = efJob.NewRequest.ForRequestor.Value,
-                DateRequested = efJob.NewRequest.DateRequested                                
+                DateRequested = efJob.NewRequest.DateRequested,
+                RequestorType = (RequestorType)efJob.NewRequest.RequestorType,
             };
 
             return response;
