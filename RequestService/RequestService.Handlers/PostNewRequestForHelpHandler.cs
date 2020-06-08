@@ -101,41 +101,41 @@ namespace RequestService.Handlers
 
         private List<HelpMyStreet.Utils.Models.Job> SplitFacemaskJobs(List<HelpMyStreet.Utils.Models.Job> jobs)
         {
-            var faceMaskJob = jobs.Where(x => x.SupportActivity == HelpMyStreet.Utils.Enums.SupportActivities.FaceMask).FirstOrDefault();
-            if (faceMaskJob == null) return jobs;
+            var faceMaskJobs = jobs.Where(x => x.SupportActivity == HelpMyStreet.Utils.Enums.SupportActivities.FaceMask);
 
-            var faceMaskQuestion = faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).FirstOrDefault();
-            if (faceMaskQuestion == null) return jobs;
-
-            int facemaskQuantity = 0;
-            int.TryParse(faceMaskQuestion.Answer, out facemaskQuantity);
-            if (facemaskQuantity == 0 || facemaskQuantity <= _applicationConfig.Value.FaceMaskChunkSize) return jobs;
-
-            var chunkRequests = (double)facemaskQuantity / _applicationConfig.Value.FaceMaskChunkSize;
-            var splitRequests = (int)Math.Floor(chunkRequests);
-
-            var remainder = facemaskQuantity - (splitRequests * _applicationConfig.Value.FaceMaskChunkSize);
-            
-            if (remainder > 0)
-            {              
-                faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = remainder.ToString();
-               splitRequests++; // since we need to add an extra request to accomdoate for a remainder request, we increase the split requests by one
-            }
-            else
+            foreach (var faceMaskJob in faceMaskJobs)
             {
-                faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = _applicationConfig.Value.FaceMaskChunkSize.ToString();
-            }
-            
-            for (int i = 1;  i < splitRequests; i++)
-            {
-                var job = JsonConvert.DeserializeObject<HelpMyStreet.Utils.Models.Job>(JsonConvert.SerializeObject(faceMaskJob)); // creating clone
-                job.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = _applicationConfig.Value.FaceMaskChunkSize.ToString();
-                jobs.Add(job);
+                var faceMaskAmountQuestion = faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).FirstOrDefault();
+                if (faceMaskAmountQuestion == null) return jobs;
+
+                var chunkSize = _applicationConfig.Value.FaceMaskChunkSize;
+
+                int facemaskQuantityRemaining = 0;
+                int.TryParse(faceMaskAmountQuestion.Answer, out facemaskQuantityRemaining);
+
+                if (facemaskQuantityRemaining > chunkSize)
+                {
+                    faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = chunkSize.ToString();
+                    facemaskQuantityRemaining -= chunkSize;
+
+                    while (facemaskQuantityRemaining > chunkSize)
+                    {
+                        var job = JsonConvert.DeserializeObject<HelpMyStreet.Utils.Models.Job>(JsonConvert.SerializeObject(faceMaskJob)); // creating clone
+                        job.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = chunkSize.ToString();
+                        jobs.Add(job);
+                        facemaskQuantityRemaining -= chunkSize;
+                    }
+
+                    if (facemaskQuantityRemaining > 0)
+                    {
+                        var job = JsonConvert.DeserializeObject<HelpMyStreet.Utils.Models.Job>(JsonConvert.SerializeObject(faceMaskJob)); // creating clone
+                        job.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = facemaskQuantityRemaining.ToString();
+                        jobs.Add(job);
+                    }
+                }
             }
 
             return jobs;
-
-
         }
 
         private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, CancellationToken cancellationToken)
