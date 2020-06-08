@@ -2,8 +2,10 @@
 using HelpMyStreet.Contracts.ReportService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
 using RequestService.Repo.EntityFramework.Entities;
@@ -12,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SupportActivities = RequestService.Repo.EntityFramework.Entities.SupportActivities;
 
 namespace RequestService.Repo
 {
@@ -168,6 +171,7 @@ namespace RequestService.Repo
                 ForRequestor = postNewRequestForHelpRequest.HelpRequest.ForRequestor,
                 PersonIdRecipientNavigation = recipient,
                 PersonIdRequesterNavigation = requester,
+                RequestorType = (byte) postNewRequestForHelpRequest.HelpRequest.RequestorType,
                 FulfillableStatus = (byte) fulfillable,
                 CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId
             };
@@ -185,6 +189,16 @@ namespace RequestService.Repo
                     JobStatusId = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Open
                 };
                 _context.Job.Add(EFcoreJob);
+
+                foreach (var question in job.Questions)
+                {
+                    _context.RequestQuestions.Add(new RequestQuestions
+                    {
+                        RequestId = request.Id,
+                        QuestionId = question.Id,
+                        Answer = question.Answer                        
+                    });
+                }
                 _context.RequestJobStatus.Add(new RequestJobStatus()
                 {
                     DateCreated = DateTime.Now,
@@ -206,6 +220,23 @@ namespace RequestService.Repo
                 JobId = jobID,
                 JobStatusId = jobStatus
             });
+        }
+
+        public async Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<HelpMyStreet.Utils.Enums.SupportActivities> activity,  CancellationToken cancellationToken)
+        {
+            return await _context.ActivityQuestions.Where(x => activity.Any(a => (int)a == x.ActivityId)).GroupBy(x => x.ActivityId).Select(g => new ActivityQuestionDTO
+            {
+                Activity = (HelpMyStreet.Utils.Enums.SupportActivities)g.Key,
+                Questions = g.Select(x => new HelpMyStreet.Utils.Models.Question
+                {
+                    Id = x.Question.Id,
+                    Name = x.Question.Name,
+                    Required = x.Question.Required,
+                    Type = (QuestionType)x.Question.QuestionType,
+                    AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>()
+                }).ToList()
+            }).ToListAsync(cancellationToken);
+            
         }
 
         public async Task<bool> UpdateJobStatusOpenAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
@@ -296,6 +327,7 @@ namespace RequestService.Repo
                                     .Where(w => w.JobStatusId == jobStatusID_Open
                                             ).ToList();
             return GetJobSummaries(jobSummaries);
+            
         }
 
         public List<JobSummary> GetJobSummaries(List<EntityFramework.Entities.Job> jobs)
@@ -313,8 +345,8 @@ namespace RequestService.Repo
                     JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)j.JobStatusId,
                     SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)j.SupportActivityId,
                     PostCode = j.NewRequest.PostCode,
-                    OtherDetails = j.NewRequest.OtherDetails,
-                    SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds
+                    OtherDetails = j.NewRequest.OtherDetails,                    
+                    SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds                    
                 });
             }
             return response;

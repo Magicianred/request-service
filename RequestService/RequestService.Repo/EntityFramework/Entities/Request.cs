@@ -25,6 +25,7 @@ namespace RequestService.Repo.EntityFramework.Entities
         public bool? ReadPrivacyNotice { get; set; }
         public bool? AcceptedTerms { get; set; }
         public bool? ForRequestor { get; set; }
+        public byte? RequestorType { get; set; }
         public int? PersonIdRequester { get; set; }
         public int? PersonIdRecipient { get; set; }
 
@@ -34,5 +35,6 @@ namespace RequestService.Repo.EntityFramework.Entities
         public virtual PersonalDetails PersonalDetails { get; set; }
         public virtual ICollection<SupportActivities> SupportActivities { get; set; }
         public virtual ICollection<Job> Job { get; set; }
+        public virtual ICollection<RequestQuestions> RequestQuestions { get; set; }
     }
 }

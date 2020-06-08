@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200605174020_AddedAddtionalAndOrderToActivityQuestions")]
+    partial class AddedAddtionalAndOrderToActivityQuestions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,6 +184,9 @@ namespace RequestService.Repo.Migrations
                     b.Property<int>("QuestionId")
                         .HasColumnName("QuestionID");
 
+                    b.Property<string>("AdditionalData")
+                        .IsUnicode(false);
+
                     b.Property<int>("Order")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(1);
@@ -190,177 +195,7 @@ namespace RequestService.Repo.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("ActivityQuestions","QuestionSet");
-
-                    b.HasData(
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 2,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 3,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 4,
-                            Order = 3
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 5,
-                            Order = 4
-                        },
-                        new
-                        {
-                            ActivityId = 13,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 13,
-                            QuestionId = 6,
-                            Order = 2
-                        });
+                    b.ToTable("ActivityQuestions","Request");
                 });
 
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.Job", b =>
@@ -492,8 +327,7 @@ namespace RequestService.Repo.Migrations
                         .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdditionalData")
-                        .IsUnicode(false);
+                    b.Property<string>("AdditionalData");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -506,29 +340,26 @@ namespace RequestService.Repo.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Question","QuestionSet");
+                    b.ToTable("Question","Request");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            AdditionalData = "[]",
                             Name = "Please tell us more about the help or support you're requesting",
                             QuestionType = (byte)3,
-                            Required = false
+                            Required = true
                         },
                         new
                         {
                             Id = 2,
-                            AdditionalData = "[]",
                             Name = "Please tell us about any specific requirements (e.g. colour, style etc.)",
                             QuestionType = (byte)3,
-                            Required = false
+                            Required = true
                         },
                         new
                         {
                             Id = 3,
-                            AdditionalData = "[]",
                             Name = "How many face coverings do you need?",
                             QuestionType = (byte)1,
                             Required = true
@@ -536,15 +367,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             Id = 4,
-                            AdditionalData = "[{\"Key\":\"keyworkers\",\"Value\":\"Key workers\"},{\"Key\":\"somonekeyworkers\",\"Value\":\"Someone helping key workers stay safe in their role (e.g. care home residents, visitors etc.)\"},{\"Key\":\"someone\",\"Value\":\"Someone else\"}]",
                             Name = "Who will be using the face coverings?",
                             QuestionType = (byte)4,
-                            Required = false
+                            Required = true
                         },
                         new
                         {
                             Id = 5,
-                            AdditionalData = "[{\"Key\":\"Yes\",\"Value\":\"Yes\"},{\"Key\":\"No\",\"Value\":\"No\"},{\"Key\":\"Contribution\",\"Value\":\"I can make a contribution\"}]",
                             Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
                             QuestionType = (byte)4,
                             Required = false
@@ -552,10 +381,9 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             Id = 6,
-                            AdditionalData = "[{\"Key\":\"true\",\"Value\":\"Yes\"},{\"Key\":\"false\",\"Value\":\"No\"}]",
-                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Name = "Is this request critical to someone’s health or wellbeing?",
                             QuestionType = (byte)4,
-                            Required = true
+                            Required = false
                         });
                 });
 
@@ -599,8 +427,6 @@ namespace RequestService.Repo.Migrations
                         .IsUnicode(false);
 
                     b.Property<bool?>("ReadPrivacyNotice");
-
-                    b.Property<byte?>("RequestorType");
 
                     b.Property<string>("SpecialCommunicationNeeds")
                         .IsUnicode(false);
