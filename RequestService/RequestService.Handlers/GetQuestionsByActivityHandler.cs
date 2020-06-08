@@ -27,7 +27,18 @@ namespace RequestService.Handlers
 
             GetQuestionsByActivtiesResponse response = new GetQuestionsByActivtiesResponse();
             response.SupportActivityQuestions = new Dictionary<HelpMyStreet.Utils.Enums.SupportActivities, List<Question>>();
-            questions.ForEach(x => response.SupportActivityQuestions.Add(x.Activity, x.Questions));
+
+            questions.ForEach(x =>
+            {
+                if (x.Questions.Count() == 0)
+                {
+                    response.SupportActivityQuestions.Add(x.Activity, new List<Question>());
+                }
+                else
+                {
+                    response.SupportActivityQuestions.Add(x.Activity, x.Questions);
+                }
+            });
 
             return response;
         }

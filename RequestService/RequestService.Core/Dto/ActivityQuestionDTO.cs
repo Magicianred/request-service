@@ -8,7 +8,7 @@ namespace RequestService.Core.Dto
 {
     public class ActivityQuestionDTO
     {
-        public List<Question> Questions { get; set; }
+        public List<Question> Questions { get; set; } = new List<Question>();
         public SupportActivities Activity { get; set; }
     }
 }

@@ -327,6 +327,7 @@ namespace RequestService.Repo
                                     .Where(w => w.JobStatusId == jobStatusID_Open
                                             ).ToList();
             return GetJobSummaries(jobSummaries);
+            
         }
 
         public List<JobSummary> GetJobSummaries(List<EntityFramework.Entities.Job> jobs)
@@ -344,8 +345,8 @@ namespace RequestService.Repo
                     JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)j.JobStatusId,
                     SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)j.SupportActivityId,
                     PostCode = j.NewRequest.PostCode,
-                    OtherDetails = j.NewRequest.OtherDetails,
-                    SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds
+                    OtherDetails = j.NewRequest.OtherDetails,                    
+                    SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds                    
                 });
             }
             return response;

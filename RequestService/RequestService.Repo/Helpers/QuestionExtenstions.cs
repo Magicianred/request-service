@@ -144,9 +144,6 @@ namespace RequestService.Repo.Helpers
                 entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.SupportRequesting , Order= 1 });
                 entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.IsHealthCritical, Order = 2 });
             }
-
-            
-            
         }
     }
 }
