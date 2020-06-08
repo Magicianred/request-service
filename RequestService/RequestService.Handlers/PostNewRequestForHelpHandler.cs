@@ -135,7 +135,7 @@ namespace RequestService.Handlers
                     Subject = "Thank you for registering your request via HelpMyStreet.org",
                     ToAddress = emailJobDTO.Requestor.EmailAddress,
                     ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
-                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true)
+                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true, emailJobDTO)
                 };
 
                 await _communicationService.SendEmail(confirmation, cancellationToken);
