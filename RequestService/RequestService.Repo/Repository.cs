@@ -176,8 +176,7 @@ namespace RequestService.Repo
                 CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId
             };
 
-            
-            foreach(HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
+            foreach (HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
             {
 
                 EntityFramework.Entities.Job EFcoreJob = new EntityFramework.Entities.Job()
@@ -213,8 +212,7 @@ namespace RequestService.Repo
 
         }
 
-
-        
+         
 
         private void AddJobStatus(int jobID, int? createdByUserID, int? volunteerUserID, byte jobStatus)
         {

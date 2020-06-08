@@ -14,6 +14,7 @@ using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
 using RequestService.Core.Dto;
 using HelpMyStreet.Contracts.CommunicationService.Request;
+using Newtonsoft.Json;
 
 namespace RequestService.Handlers
 {
@@ -80,6 +81,8 @@ namespace RequestService.Handlers
                 response.Fulfillable = Fulfillable.Accepted_ManualReferral;
             }
 
+            request.NewJobsRequest.Jobs = SplitFacemaskJobs(request.NewJobsRequest.Jobs);
+
             var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
             response.RequestID = result;
 
@@ -94,6 +97,45 @@ namespace RequestService.Handlers
             }
             
             return response;
+        }
+
+        private List<HelpMyStreet.Utils.Models.Job> SplitFacemaskJobs(List<HelpMyStreet.Utils.Models.Job> jobs)
+        {
+            var faceMaskJob = jobs.Where(x => x.SupportActivity == HelpMyStreet.Utils.Enums.SupportActivities.FaceMask).FirstOrDefault();
+            if (faceMaskJob == null) return jobs;
+
+            var faceMaskQuestion = faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).FirstOrDefault();
+            if (faceMaskQuestion == null) return jobs;
+
+            int facemaskQuantity = 0;
+            int.TryParse(faceMaskQuestion.Answer, out facemaskQuantity);
+            if (facemaskQuantity == 0 || facemaskQuantity <= _applicationConfig.Value.FaceMaskChunkSize) return jobs;
+
+            var chunkRequests = (double)facemaskQuantity / _applicationConfig.Value.FaceMaskChunkSize;
+            var splitRequests = (int)Math.Floor(chunkRequests);
+
+            var remainder = facemaskQuantity - (splitRequests * _applicationConfig.Value.FaceMaskChunkSize);
+            
+            if (remainder > 0)
+            {              
+                faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = remainder.ToString();
+               splitRequests++; // since we need to add an extra request to accomdoate for a remainder request, we increase the split requests by one
+            }
+            else
+            {
+                faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = _applicationConfig.Value.FaceMaskChunkSize.ToString();
+            }
+            
+            for (int i = 1;  i < splitRequests; i++)
+            {
+                var job = JsonConvert.DeserializeObject<HelpMyStreet.Utils.Models.Job>(JsonConvert.SerializeObject(faceMaskJob)); // creating clone
+                job.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = _applicationConfig.Value.FaceMaskChunkSize.ToString();
+                jobs.Add(job);
+            }
+
+            return jobs;
+
+
         }
 
         private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, CancellationToken cancellationToken)
