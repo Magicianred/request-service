@@ -149,7 +149,7 @@ namespace RequestService.Repo
             Person requester = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Requestor);
             Person recipient;
 
-            if (postNewRequestForHelpRequest.HelpRequest.ForRequestor)
+            if (postNewRequestForHelpRequest.HelpRequest.RequestorType != RequestorType.OnBehalf)
             {
                 recipient = requester;
             }
@@ -176,9 +176,9 @@ namespace RequestService.Repo
                 CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId
             };
 
-            _context.Request.Add(request);
-            foreach(HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
+            foreach (HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
             {
+
                 EntityFramework.Entities.Job EFcoreJob = new EntityFramework.Entities.Job()
                 {
                     NewRequest = request,
@@ -192,13 +192,14 @@ namespace RequestService.Repo
 
                 foreach (var question in job.Questions)
                 {
-                    _context.RequestQuestions.Add(new RequestQuestions
+                    _context.JobQuestions.Add(new JobQuestions
                     {
-                        RequestId = request.Id,
+                        Job = EFcoreJob,
                         QuestionId = question.Id,
-                        Answer = question.Answer                        
+                        Answer = question.Answer
                     });
                 }
+
                 _context.RequestJobStatus.Add(new RequestJobStatus()
                 {
                     DateCreated = DateTime.Now,
@@ -210,6 +211,8 @@ namespace RequestService.Repo
             return request.Id;
 
         }
+
+         
 
         private void AddJobStatus(int jobID, int? createdByUserID, int? volunteerUserID, byte jobStatus)
         {
@@ -310,7 +313,7 @@ namespace RequestService.Repo
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
                                     .Include(i => i.NewRequest)
-                                    .ThenInclude(nr => nr.RequestQuestions)
+                                    .Include(i => i.JobQuestions)
                                     .ThenInclude(rq => rq.Question)
                                     .Where(w => w.VolunteerUserId == volunteerUserID 
                                                 && w.JobStatusId == jobStatusID_InProgress
@@ -327,7 +330,7 @@ namespace RequestService.Repo
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
                                     .Include(i => i.NewRequest)
-                                    .ThenInclude(nr => nr.RequestQuestions)     
+                                    .Include(i => i.JobQuestions)
                                     .ThenInclude(rq => rq.Question)
                                     .Where(w => w.JobStatusId == jobStatusID_Open
                                             ).ToList();
@@ -352,13 +355,13 @@ namespace RequestService.Repo
                     PostCode = j.NewRequest.PostCode,
                     OtherDetails = j.NewRequest.OtherDetails,                    
                     SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds,
-                    Questions = MapToQuestions(j.NewRequest.RequestQuestions)                    
+                    Questions = MapToQuestions(j.JobQuestions)                    
                 });
             }
             return response;
         }
 
-        private List<HelpMyStreet.Utils.Models.Question> MapToQuestions(ICollection<RequestQuestions> questions)
+        private List<HelpMyStreet.Utils.Models.Question> MapToQuestions(ICollection<JobQuestions> questions)
         {
             return questions.Select(x => new HelpMyStreet.Utils.Models.Question
             {

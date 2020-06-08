@@ -7,5 +7,6 @@
         public string ManualReferName { get; set; }
         public string EmailBaseUrl { get; set; }
         public int DistanceInMilesForDailyDigest { get; set; }
+        public int FaceMaskChunkSize { get; set; }
     }
 }
