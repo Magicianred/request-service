@@ -108,6 +108,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         Address = new HelpMyStreet.Utils.Models.Address
@@ -149,6 +150,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         Address = new HelpMyStreet.Utils.Models.Address
@@ -200,6 +202,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         Address = new HelpMyStreet.Utils.Models.Address
@@ -252,6 +255,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         Address = new HelpMyStreet.Utils.Models.Address
@@ -296,6 +300,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         Address = new HelpMyStreet.Utils.Models.Address
@@ -352,6 +357,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         Address = new HelpMyStreet.Utils.Models.Address
@@ -388,6 +394,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         Address = new HelpMyStreet.Utils.Models.Address
@@ -458,6 +465,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         Address = new HelpMyStreet.Utils.Models.Address
@@ -517,6 +525,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         Address = new HelpMyStreet.Utils.Models.Address
@@ -581,6 +590,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         EmailAddress = "requestorEmailAdddress",
@@ -628,6 +638,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         EmailAddress = "requestorEmailAdddress",
@@ -690,6 +701,7 @@ namespace RequestService.UnitTests
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
                     ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
                         EmailAddress = "requestorEmailAdddress",
