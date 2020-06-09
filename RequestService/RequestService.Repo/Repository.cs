@@ -149,7 +149,7 @@ namespace RequestService.Repo
             Person requester = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Requestor);
             Person recipient;
 
-            if (postNewRequestForHelpRequest.HelpRequest.RequestorType != RequestorType.OnBehalf)
+            if (postNewRequestForHelpRequest.HelpRequest.RequestorType == RequestorType.Myself)
             {
                 recipient = requester;
             }
