@@ -7,7 +7,7 @@ namespace RequestService.Repo.EntityFramework.Entities
         public Question()
         {
             ActivityQuestions = new HashSet<ActivityQuestions>();
-            RequestQuestions = new HashSet<RequestQuestions>();
+            JobQuestions = new HashSet<JobQuestions>();
         }
 
         public int Id { get; set; }
@@ -16,7 +16,7 @@ namespace RequestService.Repo.EntityFramework.Entities
         public bool Required { get; set; }        
         public string AdditionalData { get; set; }
         public virtual ICollection<ActivityQuestions> ActivityQuestions { get; set; }
-        public virtual ICollection<RequestQuestions> RequestQuestions { get; set; }
+        public virtual ICollection<JobQuestions> JobQuestions { get; set; }
     }
 }
 

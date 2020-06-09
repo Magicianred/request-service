@@ -12,6 +12,7 @@ using RequestService.Core.Interfaces.Repositories;
 using RequestService.Core.Services;
 using RequestService.Handlers;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,7 +65,8 @@ namespace RequestService.UnitTests
             {
                 ManualReferName = "test",
                 ManualReferEmail = "manual@test.com",
-                EmailBaseUrl = "helpmystreettest"
+                EmailBaseUrl = "helpmystreettest",
+                FaceMaskChunkSize = 10
             });
         }
 
@@ -377,7 +379,180 @@ namespace RequestService.UnitTests
             _communicationService.Verify(x => x.SendEmailToUserAsync(It.Is<SendEmailToUserRequest>(ser => ser.ToUserID == 99), It.IsAny<CancellationToken>()), Times.Once);
         }
 
+        [Test]
+        public async Task WhenIPostFaceMask_With44Requested_IGet5Jobs()
+        {
+            _validPostcode = true;
+            var request = new PostNewRequestForHelpRequest
+            {
+                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
+                {
+                    ForRequestor = true,
+                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
+                    {
+                        Address = new HelpMyStreet.Utils.Models.Address
+                        {
+                            Postcode = "test",
+                        }
+                    }
+                },
+                NewJobsRequest = new NewJobsRequest
+                {
+                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
+                    {
+                        new HelpMyStreet.Utils.Models.Job
+                        {
+                            HealthCritical = true,
+                            DueDays = 5,
+                            SupportActivity = SupportActivities.FaceMask,
+                            Questions = new List<HelpMyStreet.Utils.Models.Question>
+                            {
+                                new HelpMyStreet.Utils.Models.Question
+                                {
+                                    Id = (int)Questions.FaceMask_Amount,
+                                    Answer = "44"
+                                }
+                            }
 
+                        }
+                    }
+                }
+            };
+            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
+            {
+                Volunteers = new List<VolunteerSummary>
+                {
+                    new VolunteerSummary
+                    {
+                        UserID = 1,
+                         IsStreetChampionForGivenPostCode = true,
+                         IsVerified = true,
+                        DistanceInMiles = 1,
+                    }
+                }
+            };
+            await _classUnderTest.Handle(request, new CancellationToken());
+            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Count == 5), It.IsAny<Fulfillable>()), Times.Once);
+            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Any(x => x.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer == "4")), It.IsAny<Fulfillable>()));
+        }
+
+        [Test]
+        public async Task WhenIPostFaceMask_WithNoRemainder_IGetCorrectJobs()
+        {
+            _validPostcode = true;
+            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
+            {
+                Volunteers = new List<VolunteerSummary>
+                {
+                    new VolunteerSummary
+                    {
+                        UserID = 1,
+                         IsStreetChampionForGivenPostCode = true,
+                         IsVerified = true,
+                        DistanceInMiles = 1,
+                    }
+                }
+            };
+            var request = new PostNewRequestForHelpRequest
+            {
+                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
+                {
+                    ForRequestor = true,
+                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
+                    {
+                        Address = new HelpMyStreet.Utils.Models.Address
+                        {
+                            Postcode = "test",
+                        }
+                    }
+                },
+                NewJobsRequest = new NewJobsRequest
+                {
+                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
+                    {
+                        new HelpMyStreet.Utils.Models.Job
+                        {
+                            HealthCritical = true,
+                            DueDays = 5,
+                            SupportActivity = SupportActivities.FaceMask,
+                            Questions = new List<HelpMyStreet.Utils.Models.Question>
+                            {
+                                new HelpMyStreet.Utils.Models.Question
+                                {
+                                    Id = (int)Questions.FaceMask_Amount,
+                                    Answer = "20"
+                                }
+                            }
+
+                        }
+                    }
+                }
+            };
+
+            await _classUnderTest.Handle(request, new CancellationToken());
+
+            var requestWithAddedJobs = request;
+            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Count == 2), It.IsAny<Fulfillable>()), Times.Once);
+        }
+
+        [Test]
+        public async Task WhenIPostFaceMask_UnderChunkSize_IGet1Jobs()
+        {
+            _validPostcode = true;
+            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
+            {
+                Volunteers = new List<VolunteerSummary>
+                {
+                    new VolunteerSummary
+                    {
+                        UserID = 1,
+                         IsStreetChampionForGivenPostCode = true,
+                         IsVerified = true,
+                        DistanceInMiles = 1,
+                    }
+                }
+            };
+            var request = new PostNewRequestForHelpRequest
+            {
+                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
+                {
+                    ForRequestor = true,
+                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
+                    {
+                        Address = new HelpMyStreet.Utils.Models.Address
+                        {
+                            Postcode = "test",
+                        }
+                    }
+                },
+                NewJobsRequest = new NewJobsRequest
+                {
+                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
+                    {
+                        new HelpMyStreet.Utils.Models.Job
+                        {
+                            HealthCritical = true,
+                            DueDays = 5,
+                            SupportActivity = SupportActivities.FaceMask,
+                            Questions = new List<HelpMyStreet.Utils.Models.Question>
+                            {
+                                new HelpMyStreet.Utils.Models.Question
+                                {
+                                    Id = (int)Questions.FaceMask_Amount,
+                                    Answer = "8"
+                                }
+                            }
+
+                        }
+                    }
+                }
+            };
+
+            await _classUnderTest.Handle(request, new CancellationToken());
+
+            var requestWithAddedJobs = request;
+            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Count == 1), It.IsAny<Fulfillable>()), Times.Once);
+        }
 
         [Test]
         public async Task WhenISendEmail_WithHelperFound_ISendEmailConfirmation()

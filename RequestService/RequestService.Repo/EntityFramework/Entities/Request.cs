@@ -37,6 +37,6 @@ namespace RequestService.Repo.EntityFramework.Entities
         public virtual PersonalDetails PersonalDetails { get; set; }
         public virtual ICollection<SupportActivities> SupportActivities { get; set; }
         public virtual ICollection<Job> Job { get; set; }
-        public virtual ICollection<RequestQuestions> RequestQuestions { get; set; }
+        
     }
 }
