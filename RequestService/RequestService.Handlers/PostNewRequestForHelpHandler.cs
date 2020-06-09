@@ -43,7 +43,7 @@ namespace RequestService.Handlers
         {
             request.HelpRequest.Requestor.Address.Postcode = HelpMyStreet.Utils.Utils.PostcodeFormatter.FormatPostcode(request.HelpRequest.Requestor.Address.Postcode);
 
-            if (request.HelpRequest.RequestorType != RequestorType.OnBehalf)
+            if (request.HelpRequest.RequestorType == RequestorType.Myself)
             {
                 request.HelpRequest.Recipient = request.HelpRequest.Requestor;                
             }
@@ -86,15 +86,13 @@ namespace RequestService.Handlers
             var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
             response.RequestID = result;
 
-            foreach(HelpMyStreet.Utils.Models.Job job in request.NewJobsRequest.Jobs)
-            {
-                EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, job, postcode);
+                EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
 
                 bool commsSent = await SendEmailAsync(
                     emailJob
                 , cancellationToken);
                 await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
-            }
+            
             
             return response;
         }

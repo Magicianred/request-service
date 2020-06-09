@@ -178,7 +178,7 @@ namespace RequestService.Repo
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.OtherDetails).IsUnicode(false);
-
+                entity.Property(e => e.OrganisationName).HasMaxLength(255).IsUnicode(false);
                 entity.Property(e => e.PersonIdRecipient).HasColumnName("PersonID_Recipient");
 
                 entity.Property(e => e.PersonIdRequester).HasColumnName("PersonID_Requester");

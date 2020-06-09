@@ -149,7 +149,7 @@ namespace RequestService.Repo
             Person requester = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Requestor);
             Person recipient;
 
-            if (postNewRequestForHelpRequest.HelpRequest.RequestorType != RequestorType.OnBehalf)
+            if (postNewRequestForHelpRequest.HelpRequest.RequestorType == RequestorType.Myself)
             {
                 recipient = requester;
             }
@@ -167,6 +167,7 @@ namespace RequestService.Repo
                 SpecialCommunicationNeeds = postNewRequestForHelpRequest.HelpRequest.SpecialCommunicationNeeds,
                 AcceptedTerms = postNewRequestForHelpRequest.HelpRequest.AcceptedTerms,
                 OtherDetails = postNewRequestForHelpRequest.HelpRequest.OtherDetails,
+                OrganisationName = postNewRequestForHelpRequest.HelpRequest.OrganisationName,
                 PostCode = postNewRequestForHelpRequest.HelpRequest.Recipient.Address.Postcode,
                 ForRequestor = postNewRequestForHelpRequest.HelpRequest.ForRequestor,
                 PersonIdRecipientNavigation = recipient,
