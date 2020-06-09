@@ -42,7 +42,7 @@ namespace RequestService.Handlers
         {
             request.HelpRequest.Requestor.Address.Postcode = HelpMyStreet.Utils.Utils.PostcodeFormatter.FormatPostcode(request.HelpRequest.Requestor.Address.Postcode);
 
-            if (request.HelpRequest.RequestorType != RequestorType.OnBehalf)
+            if (request.HelpRequest.RequestorType == RequestorType.Myself)
             {
                 request.HelpRequest.Recipient = request.HelpRequest.Requestor;                
             }
