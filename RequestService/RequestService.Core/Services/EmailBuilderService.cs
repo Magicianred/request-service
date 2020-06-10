@@ -92,7 +92,7 @@ namespace RequestService.Core.Services
                 $"<div>" +
                 $"<span style='font-size: 14px;'>Please visit your <a href='{baseUrl}/account/open-requests?j={emailJobDTO.EncodedJobID}' >Open Requests</a> page to view more details of the request and accept it if you’re able to help. " +
                 $"</span>" +
-                $"<span style='font-size: 14px;'>For more information about how to help safely and some answers to frequently askd questions head to <a href='https://helpmystreet.org/questions'>HelpMyStreet.org/questions</a>" +
+                $"<span style='font-size: 14px;'>For more information about how to help safely and some answers to frequently asked questions head to <a href='https://helpmystreet.org/questions'>HelpMyStreet.org/questions</a>" +
                 $"</span>" +
                 $"</div><br>" +
 
