@@ -19,9 +19,8 @@ namespace RequestService.Repo.EntityFramework.Entities
         public string Details { get; set; }
         public DateTime DueDate { get; set; }
         public bool IsHealthCritical { get; set; }
-
         public virtual Request NewRequest { get; set; }
-        
+        public virtual ICollection<JobQuestions> JobQuestions { get; set; }
         public virtual ICollection<RequestJobStatus> RequestJobStatus { get; set; }
     }
 }

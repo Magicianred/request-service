@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200607123731_SetRequiredToFalseforSupportRequesting")]
+    partial class SetRequiredToFalseforSupportRequesting
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,7 +192,7 @@ namespace RequestService.Repo.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("ActivityQuestions","QuestionSet");
+                    b.ToTable("ActivityQuestions","Request");
 
                     b.HasData(
                         new
@@ -396,25 +398,6 @@ namespace RequestService.Repo.Migrations
                     b.ToTable("Job","Request");
                 });
 
-            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.JobQuestions", b =>
-                {
-                    b.Property<int>("JobId")
-                        .HasColumnName("JobID");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnName("QuestionID");
-
-                    b.Property<string>("Answer")
-                        .IsRequired()
-                        .IsUnicode(false);
-
-                    b.HasKey("JobId", "QuestionId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("JobQuestions","Request");
-                });
-
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.Person", b =>
                 {
                     b.Property<int>("Id")
@@ -525,7 +508,7 @@ namespace RequestService.Repo.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Question","QuestionSet");
+                    b.ToTable("Question","Request");
 
                     b.HasData(
                         new
@@ -603,10 +586,6 @@ namespace RequestService.Repo.Migrations
 
                     b.Property<bool>("IsFulfillable");
 
-                    b.Property<string>("OrganisationName")
-                        .HasMaxLength(255)
-                        .IsUnicode(false);
-
                     b.Property<string>("OtherDetails")
                         .IsUnicode(false);
 
@@ -661,6 +640,25 @@ namespace RequestService.Repo.Migrations
                     b.ToTable("RequestJobStatus","Request");
                 });
 
+            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.RequestQuestions", b =>
+                {
+                    b.Property<int>("RequestId")
+                        .HasColumnName("RequestID");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnName("QuestionID");
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .IsUnicode(false);
+
+                    b.HasKey("RequestId", "QuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("RequestQuestions","Request");
+                });
+
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.SupportActivities", b =>
                 {
                     b.Property<int>("RequestId")
@@ -687,17 +685,6 @@ namespace RequestService.Repo.Migrations
                         .WithMany("Job")
                         .HasForeignKey("RequestId")
                         .HasConstraintName("FK_NewRequest_NewRequestID");
-                });
-
-            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.JobQuestions", b =>
-                {
-                    b.HasOne("RequestService.Repo.EntityFramework.Entities.Job", "Job")
-                        .WithMany("JobQuestions")
-                        .HasForeignKey("JobId");
-
-                    b.HasOne("RequestService.Repo.EntityFramework.Entities.Question", "Question")
-                        .WithMany("JobQuestions")
-                        .HasForeignKey("QuestionId");
                 });
 
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.PersonalDetails", b =>
@@ -727,6 +714,17 @@ namespace RequestService.Repo.Migrations
                         .WithMany("RequestJobStatus")
                         .HasForeignKey("JobId")
                         .HasConstraintName("FK_Job_JobID");
+                });
+
+            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.RequestQuestions", b =>
+                {
+                    b.HasOne("RequestService.Repo.EntityFramework.Entities.Question", "Question")
+                        .WithMany("RequestQuestions")
+                        .HasForeignKey("QuestionId");
+
+                    b.HasOne("RequestService.Repo.EntityFramework.Entities.Request", "Request")
+                        .WithMany("RequestQuestions")
+                        .HasForeignKey("RequestId");
                 });
 
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.SupportActivities", b =>

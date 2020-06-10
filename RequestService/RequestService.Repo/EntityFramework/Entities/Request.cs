@@ -18,6 +18,8 @@ namespace RequestService.Repo.EntityFramework.Entities
         public bool IsFulfillable { get; set; }
         public bool CommunicationSent { get; set; }
 
+        public string OrganisationName { get; set; }
+
         public byte? FulfillableStatus { get; set; }
 
         public string SpecialCommunicationNeeds { get; set; }
@@ -25,6 +27,7 @@ namespace RequestService.Repo.EntityFramework.Entities
         public bool? ReadPrivacyNotice { get; set; }
         public bool? AcceptedTerms { get; set; }
         public bool? ForRequestor { get; set; }
+        public byte? RequestorType { get; set; }
         public int? PersonIdRequester { get; set; }
         public int? PersonIdRecipient { get; set; }
 
@@ -34,5 +37,6 @@ namespace RequestService.Repo.EntityFramework.Entities
         public virtual PersonalDetails PersonalDetails { get; set; }
         public virtual ICollection<SupportActivities> SupportActivities { get; set; }
         public virtual ICollection<Job> Job { get; set; }
+        
     }
 }

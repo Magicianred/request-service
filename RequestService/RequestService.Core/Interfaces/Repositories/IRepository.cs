@@ -28,6 +28,7 @@ namespace RequestService.Core.Interfaces.Repositories
         Task<string> GetRequestPostCodeAsync(int requestId, CancellationToken cancellationToken);
         Task UpdateCommunicationSentAsync(int requestId, bool communicationSent, CancellationToken cancellationToken);
         Task<List<LatitudeAndLongitudeDTO>> GetLatitudeAndLongitudes(List<string> postCodes, CancellationToken cancellationToken);
+        Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<HelpMyStreet.Utils.Enums.SupportActivities> activity, CancellationToken cancellationToken);
 
     }
 }

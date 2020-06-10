@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200605161942_AddQuestionData")]
+    partial class AddQuestionData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -182,185 +184,11 @@ namespace RequestService.Repo.Migrations
                     b.Property<int>("QuestionId")
                         .HasColumnName("QuestionID");
 
-                    b.Property<int>("Order")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(1);
-
                     b.HasKey("ActivityId", "QuestionId");
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("ActivityQuestions","QuestionSet");
-
-                    b.HasData(
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 6,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 2,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 3,
-                            Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 4,
-                            Order = 3
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 5,
-                            Order = 4
-                        },
-                        new
-                        {
-                            ActivityId = 13,
-                            QuestionId = 1,
-                            Order = 1
-                        },
-                        new
-                        {
-                            ActivityId = 13,
-                            QuestionId = 6,
-                            Order = 2
-                        });
+                    b.ToTable("ActivityQuestions","Request");
                 });
 
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.Job", b =>
@@ -394,25 +222,6 @@ namespace RequestService.Repo.Migrations
                     b.HasIndex("RequestId");
 
                     b.ToTable("Job","Request");
-                });
-
-            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.JobQuestions", b =>
-                {
-                    b.Property<int>("JobId")
-                        .HasColumnName("JobID");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnName("QuestionID");
-
-                    b.Property<string>("Answer")
-                        .IsRequired()
-                        .IsUnicode(false);
-
-                    b.HasKey("JobId", "QuestionId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("JobQuestions","Request");
                 });
 
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.Person", b =>
@@ -511,9 +320,6 @@ namespace RequestService.Repo.Migrations
                         .HasColumnName("ID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdditionalData")
-                        .IsUnicode(false);
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -525,29 +331,26 @@ namespace RequestService.Repo.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Question","QuestionSet");
+                    b.ToTable("Question","Request");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            AdditionalData = "[]",
                             Name = "Please tell us more about the help or support you're requesting",
-                            QuestionType = (byte)3,
-                            Required = false
+                            QuestionType = (byte)2,
+                            Required = true
                         },
                         new
                         {
                             Id = 2,
-                            AdditionalData = "[]",
                             Name = "Please tell us about any specific requirements (e.g. colour, style etc.)",
-                            QuestionType = (byte)3,
-                            Required = false
+                            QuestionType = (byte)2,
+                            Required = true
                         },
                         new
                         {
                             Id = 3,
-                            AdditionalData = "[]",
                             Name = "How many face coverings do you need?",
                             QuestionType = (byte)1,
                             Required = true
@@ -555,26 +358,16 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             Id = 4,
-                            AdditionalData = "[{\"Key\":\"keyworkers\",\"Value\":\"Key workers\"},{\"Key\":\"somonekeyworkers\",\"Value\":\"Someone helping key workers stay safe in their role (e.g. care home residents, visitors etc.)\"},{\"Key\":\"someone\",\"Value\":\"Someone else\"}]",
                             Name = "Who will be using the face coverings?",
-                            QuestionType = (byte)4,
-                            Required = false
+                            QuestionType = (byte)2,
+                            Required = true
                         },
                         new
                         {
                             Id = 5,
-                            AdditionalData = "[{\"Key\":\"Yes\",\"Value\":\"Yes\"},{\"Key\":\"No\",\"Value\":\"No\"},{\"Key\":\"Contribution\",\"Value\":\"I can make a contribution\"}]",
-                            Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
-                            QuestionType = (byte)4,
+                            Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)? Volunteers are providing their time and skills free of charge",
+                            QuestionType = (byte)2,
                             Required = false
-                        },
-                        new
-                        {
-                            Id = 6,
-                            AdditionalData = "[{\"Key\":\"true\",\"Value\":\"Yes\"},{\"Key\":\"false\",\"Value\":\"No\"}]",
-                            Name = "Is this request critical to someone's health or wellbeing?",
-                            QuestionType = (byte)4,
-                            Required = true
                         });
                 });
 
@@ -603,10 +396,6 @@ namespace RequestService.Repo.Migrations
 
                     b.Property<bool>("IsFulfillable");
 
-                    b.Property<string>("OrganisationName")
-                        .HasMaxLength(255)
-                        .IsUnicode(false);
-
                     b.Property<string>("OtherDetails")
                         .IsUnicode(false);
 
@@ -622,8 +411,6 @@ namespace RequestService.Repo.Migrations
                         .IsUnicode(false);
 
                     b.Property<bool?>("ReadPrivacyNotice");
-
-                    b.Property<byte?>("RequestorType");
 
                     b.Property<string>("SpecialCommunicationNeeds")
                         .IsUnicode(false);
@@ -661,6 +448,25 @@ namespace RequestService.Repo.Migrations
                     b.ToTable("RequestJobStatus","Request");
                 });
 
+            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.RequestQuestions", b =>
+                {
+                    b.Property<int>("RequestId")
+                        .HasColumnName("RequestID");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnName("QuestionID");
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .IsUnicode(false);
+
+                    b.HasKey("RequestId", "QuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("RequestQuestions","Request");
+                });
+
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.SupportActivities", b =>
                 {
                     b.Property<int>("RequestId")
@@ -687,17 +493,6 @@ namespace RequestService.Repo.Migrations
                         .WithMany("Job")
                         .HasForeignKey("RequestId")
                         .HasConstraintName("FK_NewRequest_NewRequestID");
-                });
-
-            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.JobQuestions", b =>
-                {
-                    b.HasOne("RequestService.Repo.EntityFramework.Entities.Job", "Job")
-                        .WithMany("JobQuestions")
-                        .HasForeignKey("JobId");
-
-                    b.HasOne("RequestService.Repo.EntityFramework.Entities.Question", "Question")
-                        .WithMany("JobQuestions")
-                        .HasForeignKey("QuestionId");
                 });
 
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.PersonalDetails", b =>
@@ -727,6 +522,17 @@ namespace RequestService.Repo.Migrations
                         .WithMany("RequestJobStatus")
                         .HasForeignKey("JobId")
                         .HasConstraintName("FK_Job_JobID");
+                });
+
+            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.RequestQuestions", b =>
+                {
+                    b.HasOne("RequestService.Repo.EntityFramework.Entities.Question", "Question")
+                        .WithMany("RequestQuestions")
+                        .HasForeignKey("QuestionId");
+
+                    b.HasOne("RequestService.Repo.EntityFramework.Entities.Request", "Request")
+                        .WithMany("RequestQuestions")
+                        .HasForeignKey("RequestId");
                 });
 
             modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.SupportActivities", b =>
