@@ -148,7 +148,9 @@ namespace RequestService.Repo
         {
             Person requester = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Requestor);
             Person recipient;
-
+            
+            var jobStatus = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId.HasValue ? JobStatuses.InProgress : JobStatuses.Open;
+            
             if (postNewRequestForHelpRequest.HelpRequest.RequestorType == RequestorType.Myself)
             {
                 recipient = requester;
@@ -174,7 +176,7 @@ namespace RequestService.Repo
                 PersonIdRequesterNavigation = requester,
                 RequestorType = (byte) postNewRequestForHelpRequest.HelpRequest.RequestorType,
                 FulfillableStatus = (byte) fulfillable,
-                CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId
+                CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId,               
             };
 
             foreach (HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
@@ -204,9 +206,11 @@ namespace RequestService.Repo
                 _context.RequestJobStatus.Add(new RequestJobStatus()
                 {
                     DateCreated = DateTime.Now,
-                    JobStatusId = (byte) HelpMyStreet.Utils.Enums.JobStatuses.Open,
-                    Job = EFcoreJob
-                });
+                    JobStatusId = (byte)jobStatus,
+                    Job = EFcoreJob,
+                    VolunteerUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
+                    CreatedByUserId  = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
+                }); ;
             }
             await _context.SaveChangesAsync();
             return request.Id;

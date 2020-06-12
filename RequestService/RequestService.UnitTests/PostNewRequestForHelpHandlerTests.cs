@@ -84,6 +84,86 @@ namespace RequestService.UnitTests
         }
 
         [Test]
+       public async Task WhenIPostDiyRequest_FullfiableStatusGetSetToDiy()
+        {
+            _validPostcode = true;            
+            _emailSent = true;
+            var request = new PostNewRequestForHelpRequest
+            {
+                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
+                {
+                    ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
+                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
+                    {
+                        Address = new HelpMyStreet.Utils.Models.Address
+                        {
+                            Postcode = "test",
+                        }
+                    },
+                    VolunteerUserId = 1,                    
+                },
+                NewJobsRequest = new NewJobsRequest
+                {
+                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
+                    {
+                        new HelpMyStreet.Utils.Models.Job
+                        {
+                            HealthCritical = true,
+                            DueDays = 5,
+                            SupportActivity = SupportActivities.Shopping
+                        }
+                    }
+                }
+            };
+           var response =  await _classUnderTest.Handle(request, new CancellationToken());
+           Assert.AreEqual(Fulfillable.Accepted_DiyRequest, response.Fulfillable);
+        }
+
+
+        [Test]
+        public async Task WhenIPostDiyRequest_IOnlySendConfirmationEMail()
+        {
+            _validPostcode = true;
+            _emailSent = true;
+       
+            var request = new PostNewRequestForHelpRequest
+            {
+                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
+                {
+                    ForRequestor = true,
+                    RequestorType = RequestorType.Myself,
+                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
+                    {
+                        EmailAddress = "test",
+                        Address = new HelpMyStreet.Utils.Models.Address
+                        {
+                            Postcode = "test",
+                        }
+                    },
+                    VolunteerUserId = 1,
+                },
+                NewJobsRequest = new NewJobsRequest
+                {
+                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
+                    {
+                        new HelpMyStreet.Utils.Models.Job
+                        {
+                            HealthCritical = true,
+                            DueDays = 5,
+                            SupportActivity = SupportActivities.Shopping
+                        }
+                    }
+                }
+            };
+           await _classUnderTest.Handle(request, new CancellationToken());
+            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.IsAny<SendEmailToUsersRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            _communicationService.Verify(x => x.SendEmail(It.IsAny<SendEmailRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+            _userService.Verify(x => x.GetHelpersByPostcodeAndTaskType(It.IsAny<string>(), It.IsAny <List<SupportActivities>>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+
+        [Test]
         public async Task WhenIPostValidNewRequest_AllFunctionGetCalledCorrectly()
         {
            requestId = 1;
