@@ -151,7 +151,7 @@ namespace RequestService.Handlers
 
         private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, Fulfillable fulfillable, CancellationToken cancellationToken)
         {
-            List<bool> emailsSent = new List<bool>();
+            List<bool> emailsSent = new List<bool>();            
             if (fulfillable != Fulfillable.Accepted_DiyRequest)
             {
                 var helperResponse = await _userService.GetHelpersByPostcodeAndTaskType(emailJobDTO.PostCode, new List<SupportActivities> { emailJobDTO.Activity }, cancellationToken);
@@ -191,7 +191,7 @@ namespace RequestService.Handlers
                     Subject = "Thank you for registering your request via HelpMyStreet.org",
                     ToAddress = emailJobDTO.Requestor.EmailAddress,
                     ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
-                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true, emailJobDTO)
+                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true, emailJobDTO, fulfillable == Fulfillable.Accepted_DiyRequest, _applicationConfig.Value.EmailBaseUrl)
                 };
 
                 emailsSent.Add(await _communicationService.SendEmail(confirmation, cancellationToken));
