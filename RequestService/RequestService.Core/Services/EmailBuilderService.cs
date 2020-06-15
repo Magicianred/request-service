@@ -206,7 +206,7 @@ namespace RequestService.Core.Services
                         
 
             string NotVerifedText = "";
-            if (isVerified)
+            if (!isVerified)
             {
                 NotVerifedText = $"<div><br> " +
                      $"<span style='font-size: 14px;'>" +
