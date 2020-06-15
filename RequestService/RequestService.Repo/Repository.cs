@@ -177,6 +177,7 @@ namespace RequestService.Repo
                 RequestorType = (byte) postNewRequestForHelpRequest.HelpRequest.RequestorType,
                 FulfillableStatus = (byte) fulfillable,
                 CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId,               
+               
             };
 
             foreach (HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
@@ -189,7 +190,8 @@ namespace RequestService.Repo
                     IsHealthCritical = job.HealthCritical,
                     SupportActivityId = (byte)job.SupportActivity,
                     DueDate = DateTime.Now.AddDays(job.DueDays),
-                    JobStatusId = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Open
+                    JobStatusId = (byte)jobStatus,
+                    VolunteerUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
                 };
                 _context.Job.Add(EFcoreJob);
 
