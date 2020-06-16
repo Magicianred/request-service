@@ -61,7 +61,7 @@ namespace RequestService.Core.Services
 
             foreach (var user in users.UserDetails)
             {
-
+                //if they dont have the community connector support activity, let remove any open requests in there.
                 if (!user.SupportActivities.Contains(SupportActivities.CommunityConnector))
                 {
                     openRequests = openRequests.Where(x => x.SupportActivity != SupportActivities.CommunityConnector).ToList();
@@ -74,10 +74,7 @@ namespace RequestService.Core.Services
                     continue;
                 }
 
-                attachedDistances = attachedDistances.Where(w => w.DistanceInMiles <= _applicationConfig.Value.DistanceInMilesForDailyDigest).ToList();
-
-                //if they dont have the community connector support activity, let remove any open requests in there.
-            
+                attachedDistances = attachedDistances.Where(w => w.DistanceInMiles <= _applicationConfig.Value.DistanceInMilesForDailyDigest).ToList();                          
 
                 var (criteriaJobs, otherJobs) = attachedDistances.Split(x => user.SupportActivities.Contains(x.SupportActivity) && x.DistanceInMiles < user.SupportRadiusMiles);
 
