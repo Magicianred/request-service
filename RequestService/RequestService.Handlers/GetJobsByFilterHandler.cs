@@ -66,11 +66,24 @@ namespace RequestService.Handlers
             result = new GetJobsByFilterResponse()
             {
                 JobSummaries = jobSummaries
-                                    .Where(w => w.DistanceInMiles<=request.DistanceInMiles)
-                                    .OrderBy(a=>a.DistanceInMiles).ThenBy(a=>a.DueDate).ThenByDescending(a => a.IsHealthCritical)
+                                    .Where(w => request.SupportActivities == null || request.SupportActivities.Contains(w.SupportActivity))
+                                    .Where(w => w.DistanceInMiles <= GetSupportDistanceForActivity(w.SupportActivity, request))
+                                    .OrderBy(a => a.DistanceInMiles).ThenBy(a => a.DueDate).ThenByDescending(a => a.IsHealthCritical)
                                     .ToList()
             };
             return result;
+        }
+
+        private double GetSupportDistanceForActivity(SupportActivities supportActivity, GetJobsByFilterRequest request)
+        {
+            if (request.ActivitySpecificSupportDistancesInMiles != null && request.ActivitySpecificSupportDistancesInMiles.ContainsKey(supportActivity))
+            {
+                return request.ActivitySpecificSupportDistancesInMiles[supportActivity] ?? int.MaxValue;
+            }
+            else
+            {
+                return request.DistanceInMiles ?? int.MaxValue;
+            }
         }
     }
 }
