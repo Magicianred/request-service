@@ -1,5 +1,6 @@
 ﻿using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.RequestService.Extensions;
+using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -60,6 +61,12 @@ namespace RequestService.Core.Services
 
             foreach (var user in users.UserDetails)
             {
+
+                if (!user.SupportActivities.Contains(SupportActivities.CommunityConnector))
+                {
+                    openRequests = openRequests.Where(x => x.SupportActivity != SupportActivities.CommunityConnector).ToList();
+                };
+
                 var attachedDistances = await _jobService.AttachedDistanceToJobSummaries(user.PostCode, openRequests, cancellationToken);
                 if (attachedDistances == null || !attachedDistances.Any())
                 {
@@ -67,7 +74,10 @@ namespace RequestService.Core.Services
                     continue;
                 }
 
-                attachedDistances = attachedDistances.Where(w => w.DistanceInMiles <= _applicationConfig.Value.DistanceInMilesForDailyDigest).ToList();                                
+                attachedDistances = attachedDistances.Where(w => w.DistanceInMiles <= _applicationConfig.Value.DistanceInMilesForDailyDigest).ToList();
+
+                //if they dont have the community connector support activity, let remove any open requests in there.
+            
 
                 var (criteriaJobs, otherJobs) = attachedDistances.Split(x => user.SupportActivities.Contains(x.SupportActivity) && x.DistanceInMiles < user.SupportRadiusMiles);
 
