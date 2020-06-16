@@ -69,7 +69,7 @@ namespace RequestService.UnitTests
                 {
                     JobID = 2,
                     PostCode = "T4ST2",
-                       SupportActivity = HelpMyStreet.Utils.Enums.SupportActivities.Shopping,
+                       SupportActivity = HelpMyStreet.Utils.Enums.SupportActivities.DogWalking,
                 }
             };
             // create copy of _joubSummaries and attach a distance
@@ -85,15 +85,14 @@ namespace RequestService.UnitTests
                     {
                        UserID = 1,
                        PostCode = "T4ST1",
-                       SupportRadiusMiles = 2,
+                       SupportRadiusMiles = 3,
                        SupportActivities = new List<SupportActivities> { SupportActivities.Errands}
-                       
                     },
                     new UserDetails
                     {
                        UserID = 2,
                        PostCode = "T4ST2",
-                       SupportRadiusMiles = 2,
+                       SupportRadiusMiles = 3,
                        SupportActivities = new List<SupportActivities> { SupportActivities.Shopping}
                     }
                 }
@@ -164,19 +163,81 @@ namespace RequestService.UnitTests
         }
 
         [Test]
-        public async Task WhenUserIsOutsideRadius_IDontSendEmail()
+        public async Task WhenUserIsOutsideRadiusAndTaskTypeMatches_IDontSendEmail()
         {
             _maxDistance = 1;
+            _users = new GetUsersResponse
+            {
+                UserDetails = new List<UserDetails>
+                {
+                    new UserDetails
+                    {
+                       UserID = 1,
+                       PostCode = "T4ST1",
+                       SupportRadiusMiles = 3,
+                       SupportActivities = new List<SupportActivities> { SupportActivities.Errands}
+                    },
+                    new UserDetails
+                    {
+                       UserID = 2,
+                       PostCode = "T4ST2",
+                       SupportRadiusMiles = 3,
+                       SupportActivities = new List<SupportActivities> { SupportActivities.Shopping}
+                    },
+                    new UserDetails
+                    {
+                       UserID = 3,
+                       PostCode = "T4ST2",
+                       SupportRadiusMiles = 3,
+                       SupportActivities = new List<SupportActivities> { SupportActivities.DogWalking}
+                    }
+                }
+            };
             await _classUnderTest.SendDailyDigestEmailAsync(new CancellationToken());
             _communicationService.Verify(x => x.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test]
-        public async Task WhenUserIsInsideRadius_ISendEmail()
+        public async Task WhenUserIsInsideRadiusAndTaskTypeMatches_ISendEmail()
+        {
+            _maxDistance = 30;
+            _users = new GetUsersResponse
+            {
+                UserDetails = new List<UserDetails>
+                {
+                    new UserDetails
+                    {
+                       UserID = 1,
+                       PostCode = "T4ST1",
+                       SupportRadiusMiles = 3,
+                       SupportActivities = new List<SupportActivities> { SupportActivities.Errands}
+                    },
+                    new UserDetails
+                    {
+                       UserID = 2,
+                       PostCode = "T4ST2",
+                       SupportRadiusMiles = 3,
+                       SupportActivities = new List<SupportActivities> { SupportActivities.Shopping}
+                    },
+                    new UserDetails
+                    {
+                       UserID = 3,
+                       PostCode = "T4ST2",
+                       SupportRadiusMiles = 3,
+                       SupportActivities = new List<SupportActivities> { SupportActivities.DogWalking}
+                    }
+                }
+            };
+            await _classUnderTest.SendDailyDigestEmailAsync(new CancellationToken());
+            _communicationService.Verify(x => x.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        [Test]
+        public async Task WhenUserIsInsideRadiusAndTaskTypeDoesNotMatch_IDontSendEmail()
         {
             _maxDistance = 30;
             await _classUnderTest.SendDailyDigestEmailAsync(new CancellationToken());
-            _communicationService.Verify(x => x.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+            _communicationService.Verify(x => x.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
     }
 }
