@@ -27,7 +27,7 @@ namespace RequestService.AzureFunction
         [FunctionName("GetJobsByFilter")]        
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(GetJobsByFilterResponse))]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)]
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]
             [RequestBodyType(typeof(GetJobsByFilterRequest), "log request")] GetJobsByFilterRequest req,
             ILogger log)
         {
