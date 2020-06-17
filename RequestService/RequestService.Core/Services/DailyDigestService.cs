@@ -91,7 +91,7 @@ namespace RequestService.Core.Services
                     EncodedJobID = HelpMyStreet.Utils.Utils.Base64Utils.Base64Encode(x.JobID.ToString()),
                 }).ToList();
 
-                if (criteraJobSummaries.Count() > 0 || otherJobSummaries.Count() > 0)
+                if (criteraJobSummaries.Count() > 0)
                 {
                     try
                     {
