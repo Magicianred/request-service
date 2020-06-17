@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using HelpMyStreet.Utils.Enums;
 
 namespace RequestService.UnitTests
 {
@@ -31,12 +32,38 @@ namespace RequestService.UnitTests
             _mockRepository = new MockRepository(MockBehavior.Loose);
             SetupRepository();
             SetUpJobService();
+            SetupAddressService();
 
             _jobSummaries = new List<JobSummary>();
             _jobSummaries.Add(new JobSummary
             {
-               JobID = 1,
-               DistanceInMiles = 25d
+                JobID = 1,
+                DistanceInMiles = 25d,
+                SupportActivity = SupportActivities.CheckingIn
+            });
+            _jobSummaries.Add(new JobSummary
+            {
+                JobID = 1,
+                DistanceInMiles = 15d,
+                SupportActivity = SupportActivities.CollectingPrescriptions
+            });
+            _jobSummaries.Add(new JobSummary
+            {
+                JobID = 1,
+                DistanceInMiles = 20d,
+                SupportActivity = SupportActivities.FaceMask
+            });
+            _jobSummaries.Add(new JobSummary
+            {
+                JobID = 1,
+                DistanceInMiles = 0d,
+                SupportActivity = SupportActivities.Errands
+            });
+            _jobSummaries.Add(new JobSummary
+            {
+                JobID = 1,
+                DistanceInMiles = 30d,
+                SupportActivity = SupportActivities.Errands
             });
 
             _response = new GetJobsByFilterResponse()
@@ -51,7 +78,7 @@ namespace RequestService.UnitTests
         {
             _jobService = _mockRepository.Create<IJobService>();
             _jobService.Setup(x => x.AttachedDistanceToJobSummaries(It.IsAny<string>(), It.IsAny<List<JobSummary>>(), It.IsAny<CancellationToken>()))
-                .Verifiable();
+                .ReturnsAsync(()=>_jobSummaries);
         }
 
         private void SetupRepository()
@@ -64,6 +91,7 @@ namespace RequestService.UnitTests
         private void SetupAddressService()
         {
             _addressService = _mockRepository.Create<IAddressService>();
+            _addressService.Setup(x => x.IsValidPostcode(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
         }
 
         [TearDown]
@@ -72,30 +100,99 @@ namespace RequestService.UnitTests
             _mockRepository.VerifyAll();
         }
 
-        //[Test]
-        //public async Task WhenPassesInGoodRequest_ReturnsNoJobsDueToDistance()
-        //{
-        //    _request = new GetJobsByFilterRequest
-        //    {
-        //        Postcode = "NG1 6DQ",
-        //        DistanceInMiles = 20d
-        //    };
+        [Test]
+        public async Task WhenPassesInGoodRequest_ReturnsNoJobsDueToDistance()
+        {
+            _request = new GetJobsByFilterRequest
+            {
+                Postcode = "NG1 6DQ",
+                DistanceInMiles = 20d
+            };
 
-        //    var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-        //    Assert.AreEqual(_jobSummaries.Count(w => w.DistanceInMiles <= _request.DistanceInMiles), response.JobSummaries.Count);
-        //}
+            var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            Assert.AreEqual(_jobSummaries.Count(w => w.DistanceInMiles <= _request.DistanceInMiles), response.JobSummaries.Count);
+        }
 
-        //[Test]
-        //public async Task WhenPassesInGoodRequest_ReturnsJobs()
-        //{
-        //    _request = new GetJobsByFilterRequest
-        //    {
-        //        Postcode = "NG1 6DQ",
-        //        DistanceInMiles = 50d
-        //    };
+        [Test]
+        public async Task WhenPassesInGoodRequest_ReturnsJobs()
+        {
+            _request = new GetJobsByFilterRequest
+            {
+                Postcode = "NG1 6DQ",
+                DistanceInMiles = 50d
+            };
 
-        //    var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-        //    Assert.AreEqual(_jobSummaries.Count(w=> w.DistanceInMiles <= _request.DistanceInMiles), response.JobSummaries.Count);
-        //}
+            var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            Assert.AreEqual(_jobSummaries.Count(w => w.DistanceInMiles <= _request.DistanceInMiles), response.JobSummaries.Count);
+        }
+
+        [Test]
+        public async Task WhenPassesInGoodRequestWithNullDistance_ReturnsJobs()
+        {
+            _request = new GetJobsByFilterRequest
+            {
+                Postcode = "NG1 6DQ",
+                DistanceInMiles = null
+            };
+
+            var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            Assert.AreEqual(_jobSummaries.Count(), response.JobSummaries.Count);
+        }
+
+        [Test]
+        public async Task WhenPassesInGoodRequestWithActivitySpecificSupportDistance_ReturnsJobs()
+        {
+            _request = new GetJobsByFilterRequest
+            {
+                Postcode = "NG1 6DQ",
+                DistanceInMiles = null,
+                ActivitySpecificSupportDistancesInMiles = new Dictionary<SupportActivities, double?>() { { SupportActivities.Errands, 10d } }
+            };
+
+            var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            Assert.AreEqual(_jobSummaries.Where(w => w.SupportActivity != SupportActivities.Errands || w.DistanceInMiles < 10d).Count(), response.JobSummaries.Count);
+        }
+
+        [Test]
+        public async Task WhenPassesInGoodRequestWithNullActivitySpecificSupportDistance_ReturnsJobs()
+        {
+            _request = new GetJobsByFilterRequest
+            {
+                Postcode = "NG1 6DQ",
+                DistanceInMiles = 0d,
+                ActivitySpecificSupportDistancesInMiles = new Dictionary<SupportActivities, double?>() { { SupportActivities.Errands, null } }
+            };
+
+            var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            Assert.AreEqual(_jobSummaries.Where(w => w.SupportActivity == SupportActivities.Errands || w.DistanceInMiles == 0d).Count(), response.JobSummaries.Count);
+        }
+
+        [Test]
+        public async Task WhenPassesInGoodRequestWithSupportActivityFilter_ReturnsJobs()
+        {
+            _request = new GetJobsByFilterRequest
+            {
+                Postcode = "NG1 6DQ",
+                DistanceInMiles = null,
+                SupportActivities = new List<SupportActivities>() { SupportActivities.Errands, SupportActivities.DogWalking }
+            };
+
+            var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            Assert.AreEqual(_jobSummaries.Count(w => w.SupportActivity == SupportActivities.Errands || w.SupportActivity == SupportActivities.Errands), response.JobSummaries.Count);
+        }
+
+        [Test]
+        public async Task WhenPassesInGoodRequestWithEmptySupportActivityFilter_ReturnsJobs()
+        {
+            _request = new GetJobsByFilterRequest
+            {
+                Postcode = "NG1 6DQ",
+                DistanceInMiles = null,
+                SupportActivities = new List<SupportActivities>()
+            };
+
+            var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            Assert.AreEqual(0, response.JobSummaries.Count);
+        }
     }
 }
