@@ -56,34 +56,14 @@ namespace RequestService.Handlers
             if (jobSummaries.Count == 0)
                 return result;
 
-            jobSummaries = await _jobService.AttachedDistanceToJobSummaries(request.Postcode, jobSummaries, cancellationToken);
-
-            if(jobSummaries.Count==0)
-            {
-                return result;
-            }
+            jobSummaries = await _jobService.FilterJobSummaries(jobSummaries, request.SupportActivities, request.Postcode, request.DistanceInMiles, request.ActivitySpecificSupportDistancesInMiles, cancellationToken);
 
             result = new GetJobsByFilterResponse()
             {
                 JobSummaries = jobSummaries
-                                    .Where(w => request.SupportActivities == null || request.SupportActivities.Contains(w.SupportActivity))
-                                    .Where(w => w.DistanceInMiles <= GetSupportDistanceForActivity(w.SupportActivity, request))
-                                    .OrderBy(a => a.DistanceInMiles).ThenBy(a => a.DueDate).ThenByDescending(a => a.IsHealthCritical)
-                                    .ToList()
             };
             return result;
         }
 
-        private double GetSupportDistanceForActivity(SupportActivities supportActivity, GetJobsByFilterRequest request)
-        {
-            if (request.ActivitySpecificSupportDistancesInMiles != null && request.ActivitySpecificSupportDistancesInMiles.ContainsKey(supportActivity))
-            {
-                return request.ActivitySpecificSupportDistancesInMiles[supportActivity] ?? int.MaxValue;
-            }
-            else
-            {
-                return request.DistanceInMiles ?? int.MaxValue;
-            }
-        }
     }
 }
