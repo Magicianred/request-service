@@ -96,5 +96,29 @@ namespace RequestService.Core.Services
                 ToName = $"{emailRecipient.FirstName} {emailRecipient.LastName}" ,
             }, cancellationToken);            
         }
+
+        public async Task<List<JobSummary>> FilterJobSummaries(List<JobSummary> jobs, List<SupportActivities> supportActivities, string postcode, double? distanceInMiles, Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles, CancellationToken cancellationToken)
+        {
+            jobs = await AttachedDistanceToJobSummaries(postcode, jobs, cancellationToken);
+
+            jobs = jobs.Where(w => supportActivities == null || supportActivities.Contains(w.SupportActivity))
+                       .Where(w => w.DistanceInMiles <= GetSupportDistanceForActivity(w.SupportActivity, distanceInMiles, activitySpecificSupportDistancesInMiles))
+                       .ToList();
+
+            return jobs;
+        }
+
+
+        private double GetSupportDistanceForActivity(SupportActivities supportActivity, double? distanceInMiles, Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles)
+        {
+            if (activitySpecificSupportDistancesInMiles != null && activitySpecificSupportDistancesInMiles.ContainsKey(supportActivity))
+            {
+                return activitySpecificSupportDistancesInMiles[supportActivity] ?? int.MaxValue;
+            }
+            else
+            {
+                return distanceInMiles ?? int.MaxValue;
+            }
+        }
     }
 }

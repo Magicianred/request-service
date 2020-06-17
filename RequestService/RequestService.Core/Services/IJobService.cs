@@ -14,5 +14,6 @@ namespace RequestService.Core.Services
 
         Task<bool> SendUpdateStatusEmail(int jobId, JobStatuses status, CancellationToken cancellationToken);
 
+        Task<List<JobSummary>> FilterJobSummaries(List<JobSummary> jobs, List<SupportActivities> supportActivities, string postcode, double? distanceInMiles, Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles, CancellationToken cancellationToken);
     }
 }
