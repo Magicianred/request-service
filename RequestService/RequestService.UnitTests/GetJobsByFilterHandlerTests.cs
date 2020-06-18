@@ -99,32 +99,5 @@ namespace RequestService.UnitTests
         {
             _mockRepository.VerifyAll();
         }
-
-        //[Test]
-        //public async Task WhenPassesInGoodRequest_ReturnsNoJobsDueToDistance()
-        //{
-        //    _request = new GetJobsByFilterRequest
-        //    {
-        //        Postcode = "NG1 6DQ",
-        //        DistanceInMiles = 20d
-        //    };
-
-        //    var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-        //    Assert.AreEqual(_jobSummaries.Count(w => w.DistanceInMiles <= _request.DistanceInMiles), response.JobSummaries.Count);
-        //}
-
-        //[Test]
-        //public async Task WhenPassesInGoodRequest_ReturnsJobs()
-        //{
-        //    _request = new GetJobsByFilterRequest
-        //    {
-        //        Postcode = "NG1 6DQ",
-        //        DistanceInMiles = 50d
-        //    };
-
-        //    var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-        //    Assert.AreEqual(_jobSummaries.Count(w => w.DistanceInMiles <= _request.DistanceInMiles), response.JobSummaries.Count);
-        //}
-
     }
 }
