@@ -19,21 +19,19 @@ namespace RequestService.Core.Services
     public class DailyDigestService : IDailyDigestService
     {
         private readonly IUserService _userService;
-        private readonly IJobService _jobService;
         private readonly IRepository _repository;
         private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
         private readonly ICommunicationService _communicationService;
         private readonly ILogger<DailyDigestService> _logger;
         private readonly IJobFilteringService _jobFilteringService;
 
-        public DailyDigestService(IUserService userService, IJobService jobService, IOptionsSnapshot<ApplicationConfig> applicationConfig,
+        public DailyDigestService(IUserService userService, IOptionsSnapshot<ApplicationConfig> applicationConfig,
             ICommunicationService communicationService,
             IRepository repository,
             ILogger<DailyDigestService> logger,
             IJobFilteringService jobFilteringService)
         {
             _userService = userService;
-            _jobService = jobService;
             _repository = repository;
             _communicationService = communicationService;
             _applicationConfig = applicationConfig;
