@@ -24,11 +24,13 @@ namespace RequestService.Core.Services
         private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
         private readonly ICommunicationService _communicationService;
         private readonly ILogger<DailyDigestService> _logger;
+        private readonly IJobFilteringService _jobFilteringService;
 
         public DailyDigestService(IUserService userService, IJobService jobService, IOptionsSnapshot<ApplicationConfig> applicationConfig,
             ICommunicationService communicationService,
             IRepository repository,
-            ILogger<DailyDigestService> logger)
+            ILogger<DailyDigestService> logger,
+            IJobFilteringService jobFilteringService)
         {
             _userService = userService;
             _jobService = jobService;
@@ -36,6 +38,7 @@ namespace RequestService.Core.Services
             _communicationService = communicationService;
             _applicationConfig = applicationConfig;
             _logger = logger;
+            _jobFilteringService = jobFilteringService;
         }
 
 
@@ -68,7 +71,7 @@ namespace RequestService.Core.Services
                 {
                     var activitySpecificSupportDistancesInMiles = nationalSupportActivities.Where(a => user.SupportActivities.Contains(a)).ToDictionary(a => a, a => (double?)null);
 
-                    var attachedDistances = await _jobService.FilterJobSummaries(openRequests, null, user.PostCode, _applicationConfig.Value.DistanceInMilesForDailyDigest, activitySpecificSupportDistancesInMiles, cancellationToken);
+                    var attachedDistances = await _jobFilteringService.FilterJobSummaries(openRequests, null, user.PostCode, _applicationConfig.Value.DistanceInMilesForDailyDigest, activitySpecificSupportDistancesInMiles, cancellationToken);
 
                     var (criteriaJobs, otherJobs) = attachedDistances.Split(x => user.SupportActivities.Contains(x.SupportActivity) && x.DistanceInMiles < user.SupportRadiusMiles);
 
