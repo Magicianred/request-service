@@ -23,16 +23,16 @@ namespace RequestService.Handlers
     public class GetJobsByFilterHandler : IRequestHandler<GetJobsByFilterRequest, GetJobsByFilterResponse>
     {
         private readonly IRepository _repository;
-        private readonly IJobService _jobService;
         private readonly IAddressService _addressService;
+        private readonly IJobFilteringService _jobFilteringService;
         public GetJobsByFilterHandler(
             IRepository repository,
-            IJobService jobService,
-            IAddressService addressService)
+            IAddressService addressService,
+            IJobFilteringService jobFilteringService)
         {
             _repository = repository;
-            _jobService = jobService;
             _addressService = addressService;
+            _jobFilteringService = jobFilteringService;
         }
 
         public async Task<GetJobsByFilterResponse> Handle(GetJobsByFilterRequest request, CancellationToken cancellationToken)
@@ -56,21 +56,14 @@ namespace RequestService.Handlers
             if (jobSummaries.Count == 0)
                 return result;
 
-            jobSummaries = await _jobService.AttachedDistanceToJobSummaries(request.Postcode, jobSummaries, cancellationToken);
-
-            if(jobSummaries.Count==0)
-            {
-                return result;
-            }
+            jobSummaries = await _jobFilteringService.FilterJobSummaries(jobSummaries, request.SupportActivities, request.Postcode, request.DistanceInMiles, request.ActivitySpecificSupportDistancesInMiles, cancellationToken);
 
             result = new GetJobsByFilterResponse()
             {
                 JobSummaries = jobSummaries
-                                    .Where(w => w.DistanceInMiles<=request.DistanceInMiles)
-                                    .OrderBy(a=>a.DistanceInMiles).ThenBy(a=>a.DueDate).ThenByDescending(a => a.IsHealthCritical)
-                                    .ToList()
             };
             return result;
         }
+
     }
 }

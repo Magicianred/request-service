@@ -59,6 +59,14 @@ namespace RequestService.Repo.Helpers
                 Required = true,
                 AdditionalData = GetAdditionalData(Questions.IsHealthCritical) 
             });
+            entity.HasData(new Question
+            {
+                Id = (int)Questions.WillYouCompleteYourself,
+                Name = "Will you complete this request yourself?",
+                QuestionType = (int)QuestionType.Radio,
+                Required = true,
+                AdditionalData = GetAdditionalData(Questions.WillYouCompleteYourself)
+            });
         }
         private static string GetAdditionalData(HelpMyStreet.Utils.Enums.Questions question)
         {
@@ -120,6 +128,21 @@ namespace RequestService.Repo.Helpers
                         }
                     };
                     break;
+                case Questions.WillYouCompleteYourself:
+                    additionalData = new List<AdditonalQuestionData>
+                    {
+                        new AdditonalQuestionData
+                        {
+                            Key = "true",
+                            Value = "Yes"
+                        },
+                        new AdditonalQuestionData
+                        {
+                            Key = "false",
+                            Value = "No, please make it visible to other volunteers"
+                        }
+                    };
+                    break;
             }
 
             return JsonConvert.SerializeObject(additionalData);
@@ -138,11 +161,13 @@ namespace RequestService.Repo.Helpers
                     entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Amount, Order= 2 });                    
                     entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Recipient, Order=3});
                     entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Cost, Order= 4});
+                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Order = 5 });
                     continue;
 
                 }
                 entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.SupportRequesting , Order= 1 });
                 entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.IsHealthCritical, Order = 2 });
+                entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Order = 3 });
             }
         }
     }

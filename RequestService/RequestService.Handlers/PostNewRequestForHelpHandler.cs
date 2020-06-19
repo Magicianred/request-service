@@ -71,14 +71,22 @@ namespace RequestService.Handlers
                 };
             }
 
-            int championCount = await _userService.GetChampionCountByPostcode(postcode, cancellationToken);
-            if (championCount > 0)
+            // ifdosnet have a volunteerUserId then its a normal request
+            if (!request.HelpRequest.VolunteerUserId.HasValue)
             {
-                response.Fulfillable = Fulfillable.Accepted_PassToStreetChampion;
+                int championCount = await _userService.GetChampionCountByPostcode(postcode, cancellationToken);
+                if (championCount > 0)
+                {
+                    response.Fulfillable = Fulfillable.Accepted_PassToStreetChampion;
+                }
+                else
+                {
+                    response.Fulfillable = Fulfillable.Accepted_ManualReferral;
+                }
             }
             else
             {
-                response.Fulfillable = Fulfillable.Accepted_ManualReferral;
+                response.Fulfillable = Fulfillable.Accepted_DiyRequest;
             }
 
             request.NewJobsRequest.Jobs = SplitFacemaskJobs(request.NewJobsRequest.Jobs);
@@ -90,6 +98,7 @@ namespace RequestService.Handlers
 
                 bool commsSent = await SendEmailAsync(
                     emailJob
+                , response.Fulfillable
                 , cancellationToken);
                 await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
             
@@ -140,37 +149,40 @@ namespace RequestService.Handlers
             return jobs;
         }
 
-        private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, CancellationToken cancellationToken)
+        private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, Fulfillable fulfillable, CancellationToken cancellationToken)
         {
-           var helperResponse = await _userService.GetHelpersByPostcodeAndTaskType(emailJobDTO.PostCode, new List<SupportActivities> { emailJobDTO.Activity }, cancellationToken);
-
-            if(helperResponse.Volunteers == null || helperResponse.Volunteers.Count() == 0)
+            List<bool> emailsSent = new List<bool>();            
+            if (fulfillable != Fulfillable.Accepted_DiyRequest)
             {
-                SendEmailRequest emailRequest = new SendEmailRequest
+                var helperResponse = await _userService.GetHelpersByPostcodeAndTaskType(emailJobDTO.PostCode, new List<SupportActivities> { emailJobDTO.Activity }, cancellationToken);
+                if (helperResponse.Volunteers == null || helperResponse.Volunteers.Count() == 0)
                 {
-                    ToAddress = _applicationConfig.Value.ManualReferEmail,
-                    ToName = _applicationConfig.Value.ManualReferName,
-                    Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
-                    BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
+                    SendEmailRequest emailRequest = new SendEmailRequest
+                    {
+                        ToAddress = _applicationConfig.Value.ManualReferEmail,
+                        ToName = _applicationConfig.Value.ManualReferName,
+                        Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
+                        BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
+                    };
+                    await _communicationService.SendEmail(emailRequest, cancellationToken);
+                }
+
+            
+                foreach (var volunteer in helperResponse.Volunteers)
+                {
+                    emailJobDTO.IsVerified = volunteer.IsVerified.Value;
+                    emailJobDTO.IsStreetChampionOfPostcode = volunteer.IsStreetChampionForGivenPostCode.Value;
+                    emailJobDTO.DistanceFromPostcode = volunteer.DistanceInMiles;
+
+                    SendEmailToUserRequest emailRequest = new SendEmailToUserRequest
+                    {
+                        ToUserID = volunteer.UserID,
+                        Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
+                        BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
+                    };
+                    emailsSent.Add(await _communicationService.SendEmailToUserAsync(emailRequest, cancellationToken));
                 };
-                 await _communicationService.SendEmail(emailRequest, cancellationToken);
             }
-
-            List<bool> emailsSent = new List<bool>();
-            foreach(var volunteer in helperResponse.Volunteers)
-            {
-                emailJobDTO.IsVerified = volunteer.IsVerified.Value;
-                emailJobDTO.IsStreetChampionOfPostcode = volunteer.IsStreetChampionForGivenPostCode.Value;
-                emailJobDTO.DistanceFromPostcode = volunteer.DistanceInMiles;
-
-                SendEmailToUserRequest emailRequest = new SendEmailToUserRequest
-                {
-                    ToUserID = volunteer.UserID,
-                    Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",                    
-                    BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
-                };
-                emailsSent.Add(await _communicationService.SendEmailToUserAsync(emailRequest, cancellationToken));          
-            };
 
             if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
             {
@@ -179,10 +191,10 @@ namespace RequestService.Handlers
                     Subject = "Thank you for registering your request via HelpMyStreet.org",
                     ToAddress = emailJobDTO.Requestor.EmailAddress,
                     ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
-                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true, emailJobDTO)
+                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true, emailJobDTO, fulfillable == Fulfillable.Accepted_DiyRequest, _applicationConfig.Value.EmailBaseUrl)
                 };
 
-                await _communicationService.SendEmail(confirmation, cancellationToken);
+                emailsSent.Add(await _communicationService.SendEmail(confirmation, cancellationToken));
             }
 
             return emailsSent.Count > 0;
