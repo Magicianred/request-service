@@ -22,7 +22,8 @@ namespace RequestService.Core.Services
             { HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn, "Check In" },
             { HelpMyStreet.Utils.Enums.SupportActivities.FaceMask, "Face Covering" },
             { HelpMyStreet.Utils.Enums.SupportActivities.WellbeingPackage, "Wellbeing Package" },
-            { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" }
+            { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" },
+            { HelpMyStreet.Utils.Enums.SupportActivities.CommunityConnector, "Community Connector" }
         };
 
         private static Dictionary<HelpMyStreet.Utils.Enums.JobStatuses, string> _jobMappings = new Dictionary<HelpMyStreet.Utils.Enums.JobStatuses, string>() {
