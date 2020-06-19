@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200612092302_AddedWillYouCompleteQuestion")]
+    partial class AddedWillYouCompleteQuestion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,12 +209,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 1,
-                            QuestionId = 7,
-                            Order = 3
-                        },
-                        new
-                        {
                             ActivityId = 2,
                             QuestionId = 1,
                             Order = 1
@@ -222,12 +218,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 2,
                             QuestionId = 6,
                             Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 7,
-                            Order = 3
                         },
                         new
                         {
@@ -243,12 +233,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 3,
-                            QuestionId = 7,
-                            Order = 3
-                        },
-                        new
-                        {
                             ActivityId = 4,
                             QuestionId = 1,
                             Order = 1
@@ -258,12 +242,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 4,
                             QuestionId = 6,
                             Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 7,
-                            Order = 3
                         },
                         new
                         {
@@ -279,12 +257,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 5,
-                            QuestionId = 7,
-                            Order = 3
-                        },
-                        new
-                        {
                             ActivityId = 6,
                             QuestionId = 1,
                             Order = 1
@@ -294,12 +266,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 6,
                             QuestionId = 6,
                             Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 7,
-                            Order = 3
                         },
                         new
                         {
@@ -315,12 +281,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 7,
-                            QuestionId = 7,
-                            Order = 3
-                        },
-                        new
-                        {
                             ActivityId = 8,
                             QuestionId = 1,
                             Order = 1
@@ -330,12 +290,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 8,
                             QuestionId = 6,
                             Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 7,
-                            Order = 3
                         },
                         new
                         {
@@ -351,12 +305,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 9,
-                            QuestionId = 7,
-                            Order = 3
-                        },
-                        new
-                        {
                             ActivityId = 10,
                             QuestionId = 1,
                             Order = 1
@@ -369,12 +317,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 10,
-                            QuestionId = 7,
-                            Order = 3
-                        },
-                        new
-                        {
                             ActivityId = 11,
                             QuestionId = 1,
                             Order = 1
@@ -384,12 +326,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 11,
                             QuestionId = 6,
                             Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 7,
-                            Order = 3
                         },
                         new
                         {
@@ -417,12 +353,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 12,
-                            QuestionId = 7,
-                            Order = 5
-                        },
-                        new
-                        {
                             ActivityId = 13,
                             QuestionId = 1,
                             Order = 1
@@ -432,12 +362,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 13,
                             QuestionId = 6,
                             Order = 2
-                        },
-                        new
-                        {
-                            ActivityId = 13,
-                            QuestionId = 7,
-                            Order = 3
                         });
                 });
 
