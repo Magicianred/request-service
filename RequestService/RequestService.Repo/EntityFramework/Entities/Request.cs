@@ -31,6 +31,9 @@ namespace RequestService.Repo.EntityFramework.Entities
         public int? PersonIdRequester { get; set; }
         public int? PersonIdRecipient { get; set; }
 
+        public int? ReferringGroupId { get; set; }
+        public string Source { get; set; }
+
         public virtual Person PersonIdRecipientNavigation { get; set; }
         public virtual Person PersonIdRequesterNavigation { get; set; }
 

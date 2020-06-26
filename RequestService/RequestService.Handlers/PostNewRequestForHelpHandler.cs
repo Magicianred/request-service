@@ -5,7 +5,6 @@ using RequestService.Core.Interfaces.Repositories;
 using RequestService.Core.Services;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.CommunicationService.Request;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Options;
 using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
 using RequestService.Core.Dto;
-using HelpMyStreet.Contracts.CommunicationService.Request;
 using Newtonsoft.Json;
 
 namespace RequestService.Handlers
@@ -94,13 +92,13 @@ namespace RequestService.Handlers
             var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
             response.RequestID = result;
 
-                EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
+            EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
 
-                bool commsSent = await SendEmailAsync(
-                    emailJob
-                , response.Fulfillable
-                , cancellationToken);
-                await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
+            bool commsSent = await SendEmailAsync(
+                emailJob
+            , response.Fulfillable
+            , cancellationToken);
+            await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
             
             
             return response;

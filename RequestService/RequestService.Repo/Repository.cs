@@ -176,8 +176,9 @@ namespace RequestService.Repo
                 PersonIdRequesterNavigation = requester,
                 RequestorType = (byte) postNewRequestForHelpRequest.HelpRequest.RequestorType,
                 FulfillableStatus = (byte) fulfillable,
-                CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId,               
-               
+                CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId,
+                ReferringGroupId = postNewRequestForHelpRequest.HelpRequest.ReferringGroupId,
+                Source = postNewRequestForHelpRequest.HelpRequest.Source
             };
 
             foreach (HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
@@ -212,7 +213,13 @@ namespace RequestService.Repo
                     Job = EFcoreJob,
                     VolunteerUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
                     CreatedByUserId  = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
-                }); ;
+                });
+
+                _context.JobAvailableToGroup.Add(new JobAvailableToGroup()
+                {
+                    Job = EFcoreJob,
+                    GroupId = postNewRequestForHelpRequest.HelpRequest.ReferringGroupId.Value
+                });
             }
             await _context.SaveChangesAsync();
             return request.Id;
@@ -333,7 +340,7 @@ namespace RequestService.Repo
         public List<JobSummary> GetOpenJobsSummaries()
         {
             
-            byte jobStatusID_Open = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Open;
+            byte jobStatusID_Open = (byte)JobStatuses.Open;
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
                                     .Include(i => i.NewRequest)
@@ -343,6 +350,17 @@ namespace RequestService.Repo
                                             ).ToList();
             return GetJobSummaries(jobSummaries);
             
+        }
+
+        public List<JobSummary> GetJobSummaries()
+        {
+            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.NewRequest)
+                                    .Include(i => i.JobQuestions)
+                                    .ThenInclude(rq => rq.Question)
+                                    .ToList();
+            return GetJobSummaries(jobSummaries);
+
         }
 
         public List<JobSummary> GetJobSummaries(List<EntityFramework.Entities.Job> jobs)
@@ -357,12 +375,14 @@ namespace RequestService.Repo
                     Details = j.Details,
                     JobID = j.Id,
                     VolunteerUserID = j.VolunteerUserId,
-                    JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)j.JobStatusId,
+                    JobStatus = (JobStatuses)j.JobStatusId,
                     SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)j.SupportActivityId,
                     PostCode = j.NewRequest.PostCode,
                     OtherDetails = j.NewRequest.OtherDetails,                    
                     SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds,
-                    Questions = MapToQuestions(j.JobQuestions)                    
+                    Questions = MapToQuestions(j.JobQuestions),
+                    ReferringGroupID = j.NewRequest.ReferringGroupId,
+                    Groups = j.JobAvailableToGroup.Select(x=>x.GroupId).ToList()
                 });
             }
             return response;
