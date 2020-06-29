@@ -57,13 +57,13 @@ namespace RequestService.Handlers
                 return result;
 
             jobSummaries = await _jobFilteringService.FilterJobSummaries(jobSummaries, 
-                request.SupportActivities, 
+                request.SupportActivities?.SupportActivities, 
                 request.Postcode, 
                 request.DistanceInMiles, 
                 request.ActivitySpecificSupportDistancesInMiles, 
                 request.ReferringGroupID,
                 request.Groups,
-                request.Statuses, 
+                request.JobStatuses?.JobStatuses, 
                 cancellationToken);
 
             result = new GetJobsByFilterResponse()
