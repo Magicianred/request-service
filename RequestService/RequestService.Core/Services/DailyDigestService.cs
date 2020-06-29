@@ -69,7 +69,7 @@ namespace RequestService.Core.Services
                 {
                     var activitySpecificSupportDistancesInMiles = nationalSupportActivities.Where(a => user.SupportActivities.Contains(a)).ToDictionary(a => a, a => (double?)null);
 
-                    var attachedDistances = await _jobFilteringService.FilterJobSummaries(openRequests, null, user.PostCode, _applicationConfig.Value.DistanceInMilesForDailyDigest, activitySpecificSupportDistancesInMiles, cancellationToken);
+                    var attachedDistances = await _jobFilteringService.FilterJobSummaries(openRequests, null, user.PostCode, _applicationConfig.Value.DistanceInMilesForDailyDigest, activitySpecificSupportDistancesInMiles,null,null,new List<JobStatuses>() { JobStatuses.Open }, cancellationToken);
 
                     //if they dont have the community connector support activity, let remove any open requests in there.
                     if (!user.SupportActivities.Contains(SupportActivities.CommunityConnector))
