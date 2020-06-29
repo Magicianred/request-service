@@ -63,7 +63,7 @@ namespace RequestService.Handlers
                 request.ActivitySpecificSupportDistancesInMiles, 
                 request.ReferringGroupID,
                 request.Groups,
-                request.Statuses, 
+                request.JobStatuses.JobStatuses, 
                 cancellationToken);
 
             result = new GetJobsByFilterResponse()
