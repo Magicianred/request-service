@@ -33,7 +33,8 @@ namespace RequestService.UnitTests
                 SupportActivity = SupportActivities.CheckingIn,
                 Groups = new List<int>()
                 { 1,2},
-                JobStatus = JobStatuses.Open
+                JobStatus = JobStatuses.Open,
+                ReferringGroupID = 3
             });
             _jobSummaries.Add(new JobSummary()
             {
@@ -231,6 +232,21 @@ namespace RequestService.UnitTests
             int count = _jobSummaries.Count(t2 => statuses.Contains(t2.JobStatus));
 
             var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, null,null,statuses, CancellationToken.None);
+
+            Assert.AreEqual(count, response.Count);
+        }
+
+        [Test]
+        public async Task WhenPassesInGoodRequestWithReferringGroup_ReturnsJobs()
+        {
+            int referringGroupId = 3;
+            string postcode = "";
+            double? distanceInMiles = null;
+            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
+
+            int count = _jobSummaries.Count(t2 => t2.ReferringGroupID == referringGroupId);
+
+            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, referringGroupId, null, null, CancellationToken.None);
 
             Assert.AreEqual(count, response.Count);
         }
