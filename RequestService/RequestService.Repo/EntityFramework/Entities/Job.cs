@@ -9,6 +9,8 @@ namespace RequestService.Repo.EntityFramework.Entities
         public Job()
         {
             RequestJobStatus = new HashSet<RequestJobStatus>();
+            JobQuestions = new HashSet<JobQuestions>();
+            JobAvailableToGroup = new HashSet<JobAvailableToGroup>();
         }
 
         public int? VolunteerUserId { get; set; }
@@ -22,5 +24,6 @@ namespace RequestService.Repo.EntityFramework.Entities
         public virtual Request NewRequest { get; set; }
         public virtual ICollection<JobQuestions> JobQuestions { get; set; }
         public virtual ICollection<RequestJobStatus> RequestJobStatus { get; set; }
+        public virtual ICollection<JobAvailableToGroup> JobAvailableToGroup { get; set; }
     }
 }

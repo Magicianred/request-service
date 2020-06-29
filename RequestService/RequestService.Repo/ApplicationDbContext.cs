@@ -42,7 +42,7 @@ namespace RequestService.Repo
         public virtual DbSet<PostcodeEntity> Postcode { get; set; }
         public virtual DbSet<ActivityQuestions> ActivityQuestions { get; set; }
         public virtual DbSet<Question> Question { get; set; }
-
+        public virtual DbSet<JobAvailableToGroup> JobAvailableToGroup { get; set; }
         public virtual DbSet<JobQuestions> JobQuestions { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
@@ -305,6 +305,22 @@ namespace RequestService.Repo
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
+            modelBuilder.Entity<JobAvailableToGroup>(entity =>
+            {
+                entity.HasKey(e => new { e.JobId, e.GroupId });
+
+                entity.ToTable("JobAvailableToGroup", "Request");
+
+                entity.Property(e => e.JobId).HasColumnName("JobID");
+
+                entity.Property(e => e.GroupId).HasColumnName("GroupID");
+
+                entity.HasOne(d => d.Job)
+                    .WithMany(p => p.JobAvailableToGroup)
+                    .HasForeignKey(d => d.JobId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_JobAvailableToGroup_JobID");
+            });
 
             modelBuilder.SetupPostcodeCoordinateTables();
             modelBuilder.SetupPostcodeCoordinateDefaultIndexes();
