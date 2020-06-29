@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -168,18 +169,6 @@ namespace RequestService.UnitTests
         }
 
         [Test]
-        public async Task WhenPassesInGoodRequestWithEmptySupportActivityFilter_ReturnsNoJobs()
-        {
-            List<SupportActivities> supportActivities = new List<SupportActivities>();
-            string postcode = "";
-            double? distanceInMiles = null;
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
-
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, supportActivities, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, null,null, null, CancellationToken.None);
-            Assert.AreEqual(0, response.Count);
-        }
-
-        [Test]
         public async Task WhenPassesInGoodRequestWithEmptyJobStatusFilter_ReturnsNoJobs()
         {
             List<JobStatuses> statuses = new List<JobStatuses>();
@@ -192,59 +181,68 @@ namespace RequestService.UnitTests
         }
 
         [Test]
-        public async Task WhenPassesInGoodRequestWithEmptyGroupFilter_ReturnsNoJobs()
+        [TestCase(null)]
+        [TestCase(new[] { 1 })]
+        [TestCase(new int[0])]
+        public async Task WhenPassesInGoodRequestWithGroupFilter_ReturnsJobs(int[] pGroups)
         {
-            List<int> groups = new List<int>();
+            List<int> groups = null;
+
+            if (pGroups != null)
+                groups = pGroups.ToList();
+
             string postcode = "";
             double? distanceInMiles = null;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
+            int count = _jobSummaries.Count;
 
+            if(groups!=null)
+            {
+                count = _jobSummaries.Count(t2 => groups.Any(t1 => t2.Groups.Contains(t1)));
+            }
             var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, null, groups, null, CancellationToken.None);
-            Assert.AreEqual(0, response.Count);
+
+            Assert.AreEqual(count, response.Count);
         }
 
         [Test]
-        public async Task WhenPassesInGoodRequestWithGroupFilter_ReturnsJobs()
+        [TestCase(null)]
+        [TestCase(new[] { JobStatuses.InProgress, JobStatuses.Open })]
+        [TestCase(new JobStatuses[0])]
+        public async Task WhenPassesInGoodRequestWithJobStatusFilter_ReturnsJobs(JobStatuses[] jobStatuses)
         {
-            List<int> groups = new List<int>() { 1 };
-            string postcode = "";
-            double? distanceInMiles = null;
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
-
-            int count = _jobSummaries.Count(t2 => groups.Any(t1 => t2.Groups.Contains(t1)));
-
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, null, groups, null, CancellationToken.None);
-
+            List<JobStatuses> statuses = null;
             
+            if(jobStatuses!=null)
+               statuses  = jobStatuses.ToList();
+            
+            string postcode = "";
+            double? distanceInMiles = null;
+            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
+            int count = _jobSummaries.Count;
+
+            if (statuses!=null)
+                count = _jobSummaries.Count(t2 => statuses.Contains(t2.JobStatus));
+     
+            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, null, null, statuses, CancellationToken.None);
 
             Assert.AreEqual(count, response.Count);
         }
 
         [Test]
-        public async Task WhenPassesInGoodRequestWithJobStatusFilter_ReturnsJobs()
+        [TestCase(3)]
+        [TestCase(null)]
+        public async Task TestRefferingGroupFilter_ReturnsCorrectJobs(int? pReferringGroupId)
         {
-            List<JobStatuses> statuses = new List<JobStatuses>()
-            { JobStatuses.InProgress,JobStatuses.Open};
+            int? referringGroupId = pReferringGroupId;
             string postcode = "";
             double? distanceInMiles = null;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 
-            int count = _jobSummaries.Count(t2 => statuses.Contains(t2.JobStatus));
+            int count = _jobSummaries.Count;
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, null,null,statuses, CancellationToken.None);
-
-            Assert.AreEqual(count, response.Count);
-        }
-
-        [Test]
-        public async Task WhenPassesInGoodRequestWithReferringGroup_ReturnsJobs()
-        {
-            int referringGroupId = 3;
-            string postcode = "";
-            double? distanceInMiles = null;
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
-
-            int count = _jobSummaries.Count(t2 => t2.ReferringGroupID == referringGroupId);
+            if (pReferringGroupId.HasValue)
+                count = _jobSummaries.Count(t2 => t2.ReferringGroupID == referringGroupId);
 
             var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, referringGroupId, null, null, CancellationToken.None);
 
