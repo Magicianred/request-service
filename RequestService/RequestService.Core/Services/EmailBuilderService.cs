@@ -22,7 +22,8 @@ namespace RequestService.Core.Services
             { HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn, "Check In" },
             { HelpMyStreet.Utils.Enums.SupportActivities.FaceMask, "Face Covering" },
             { HelpMyStreet.Utils.Enums.SupportActivities.WellbeingPackage, "Wellbeing Package" },
-            { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" }
+            { HelpMyStreet.Utils.Enums.SupportActivities.Other, "Other" },
+            { HelpMyStreet.Utils.Enums.SupportActivities.CommunityConnector, "Community Connector" }
         };
 
         private static Dictionary<HelpMyStreet.Utils.Enums.JobStatuses, string> _jobMappings = new Dictionary<HelpMyStreet.Utils.Enums.JobStatuses, string>() {
@@ -241,11 +242,12 @@ namespace RequestService.Core.Services
 
                 html += $"<ul>";
                 foreach (var job in criteriaJobs)
-                {
-                    string dueDateStyles = "";
+                {                   
+                    string dueDateStyles = "", listColorStyle = "";
+                    if (job.SupportActivity == HelpMyStreet.Utils.Enums.SupportActivities.CommunityConnector) listColorStyle = "color: #64AC2F;";
                     if (job.DueDate.Date <= DateTime.Today) dueDateStyles = "color: #ff4e00; font-weight:600;";
                     if (job.DueDate.Date == DateTime.Today.AddDays(1)) dueDateStyles = "color: #ff4e00;";
-                    html += $"<li style='text-align: left; margin-bottom:5px;'><a href={baseUrl}/account/open-requests?j={job.EncodedJobID}><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance.ToString("N1")} miles away) - <span style='{dueDateStyles}'>Due {job.DueDate.ToString("dd/MM/yy")}</span>";
+                    html += $"<li style='text-align: left; margin-bottom:5px; '><a class='{listColorStyle}' href={baseUrl}/account/open-requests?j={job.EncodedJobID}><span style='font-size: 14px;'><strong>{_mappings[job.SupportActivity]}</strong> in {job.Postcode} ({job.Distance.ToString("N1")} miles away) - <span style='{dueDateStyles}'>Due {job.DueDate.ToString("dd/MM/yy")}</span>";
                     if (job.IsCritical)
                     {
                         html += "<strong> - CRITICAL </strong>";
