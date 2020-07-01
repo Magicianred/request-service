@@ -25,7 +25,7 @@ namespace RequestService.Repo.Helpers
             });
             entity.HasData(new Question {
                 Id = (int)Questions.FaceMask_SpecificRequirements,
-                Name = "Please tell us about any specific requirements (e.g. colour, style etc.)",
+                Name = "Please tell us about any specific requirements (e.g. size, colour, style etc.)",
                 QuestionType = (int)QuestionType.MultiLineText,
                 Required = false,
                 AdditionalData = GetAdditionalData(Questions.FaceMask_SpecificRequirements)
