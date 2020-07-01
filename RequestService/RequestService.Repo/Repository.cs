@@ -456,6 +456,7 @@ namespace RequestService.Repo
                 ForRequestor = efJob.NewRequest.ForRequestor.Value,
                 DateRequested = efJob.NewRequest.DateRequested,
                 RequestorType = (RequestorType)efJob.NewRequest.RequestorType,
+                OrganisationName = efJob.NewRequest.OrganisationName
             };
 
             return response;
