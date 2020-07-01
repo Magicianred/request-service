@@ -466,7 +466,7 @@ namespace RequestService.UnitTests
         }
 
         [Test]
-        public async Task WhenIPostFaceMask_With44Requested_IGet5Jobs()
+        public async Task WhenIPostFaceMask_With44Requested_IGet1Job()
         {
             _validPostcode = true;
             var request = new PostNewRequestForHelpRequest
@@ -519,8 +519,7 @@ namespace RequestService.UnitTests
                 }
             };
             await _classUnderTest.Handle(request, new CancellationToken());
-            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Count == 5), It.IsAny<Fulfillable>()), Times.Once);
-            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Any(x => x.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer == "4")), It.IsAny<Fulfillable>()));
+            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Count == 1), It.IsAny<Fulfillable>()), Times.Once);
         }
 
         [Test]
@@ -580,7 +579,7 @@ namespace RequestService.UnitTests
             await _classUnderTest.Handle(request, new CancellationToken());
 
             var requestWithAddedJobs = request;
-            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Count == 2), It.IsAny<Fulfillable>()), Times.Once);
+            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Count == 1), It.IsAny<Fulfillable>()), Times.Once);
         }
 
         [Test]
