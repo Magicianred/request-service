@@ -215,11 +215,14 @@ namespace RequestService.Repo
                     CreatedByUserId  = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
                 });
 
-                _context.JobAvailableToGroup.Add(new JobAvailableToGroup()
+                if (postNewRequestForHelpRequest.HelpRequest.ReferringGroupId.HasValue)
                 {
-                    Job = EFcoreJob,
-                    GroupId = postNewRequestForHelpRequest.HelpRequest.ReferringGroupId.Value
-                });
+                    _context.JobAvailableToGroup.Add(new JobAvailableToGroup()
+                    {
+                        Job = EFcoreJob,
+                        GroupId = postNewRequestForHelpRequest.HelpRequest.ReferringGroupId.Value
+                    });
+                }
             }
             await _context.SaveChangesAsync();
             return request.Id;
@@ -453,6 +456,7 @@ namespace RequestService.Repo
                 ForRequestor = efJob.NewRequest.ForRequestor.Value,
                 DateRequested = efJob.NewRequest.DateRequested,
                 RequestorType = (RequestorType)efJob.NewRequest.RequestorType,
+                OrganisationName = efJob.NewRequest.OrganisationName
             };
 
             return response;
