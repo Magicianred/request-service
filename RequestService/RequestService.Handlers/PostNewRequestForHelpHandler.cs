@@ -87,8 +87,6 @@ namespace RequestService.Handlers
                 response.Fulfillable = Fulfillable.Accepted_DiyRequest;
             }
 
-            request.NewJobsRequest.Jobs = SplitFacemaskJobs(request.NewJobsRequest.Jobs);
-
             var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
             response.RequestID = result;
 
@@ -102,49 +100,6 @@ namespace RequestService.Handlers
             
             
             return response;
-        }
-
-        private List<HelpMyStreet.Utils.Models.Job> SplitFacemaskJobs(List<HelpMyStreet.Utils.Models.Job> jobs)
-        {
-            var faceMaskJobs = jobs.Where(x => x.SupportActivity == HelpMyStreet.Utils.Enums.SupportActivities.FaceMask);
-
-            List<HelpMyStreet.Utils.Models.Job> additionalJobs = new List<HelpMyStreet.Utils.Models.Job>();
-
-            foreach (var faceMaskJob in faceMaskJobs)
-            {
-                var faceMaskAmountQuestion = faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).FirstOrDefault();
-                if (faceMaskAmountQuestion == null) return jobs;
-
-                var chunkSize = _applicationConfig.Value.FaceMaskChunkSize;
-
-                int facemaskQuantityRemaining = 0;
-                int.TryParse(faceMaskAmountQuestion.Answer, out facemaskQuantityRemaining);
-
-                if (facemaskQuantityRemaining > chunkSize)
-                {
-                    faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = chunkSize.ToString();
-                    facemaskQuantityRemaining -= chunkSize;
-
-                    while (facemaskQuantityRemaining > chunkSize)
-                    {
-                        var job = JsonConvert.DeserializeObject<HelpMyStreet.Utils.Models.Job>(JsonConvert.SerializeObject(faceMaskJob)); // creating clone
-                        job.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = chunkSize.ToString();
-                        additionalJobs.Add(job);
-                        facemaskQuantityRemaining -= chunkSize;
-                    }
-
-                    if (facemaskQuantityRemaining > 0)
-                    {
-                        var job = JsonConvert.DeserializeObject<HelpMyStreet.Utils.Models.Job>(JsonConvert.SerializeObject(faceMaskJob)); // creating clone
-                        job.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = facemaskQuantityRemaining.ToString();
-                        additionalJobs.Add(job);
-                    }
-                }
-            }
-
-            jobs.AddRange(additionalJobs);
-
-            return jobs;
         }
 
         private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, Fulfillable fulfillable, CancellationToken cancellationToken)
