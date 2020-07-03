@@ -157,8 +157,8 @@ namespace RequestService.Repo.Helpers
             {
                 if(activity == SupportActivities.FaceMask)
                 {
-                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_SpecificRequirements, Order = 1 });
-                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Amount, Order= 2 });                    
+                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_SpecificRequirements, Order = 2 });
+                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Amount, Order= 1 });                    
                     entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Recipient, Order=3});
                     entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Cost, Order= 4});
                     entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Order = 5 });
