@@ -22,18 +22,21 @@ namespace RequestService.Handlers
         private readonly ICommunicationService _communicationService;
         private readonly IUserService _userService;
         private readonly IAddressService _addressService;
+        private readonly IGroupService _groupService;
         private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
         public PostNewRequestForHelpHandler(
-            IRepository repository, 
-            IUserService userService, 
+            IRepository repository,
+            IUserService userService,
             IAddressService addressService,
             ICommunicationService communicationService,
+            IGroupService groupService,
             IOptionsSnapshot<ApplicationConfig> applicationConfig)
         {
             _repository = repository;
             _userService = userService;
             _addressService = addressService;
             _communicationService = communicationService;
+            _groupService = groupService;
             _applicationConfig = applicationConfig;
         }
 
@@ -89,6 +92,17 @@ namespace RequestService.Handlers
 
             var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
             response.RequestID = result;
+
+            var actions = _groupService.GetNewRequestActions(new HelpMyStreet.Contracts.GroupService.Request.GetNewRequestActionsRequest()
+            {
+                HelpRequest = request.HelpRequest,
+                NewJobsRequest = request.NewJobsRequest
+            },cancellationToken).Result;
+
+            if(actions!=null)
+            {
+               // actions.Actions[]
+            }
 
             EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
 
