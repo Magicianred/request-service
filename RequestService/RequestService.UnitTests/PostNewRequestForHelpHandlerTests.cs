@@ -1,4 +1,6 @@
 using HelpMyStreet.Contracts.CommunicationService.Request;
+using HelpMyStreet.Contracts.GroupService.Request;
+using HelpMyStreet.Contracts.GroupService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.UserService.Response;
@@ -24,6 +26,7 @@ namespace RequestService.UnitTests
         private Mock<IUserService> _userService;
         private Mock<ICommunicationService> _communicationService;
         private Mock<IAddressService> _adddressService;
+        private Mock<IGroupService> _groupService;
         private PostNewRequestForHelpHandler _classUnderTest;
         private PostNewRequestForHelpRequest _request;
         private Mock<IOptionsSnapshot<ApplicationConfig>> _applicationConfig;
@@ -31,6 +34,7 @@ namespace RequestService.UnitTests
         private bool _validPostcode;
         private int _championCount;
         private bool _emailSent;
+        private GetNewRequestActionsResponse _getNewRequestActionsResponse;
         private GetVolunteersByPostcodeAndActivityResponse _getVolunteersByPostcodeAndActivityResponse;
         [SetUp]
         public void Setup()
@@ -40,7 +44,8 @@ namespace RequestService.UnitTests
             SetupCommunicationService();
             SetupApplicationConfig();
             SetupUserService();
-            _classUnderTest = new PostNewRequestForHelpHandler(_repository.Object, _userService.Object, _adddressService.Object, _communicationService.Object, _applicationConfig.Object);
+            SetupGroupService();
+            _classUnderTest = new PostNewRequestForHelpHandler(_repository.Object, _userService.Object, _adddressService.Object, _communicationService.Object, _groupService.Object, _applicationConfig.Object);
         }
         private void SetupCommunicationService()
         {
@@ -81,6 +86,13 @@ namespace RequestService.UnitTests
         {
             _adddressService = new Mock<IAddressService>();
             _adddressService.Setup(x => x.IsValidPostcode(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => _validPostcode);
+        }
+
+        private void SetupGroupService()
+        {
+            _groupService = new Mock<IGroupService>();
+            _groupService.Setup(x => x.GetNewRequestActions(It.IsAny<GetNewRequestActionsRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => _getNewRequestActionsResponse);
         }
 
         [Test]

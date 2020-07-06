@@ -160,73 +160,78 @@ namespace RequestService.Repo
                 recipient = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Recipient);
             }
 
-            _context.Person.Add(requester);
-            _context.Person.Add(recipient);
-
-            Request request = new Request()
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                ReadPrivacyNotice = postNewRequestForHelpRequest.HelpRequest.ReadPrivacyNotice,
-                SpecialCommunicationNeeds = postNewRequestForHelpRequest.HelpRequest.SpecialCommunicationNeeds,
-                AcceptedTerms = postNewRequestForHelpRequest.HelpRequest.AcceptedTerms,
-                OtherDetails = postNewRequestForHelpRequest.HelpRequest.OtherDetails,
-                OrganisationName = postNewRequestForHelpRequest.HelpRequest.OrganisationName,
-                PostCode = postNewRequestForHelpRequest.HelpRequest.Recipient.Address.Postcode,
-                ForRequestor = postNewRequestForHelpRequest.HelpRequest.ForRequestor,
-                PersonIdRecipientNavigation = recipient,
-                PersonIdRequesterNavigation = requester,
-                RequestorType = (byte) postNewRequestForHelpRequest.HelpRequest.RequestorType,
-                FulfillableStatus = (byte) fulfillable,
-                CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId,
-                ReferringGroupId = postNewRequestForHelpRequest.HelpRequest.ReferringGroupId,
-                Source = postNewRequestForHelpRequest.HelpRequest.Source
-            };
-
-            foreach (HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
-            {
-
-                EntityFramework.Entities.Job EFcoreJob = new EntityFramework.Entities.Job()
+                try
                 {
-                    NewRequest = request,
-                    Details = job.Details,
-                    IsHealthCritical = job.HealthCritical,
-                    SupportActivityId = (byte)job.SupportActivity,
-                    DueDate = DateTime.Now.AddDays(job.DueDays),
-                    JobStatusId = (byte)jobStatus,
-                    VolunteerUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
-                };
-                _context.Job.Add(EFcoreJob);
+                    _context.Person.Add(requester);
+                    _context.Person.Add(recipient);
 
-                foreach (var question in job.Questions)
-                {
-                    _context.JobQuestions.Add(new JobQuestions
+                    Request request = new Request()
                     {
-                        Job = EFcoreJob,
-                        QuestionId = question.Id,
-                        Answer = question.Answer
-                    });
+                        ReadPrivacyNotice = postNewRequestForHelpRequest.HelpRequest.ReadPrivacyNotice,
+                        SpecialCommunicationNeeds = postNewRequestForHelpRequest.HelpRequest.SpecialCommunicationNeeds,
+                        AcceptedTerms = postNewRequestForHelpRequest.HelpRequest.AcceptedTerms,
+                        OtherDetails = postNewRequestForHelpRequest.HelpRequest.OtherDetails,
+                        OrganisationName = postNewRequestForHelpRequest.HelpRequest.OrganisationName,
+                        PostCode = postNewRequestForHelpRequest.HelpRequest.Recipient.Address.Postcode,
+                        ForRequestor = postNewRequestForHelpRequest.HelpRequest.ForRequestor,
+                        PersonIdRecipientNavigation = recipient,
+                        PersonIdRequesterNavigation = requester,
+                        RequestorType = (byte)postNewRequestForHelpRequest.HelpRequest.RequestorType,
+                        FulfillableStatus = (byte)fulfillable,
+                        CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId,
+                        ReferringGroupId = postNewRequestForHelpRequest.HelpRequest.ReferringGroupId,
+                        Source = postNewRequestForHelpRequest.HelpRequest.Source
+                    };
+
+                    foreach (HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
+                    {
+
+                        EntityFramework.Entities.Job EFcoreJob = new EntityFramework.Entities.Job()
+                        {
+                            NewRequest = request,
+                            Details = job.Details,
+                            IsHealthCritical = job.HealthCritical,
+                            SupportActivityId = (byte)job.SupportActivity,
+                            DueDate = DateTime.Now.AddDays(job.DueDays),
+                            JobStatusId = (byte)jobStatus,
+                            VolunteerUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
+                        };
+                        _context.Job.Add(EFcoreJob);
+                        await _context.SaveChangesAsync();
+                        job.JobID = EFcoreJob.Id;
+
+                        foreach (var question in job.Questions)
+                        {
+                            _context.JobQuestions.Add(new JobQuestions
+                            {
+                                Job = EFcoreJob,
+                                QuestionId = question.Id,
+                                Answer = question.Answer
+                            });
+                        }
+
+                        _context.RequestJobStatus.Add(new RequestJobStatus()
+                        {
+                            DateCreated = DateTime.Now,
+                            JobStatusId = (byte)jobStatus,
+                            Job = EFcoreJob,
+                            VolunteerUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
+                            CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
+                        });
+                    }
+
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                    return request.Id;
                 }
-
-                _context.RequestJobStatus.Add(new RequestJobStatus()
+                catch(Exception exc)
                 {
-                    DateCreated = DateTime.Now,
-                    JobStatusId = (byte)jobStatus,
-                    Job = EFcoreJob,
-                    VolunteerUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
-                    CreatedByUserId  = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
-                });
-
-                if (postNewRequestForHelpRequest.HelpRequest.ReferringGroupId.HasValue)
-                {
-                    _context.JobAvailableToGroup.Add(new JobAvailableToGroup()
-                    {
-                        Job = EFcoreJob,
-                        GroupId = postNewRequestForHelpRequest.HelpRequest.ReferringGroupId.Value
-                    });
+                    transaction.Rollback();
                 }
             }
-            await _context.SaveChangesAsync();
-            return request.Id;
-
+            throw new Exception("Unable to save request");
         }
 
          
@@ -450,7 +455,7 @@ namespace RequestService.Repo
                 HealthCritical = efJob.IsHealthCritical,
                 JobID = efJob.Id,
                 VolunteerUserID = efJob.VolunteerUserId,
-                JobStatus = (HelpMyStreet.Utils.Enums.JobStatuses)efJob.JobStatusId,
+                JobStatus = (JobStatuses)efJob.JobStatusId,
                 SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
                 DueDate= efJob.DueDate,
                 ForRequestor = efJob.NewRequest.ForRequestor.Value,
