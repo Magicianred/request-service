@@ -93,16 +93,16 @@ namespace RequestService.Handlers
             var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
             response.RequestID = result;
 
-            var actions = _groupService.GetNewRequestActions(new HelpMyStreet.Contracts.GroupService.Request.GetNewRequestActionsRequest()
-            {
-                HelpRequest = request.HelpRequest,
-                NewJobsRequest = request.NewJobsRequest
-            },cancellationToken).Result;
+            //var actions = _groupService.GetNewRequestActions(new HelpMyStreet.Contracts.GroupService.Request.GetNewRequestActionsRequest()
+            //{
+            //    HelpRequest = request.HelpRequest,
+            //    NewJobsRequest = request.NewJobsRequest
+            //},cancellationToken).Result;
 
-            if(actions!=null)
-            {
-               // actions.Actions[]
-            }
+            //if(actions!=null)
+            //{
+            //   // actions.Actions[]
+            //}
 
             EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
 
