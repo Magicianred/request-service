@@ -108,104 +108,51 @@ namespace RequestService.Handlers
 
             foreach(int jobID in actions.Actions.Keys)
             {
-                List<int> availableGroups = actions.Actions[jobID].TaskActions[NewTaskAction.MakeAvailableToGroups];
-                if (availableGroups != null)
+                if (actions.Actions[jobID].TaskActions.ContainsKey(NewTaskAction.MakeAvailableToGroups))
                 {
-                    foreach (int i in availableGroups)
+                    List<int> availableGroups = actions.Actions[jobID].TaskActions[NewTaskAction.MakeAvailableToGroups];
+                    if (availableGroups != null)
                     {
-                        await _repository.AddJobAvailableToGroupAsync(jobID, i,cancellationToken);
-                    }
-                }
-
-                List<int> matchingVolunteersGroup = actions.Actions[jobID].TaskActions[NewTaskAction.NotifyMatchingVolunteers];
-                if (matchingVolunteersGroup != null)
-                {
-                    foreach (int i in matchingVolunteersGroup)
-                    {
-                        await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                        foreach (int i in availableGroups)
                         {
-                            JobID = jobID,
-                            CommunicationJob = new CommunicationJob()
+                            await _repository.AddJobAvailableToGroupAsync(jobID, i, cancellationToken);
+                        }
+                    }
+                }
+
+                if (actions.Actions[jobID].TaskActions.ContainsKey(NewTaskAction.NotifyMatchingVolunteers))
+                {
+                    List<int> matchingVolunteersGroup = actions.Actions[jobID].TaskActions[NewTaskAction.NotifyMatchingVolunteers];
+                    if (matchingVolunteersGroup != null)
+                    {
+                        foreach (int i in matchingVolunteersGroup)
+                        {
+                            await _communicationService.RequestCommunication(new RequestCommunicationRequest()
                             {
-                                CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification
-                            },
-                            GroupID = i
-                        }, cancellationToken);
+                                JobID = jobID,
+                                CommunicationJob = new CommunicationJob()
+                                {
+                                    CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification
+                                },
+                                GroupID = i
+                            }, cancellationToken);
+                        }
                     }
                 }
 
-                List<int> volunteer = actions.Actions[jobID].TaskActions[NewTaskAction.AssignToVolunteer];
-                if (volunteer != null)
+                if (actions.Actions[jobID].TaskActions.ContainsKey(NewTaskAction.AssignToVolunteer))
                 {
-                    foreach (int i in volunteer)
+                    List<int> volunteer = actions.Actions[jobID].TaskActions[NewTaskAction.AssignToVolunteer];
+                    if (volunteer != null)
                     {
-                        await _repository.AssignJobToVolunteerAsync(jobID, i, cancellationToken);
+                        foreach (int i in volunteer)
+                        {
+                            await _repository.AssignJobToVolunteerAsync(jobID, i, cancellationToken);
+                        }
                     }
                 }
-
-            }
-
-            EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
-
-            bool commsSent = await SendEmailAsync(
-                emailJob
-            , response.Fulfillable
-            , cancellationToken);
-            await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
-            
-            
+            }            
             return response;
-        }
-
-        private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, Fulfillable fulfillable, CancellationToken cancellationToken)
-        {
-            List<bool> emailsSent = new List<bool>();            
-            if (fulfillable != Fulfillable.Accepted_DiyRequest)
-            {
-                var helperResponse = await _userService.GetHelpersByPostcodeAndTaskType(emailJobDTO.PostCode, new List<SupportActivities> { emailJobDTO.Activity }, cancellationToken);
-                if (helperResponse.Volunteers == null || helperResponse.Volunteers.Count() == 0)
-                {
-                    SendEmailRequest emailRequest = new SendEmailRequest
-                    {
-                        ToAddress = _applicationConfig.Value.ManualReferEmail,
-                        ToName = _applicationConfig.Value.ManualReferName,
-                        Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
-                        BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
-                    };
-                    await _communicationService.SendEmail(emailRequest, cancellationToken);
-                }
-
-            
-                foreach (var volunteer in helperResponse.Volunteers)
-                {
-                    emailJobDTO.IsVerified = volunteer.IsVerified.Value;
-                    emailJobDTO.IsStreetChampionOfPostcode = volunteer.IsStreetChampionForGivenPostCode.Value;
-                    emailJobDTO.DistanceFromPostcode = volunteer.DistanceInMiles;
-
-                    SendEmailToUserRequest emailRequest = new SendEmailToUserRequest
-                    {
-                        ToUserID = volunteer.UserID,
-                        Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
-                        BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
-                    };
-                    emailsSent.Add(await _communicationService.SendEmailToUserAsync(emailRequest, cancellationToken));
-                };
-            }
-
-            if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
-            {
-                SendEmailRequest confirmation = new SendEmailRequest()
-                {
-                    Subject = "Thank you for registering your request via HelpMyStreet.org",
-                    ToAddress = emailJobDTO.Requestor.EmailAddress,
-                    ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
-                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true, emailJobDTO, fulfillable == Fulfillable.Accepted_DiyRequest, _applicationConfig.Value.EmailBaseUrl)
-                };
-
-                emailsSent.Add(await _communicationService.SendEmail(confirmation, cancellationToken));
-            }
-
-            return emailsSent.Count > 0;
         }
     }
 }
