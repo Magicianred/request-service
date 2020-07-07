@@ -88,8 +88,8 @@ namespace RequestService.Repo.Helpers
                         },
                         new AdditonalQuestionData
                         {
-                            Key = "someone",
-                            Value = "Someone else"
+                            Key = "memberspublic",
+                            Value = "Members of the public"
                         },
                     };
                     break;
