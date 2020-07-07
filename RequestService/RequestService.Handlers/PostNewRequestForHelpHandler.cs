@@ -134,37 +134,8 @@ namespace RequestService.Handlers
                     }
                 }
             }
-
-            EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
-
-            bool commsSent = await SendEmailAsync(
-                emailJob
-            , response.Fulfillable
-            , cancellationToken);
-            await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
-            
             
             return response;
-        }
-
-        private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, Fulfillable fulfillable, CancellationToken cancellationToken)
-        {
-            List<bool> emailsSent = new List<bool>();            
-
-            if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
-            {
-                SendEmailRequest confirmation = new SendEmailRequest()
-                {
-                    Subject = "Thank you for registering your request via HelpMyStreet.org",
-                    ToAddress = emailJobDTO.Requestor.EmailAddress,
-                    ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
-                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true, emailJobDTO, fulfillable == Fulfillable.Accepted_DiyRequest, _applicationConfig.Value.EmailBaseUrl)
-                };
-
-                emailsSent.Add(await _communicationService.SendEmail(confirmation, cancellationToken));
-            }
-
-            return emailsSent.Count > 0;
         }
     }
 }
