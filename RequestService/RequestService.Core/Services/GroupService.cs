@@ -3,12 +3,14 @@ using HelpMyStreet.Contracts.GroupService.Response;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.Shared;
 using HelpMyStreet.Utils.Utils;
+using Newtonsoft.Json;
 using RequestService.Core.Config;
 using RequestService.Core.Utils;
 using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Utf8Json.Resolvers;
@@ -25,24 +27,18 @@ namespace RequestService.Core.Services
         public async Task<GetNewRequestActionsResponse> GetNewRequestActions(GetNewRequestActionsRequest request, CancellationToken cancellationToken)
         {
             string path = $"api/GetNewRequestActions";
-            var streamContent = HttpContentUtils.SerialiseToJsonAndCompress(request);
 
-            ResponseWrapper<GetNewRequestActionsResponse, GroupServiceErrorCode> getNewRequestActionsResponseWithWrapper;
-            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.GroupService, path, streamContent, cancellationToken).ConfigureAwait(false))
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.GroupService, path, request, cancellationToken).ConfigureAwait(false))
             {
                 response.EnsureSuccessStatusCode();
-                Stream stream = await response.Content.ReadAsStreamAsync();
-                getNewRequestActionsResponseWithWrapper = await Utf8Json.JsonSerializer.DeserializeAsync<ResponseWrapper<GetNewRequestActionsResponse, GroupServiceErrorCode>>(stream, StandardResolver.AllowPrivate);
+                string content = await response.Content.ReadAsStringAsync();
+                var jsonResponse = JsonConvert.DeserializeObject<ResponseWrapper<GetNewRequestActionsResponse, GroupServiceErrorCode>>(content);
+                if (jsonResponse.IsSuccessful)
+                {
+                    return jsonResponse.Content;
+                }
             }
-
-            if (!getNewRequestActionsResponseWithWrapper.IsSuccessful)
-            {
-                throw new Exception($"Calling Group Service GetNewRequestActions endpoint unsuccessful: {getNewRequestActionsResponseWithWrapper.Errors.FirstOrDefault()?.ErrorMessage}");
-            }
-
-            return getNewRequestActionsResponseWithWrapper.Content;
-
-            throw new NotImplementedException();
+            throw new Exception("Unable to get new request actions");
         }
     }
 }

@@ -480,5 +480,22 @@ namespace RequestService.Repo
 
             return postcodeDetails;
         }
+
+        public async Task AddJobAvailableToGroupAsync(int jobID, int groupID, CancellationToken cancellationToken)
+        {
+            _context.JobAvailableToGroup.Add(new JobAvailableToGroup()
+            {
+                GroupId = groupID,
+                JobId = jobID
+            });
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task AssignJobToVolunteerAsync(int jobID, int volunteerUserID, CancellationToken cancellationToken)
+        {
+            EntityFramework.Entities.Job job = _context.Job.First(x => x.Id == jobID);
+            job.VolunteerUserId = volunteerUserID;
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

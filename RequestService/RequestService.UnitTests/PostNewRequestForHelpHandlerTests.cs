@@ -91,14 +91,26 @@ namespace RequestService.UnitTests
         private void SetupGroupService()
         {
             _groupService = new Mock<IGroupService>();
+            Dictionary<int, TaskAction> actions = new Dictionary<int, TaskAction>();
+            actions.Add(1, new TaskAction()
+            {
+                TaskActions = new Dictionary<NewTaskAction, List<int>>()
+            });
+
+            _getNewRequestActionsResponse = new GetNewRequestActionsResponse()
+            {
+                Actions = actions
+            };
+
+
             _groupService.Setup(x => x.GetNewRequestActions(It.IsAny<GetNewRequestActionsRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => _getNewRequestActionsResponse);
         }
 
         [Test]
-       public async Task WhenIPostDiyRequest_FullfiableStatusGetSetToDiy()
+        public async Task WhenIPostDiyRequest_FullfiableStatusGetSetToDiy()
         {
-            _validPostcode = true;            
+            _validPostcode = true;
             _emailSent = true;
             var request = new PostNewRequestForHelpRequest
             {
@@ -113,7 +125,7 @@ namespace RequestService.UnitTests
                             Postcode = "test",
                         }
                     },
-                    VolunteerUserId = 1,                    
+                    VolunteerUserId = 1,
                 },
                 NewJobsRequest = new NewJobsRequest
                 {
@@ -128,8 +140,13 @@ namespace RequestService.UnitTests
                     }
                 }
             };
-           var response =  await _classUnderTest.Handle(request, new CancellationToken());
-           Assert.AreEqual(Fulfillable.Accepted_DiyRequest, response.Fulfillable);
+
+            _getNewRequestActionsResponse = new GetNewRequestActionsResponse() { Actions = new Dictionary<int, TaskAction>() };
+            _getNewRequestActionsResponse.Actions.Add(0, new TaskAction() { TaskActions = new Dictionary<NewTaskAction, List<int>>() });
+            _getNewRequestActionsResponse.Actions[0].TaskActions.Add(NewTaskAction.AssignToVolunteer, new List<int>() { 1 });
+
+            var response = await _classUnderTest.Handle(request, new CancellationToken());
+            Assert.AreEqual(Fulfillable.Accepted_DiyRequest, response.Fulfillable);
         }
 
 
@@ -168,69 +185,17 @@ namespace RequestService.UnitTests
                     }
                 }
             };
-           await _classUnderTest.Handle(request, new CancellationToken());
+            _getNewRequestActionsResponse = new GetNewRequestActionsResponse() { Actions = new Dictionary<int, TaskAction>() };
+            _getNewRequestActionsResponse.Actions.Add(0, new TaskAction() { TaskActions = new Dictionary<NewTaskAction, List<int>>() });
+            _getNewRequestActionsResponse.Actions[0].TaskActions.Add(NewTaskAction.AssignToVolunteer, new List<int>() { 1 });
+
+            await _classUnderTest.Handle(request, new CancellationToken());
             _communicationService.Verify(x => x.SendEmailToUsersAsync(It.IsAny<SendEmailToUsersRequest>(), It.IsAny<CancellationToken>()), Times.Never);
-            _communicationService.Verify(x => x.SendEmail(It.IsAny<SendEmailRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+            _repository.Verify(x => x.AssignJobToVolunteerAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _userService.Verify(x => x.GetHelpersByPostcodeAndTaskType(It.IsAny<string>(), It.IsAny <List<SupportActivities>>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
 
-        [Test]
-        public async Task WhenIPostValidNewRequest_AllFunctionGetCalledCorrectly()
-        {
-           requestId = 1;
-          _validPostcode = true;
-          _championCount = 1;
-          _emailSent = true;
-           _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
-           {
-                Volunteers = new List<VolunteerSummary>
-                {
-                    new VolunteerSummary
-                    {
-                        UserID = 1,
-                         IsStreetChampionForGivenPostCode = true,
-                         IsVerified = true,
-                        DistanceInMiles = 1,
-                    }
-                }
-            };
-           var request = new PostNewRequestForHelpRequest
-            {
-                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
-                {
-                    ForRequestor = true,
-                    RequestorType = RequestorType.Myself,
-                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
-                    {
-                        Address = new HelpMyStreet.Utils.Models.Address
-                        {
-                            Postcode = "test",
-                        }
-                    }
-                },
-                NewJobsRequest = new NewJobsRequest
-                {
-                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
-                    {
-                        new HelpMyStreet.Utils.Models.Job
-                        {
-                            HealthCritical = true,
-                            DueDays = 5,
-                            SupportActivity = SupportActivities.Shopping
-                        }
-                    }
-                }
-            };
-           await _classUnderTest.Handle(request, new CancellationToken());
-
-            _adddressService.Verify(x => x.IsValidPostcode("TEST", It.IsAny<CancellationToken>()), Times.Once);
-            _userService.Verify(x => x.GetChampionCountByPostcode("TEST", It.IsAny<CancellationToken>()), Times.Once);
-            _repository.Verify(x => x.NewHelpRequestAsync(request, Fulfillable.Accepted_PassToStreetChampion), Times.Once);
-            _userService.Verify(x => x.GetHelpersByPostcodeAndTaskType("TEST", new List<SupportActivities> { SupportActivities.Shopping }, It.IsAny<CancellationToken>()), Times.Once);
-            _communicationService.Verify(x => x.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()), Times.Once);
-            _repository.Verify(x => x.UpdateCommunicationSentAsync(1, true, It.IsAny<CancellationToken>()), Times.Once);
-        }
 
         [Test]
         public async Task WhenIPostRequest_WithInvalidPostcode_IGetRejected()
@@ -317,511 +282,18 @@ namespace RequestService.UnitTests
                 }
             };
 
+            _getNewRequestActionsResponse = new GetNewRequestActionsResponse() { Actions = new Dictionary<int, TaskAction>() };
+            _getNewRequestActionsResponse.Actions.Add(0, new TaskAction() { TaskActions = new Dictionary<NewTaskAction, List<int>>() });
+            _getNewRequestActionsResponse.Actions[0].TaskActions.Add(NewTaskAction.MakeAvailableToGroups, new List<int>() { 1 });
+            _getNewRequestActionsResponse.Actions[0].TaskActions.Add(NewTaskAction.NotifyMatchingVolunteers, new List<int>() { 1 });
+
+
             var response = await _classUnderTest.Handle(request, new CancellationToken());
             Assert.AreEqual(Fulfillable.Accepted_ManualReferral, response.Fulfillable);
         }
 
-        [Test]
-        public async Task WhenIPostRequest_WithChampions_IGetAccepted()
-        {
-            requestId = 1;
-            _validPostcode = true;
-            _championCount = 1;
-            _emailSent = true;
-            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
-            {
-                Volunteers = new List<VolunteerSummary>
-                {
-                    new VolunteerSummary
-                    {
-                        UserID = 99,
-                         IsStreetChampionForGivenPostCode = true,
-                         IsVerified = true,
-                        DistanceInMiles = 1,
-                    }
-                }
-            };
-
-            var request = new PostNewRequestForHelpRequest
-            {
-                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
-                {
-                    ForRequestor = true,
-                    RequestorType = RequestorType.Myself,
-                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
-                    {
-                        Address = new HelpMyStreet.Utils.Models.Address
-                        {
-                            Postcode = "test",
-                        }
-                    }
-                },
-                NewJobsRequest = new NewJobsRequest
-                {
-                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
-                    {
-                        new HelpMyStreet.Utils.Models.Job
-                        {
-                            HealthCritical = true,
-                            DueDays = 5,
-                            SupportActivity = SupportActivities.Shopping
-                        }
-                    }
-                }
-            };
-
-            var response = await _classUnderTest.Handle(request, new CancellationToken());
-            Assert.AreEqual(Fulfillable.Accepted_PassToStreetChampion, response.Fulfillable);
-        }
-
-
-        [Test]
-        public async Task WhenISendEmail_WithNoHelperFound_ISendManualRefer()
-        {
-            requestId = 1;
-            _validPostcode = true;
-            _championCount = 1;
-            _emailSent = true;
-            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
-            {
-                Volunteers = new List<VolunteerSummary>()                
-            };
-
-            var request = new PostNewRequestForHelpRequest
-            {
-                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
-                {
-                    ForRequestor = true,
-                    RequestorType = RequestorType.Myself,
-                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
-                    {
-                        Address = new HelpMyStreet.Utils.Models.Address
-                        {
-                            Postcode = "test",
-                        }
-                    }
-                },
-                NewJobsRequest = new NewJobsRequest
-                {
-                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
-                    {
-                        new HelpMyStreet.Utils.Models.Job
-                        {
-                            HealthCritical = true,
-                            DueDays = 5,
-                            SupportActivity = SupportActivities.Shopping
-                        }
-                    }
-                }
-            };
-
-            var response = await _classUnderTest.Handle(request, new CancellationToken());
-
-            _communicationService.Verify(x => x.SendEmail(It.Is<SendEmailRequest>(ser => ser.ToAddress == "manual@test.com"), It.IsAny<CancellationToken>()), Times.Once);
-        }
 
 
 
-        [Test]
-        public async Task WhenISendEmail_WithHelperFound_ISendToUser()
-        {
-            requestId = 1;
-            _validPostcode = true;
-            _championCount = 1;
-            _emailSent = true;
-            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
-            {
-                Volunteers = new List<VolunteerSummary>
-                {
-                    new VolunteerSummary
-                    {
-                        UserID = 99,
-                         IsStreetChampionForGivenPostCode = true,
-                         IsVerified = true,
-                        DistanceInMiles = 1,
-                    }
-                }
-            };
-
-
-            var request = new PostNewRequestForHelpRequest
-            {
-                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
-                {
-                    ForRequestor = true,
-                    RequestorType = RequestorType.Myself,
-                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
-                    {
-                        Address = new HelpMyStreet.Utils.Models.Address
-                        {
-                            Postcode = "test",
-                        }
-                    }
-                },
-                NewJobsRequest = new NewJobsRequest
-                {
-                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
-                    {
-                        new HelpMyStreet.Utils.Models.Job
-                        {
-                            HealthCritical = true,
-                            DueDays = 5,
-                            SupportActivity = SupportActivities.Shopping
-                        }
-                    }
-                }
-            };
-
-            var response = await _classUnderTest.Handle(request, new CancellationToken());
-
-            _communicationService.Verify(x => x.SendEmailToUserAsync(It.Is<SendEmailToUserRequest>(ser => ser.ToUserID == 99), It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-        [Test]
-        public async Task WhenIPostFaceMask_With44Requested_IGet1Job()
-        {
-            _validPostcode = true;
-            var request = new PostNewRequestForHelpRequest
-            {
-                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
-                {
-                    ForRequestor = true,
-                    RequestorType = RequestorType.Myself,
-                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
-                    {
-                        Address = new HelpMyStreet.Utils.Models.Address
-                        {
-                            Postcode = "test",
-                        }
-                    }
-                },
-                NewJobsRequest = new NewJobsRequest
-                {
-                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
-                    {
-                        new HelpMyStreet.Utils.Models.Job
-                        {
-                            HealthCritical = true,
-                            DueDays = 5,
-                            SupportActivity = SupportActivities.FaceMask,
-                            Questions = new List<HelpMyStreet.Utils.Models.Question>
-                            {
-                                new HelpMyStreet.Utils.Models.Question
-                                {
-                                    Id = (int)Questions.FaceMask_Amount,
-                                    Answer = "44"
-                                }
-                            }
-
-                        }
-                    }
-                }
-            };
-            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
-            {
-                Volunteers = new List<VolunteerSummary>
-                {
-                    new VolunteerSummary
-                    {
-                        UserID = 1,
-                         IsStreetChampionForGivenPostCode = true,
-                         IsVerified = true,
-                        DistanceInMiles = 1,
-                    }
-                }
-            };
-            await _classUnderTest.Handle(request, new CancellationToken());
-            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Count == 1), It.IsAny<Fulfillable>()), Times.Once);
-        }
-
-        [Test]
-        public async Task WhenIPostFaceMask_WithNoRemainder_IGetCorrectJobs()
-        {
-            _validPostcode = true;
-            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
-            {
-                Volunteers = new List<VolunteerSummary>
-                {
-                    new VolunteerSummary
-                    {
-                        UserID = 1,
-                         IsStreetChampionForGivenPostCode = true,
-                         IsVerified = true,
-                        DistanceInMiles = 1,
-                    }
-                }
-            };
-            var request = new PostNewRequestForHelpRequest
-            {
-                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
-                {
-                    ForRequestor = true,
-                    RequestorType = RequestorType.Myself,
-                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
-                    {
-                        Address = new HelpMyStreet.Utils.Models.Address
-                        {
-                            Postcode = "test",
-                        }
-                    }
-                },
-                NewJobsRequest = new NewJobsRequest
-                {
-                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
-                    {
-                        new HelpMyStreet.Utils.Models.Job
-                        {
-                            HealthCritical = true,
-                            DueDays = 5,
-                            SupportActivity = SupportActivities.FaceMask,
-                            Questions = new List<HelpMyStreet.Utils.Models.Question>
-                            {
-                                new HelpMyStreet.Utils.Models.Question
-                                {
-                                    Id = (int)Questions.FaceMask_Amount,
-                                    Answer = "20"
-                                }
-                            }
-
-                        }
-                    }
-                }
-            };
-
-            await _classUnderTest.Handle(request, new CancellationToken());
-
-            var requestWithAddedJobs = request;
-            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Count == 1), It.IsAny<Fulfillable>()), Times.Once);
-        }
-
-        [Test]
-        public async Task WhenIPostFaceMask_UnderChunkSize_IGet1Jobs()
-        {
-            _validPostcode = true;
-            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
-            {
-                Volunteers = new List<VolunteerSummary>
-                {
-                    new VolunteerSummary
-                    {
-                        UserID = 1,
-                         IsStreetChampionForGivenPostCode = true,
-                         IsVerified = true,
-                        DistanceInMiles = 1,
-                    }
-                }
-            };
-            var request = new PostNewRequestForHelpRequest
-            {
-                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
-                {
-                    ForRequestor = true,
-                    RequestorType = RequestorType.Myself,
-                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
-                    {
-                        Address = new HelpMyStreet.Utils.Models.Address
-                        {
-                            Postcode = "test",
-                        }
-                    }
-                },
-                NewJobsRequest = new NewJobsRequest
-                {
-                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
-                    {
-                        new HelpMyStreet.Utils.Models.Job
-                        {
-                            HealthCritical = true,
-                            DueDays = 5,
-                            SupportActivity = SupportActivities.FaceMask,
-                            Questions = new List<HelpMyStreet.Utils.Models.Question>
-                            {
-                                new HelpMyStreet.Utils.Models.Question
-                                {
-                                    Id = (int)Questions.FaceMask_Amount,
-                                    Answer = "8"
-                                }
-                            }
-
-                        }
-                    }
-                }
-            };
-
-            await _classUnderTest.Handle(request, new CancellationToken());
-
-            var requestWithAddedJobs = request;
-            _repository.Verify(x => x.NewHelpRequestAsync(It.Is<PostNewRequestForHelpRequest>(z => z.NewJobsRequest.Jobs.Count == 1), It.IsAny<Fulfillable>()), Times.Once);
-        }
-
-        [Test]
-        public async Task WhenISendEmail_WithHelperFound_ISendEmailConfirmation()
-        {
-            requestId = 1;
-            _validPostcode = true;
-            _championCount = 1;
-            _emailSent = true;
-            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
-            {
-                Volunteers = new List<VolunteerSummary>
-                {
-                    new VolunteerSummary
-                    {
-                        UserID = 99,
-                         IsStreetChampionForGivenPostCode = true,
-                         IsVerified = true,
-                        DistanceInMiles = 1,
-                    }
-                }
-            };
-
-
-            var request = new PostNewRequestForHelpRequest
-            {
-                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
-                {
-                    ForRequestor = true,
-                    RequestorType = RequestorType.Myself,
-                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
-                    {
-                        EmailAddress = "requestorEmailAdddress",
-                        Address = new HelpMyStreet.Utils.Models.Address
-                        {
-                            Postcode = "test",
-                            
-                        }
-                    }
-                },
-                NewJobsRequest = new NewJobsRequest
-                {
-                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
-                    {
-                        new HelpMyStreet.Utils.Models.Job
-                        {
-                            HealthCritical = true,
-                            DueDays = 5,
-                            SupportActivity = SupportActivities.Shopping
-                        }
-                    }
-                }
-            };
-
-            var response = await _classUnderTest.Handle(request, new CancellationToken());
-
-            _communicationService.Verify(x => x.SendEmailToUserAsync(It.Is<SendEmailToUserRequest>(ser => ser.ToUserID == 99), It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-
-        [Test]
-        public async Task WhenISendEmail_WithNoHelperFound_ISendEmailConfirmation()
-        {
-            requestId = 1;
-            _validPostcode = true;
-            _championCount = 1;
-            _emailSent = true;
-            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
-            {
-                Volunteers = new List<VolunteerSummary>()
-            };
-
-            var request = new PostNewRequestForHelpRequest
-            {
-                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
-                {
-                    ForRequestor = true,
-                    RequestorType = RequestorType.Myself,
-                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
-                    {
-                        EmailAddress = "requestorEmailAdddress",
-                        Address = new HelpMyStreet.Utils.Models.Address
-                        {
-                            Postcode = "test",
-
-                        }
-                    }
-                },
-                NewJobsRequest = new NewJobsRequest
-                {
-                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
-                    {
-                        new HelpMyStreet.Utils.Models.Job
-                        {
-                            HealthCritical = true,
-                            DueDays = 5,
-                            SupportActivity = SupportActivities.Shopping
-                        }
-                    }
-                }
-            };
-
-            var response = await _classUnderTest.Handle(request, new CancellationToken());
-
-            _communicationService.Verify(x => x.SendEmail(It.Is<SendEmailRequest>(ser => ser.ToAddress == "requestorEmailAdddress"), It.IsAny<CancellationToken>()), Times.Once);
-        }
-
-
-        public async Task WhenISendEmail_WithHelperFound_ISendEmailToEachHelper()
-        {
-            requestId = 1;
-            _validPostcode = true;
-            _championCount = 1;
-            _emailSent = true;
-            _getVolunteersByPostcodeAndActivityResponse = new GetVolunteersByPostcodeAndActivityResponse
-            {
-                Volunteers = new List<VolunteerSummary>
-                {
-                    new VolunteerSummary
-                    {
-                        UserID = 99,
-                         IsStreetChampionForGivenPostCode = true,
-                         IsVerified = true,
-                        DistanceInMiles = 1,
-                    },
-                    new VolunteerSummary
-                    {
-                        UserID = 98,
-                         IsStreetChampionForGivenPostCode = true,
-                         IsVerified = true,
-                        DistanceInMiles = 1,
-                    }
-                }
-            };
-
-            var request = new PostNewRequestForHelpRequest
-            {
-                HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
-                {
-                    ForRequestor = true,
-                    RequestorType = RequestorType.Myself,
-                    Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
-                    {
-                        EmailAddress = "requestorEmailAdddress",
-                        Address = new HelpMyStreet.Utils.Models.Address
-                        {
-                            Postcode = "test",
-
-                        }
-                    }
-                },
-                NewJobsRequest = new NewJobsRequest
-                {
-                    Jobs = new List<HelpMyStreet.Utils.Models.Job>
-                    {
-                        new HelpMyStreet.Utils.Models.Job
-                        {
-                            HealthCritical = true,
-                            DueDays = 5,
-                            SupportActivity = SupportActivities.Shopping
-                        }
-                    }
-                }
-            };
-
-            var response = await _classUnderTest.Handle(request, new CancellationToken());
-
-            _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(ser => ser.Recipients.ToUserIDs.Contains(99)), It.IsAny<CancellationToken>()), Times.Once);
-             _communicationService.Verify(x => x.SendEmailToUsersAsync(It.Is<SendEmailToUsersRequest>(ser => ser.Recipients.ToUserIDs.Contains(98)), It.IsAny<CancellationToken>()), Times.Once);
-            
-        }
     }
 }
