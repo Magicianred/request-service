@@ -150,37 +150,6 @@ namespace RequestService.Handlers
         private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, Fulfillable fulfillable, CancellationToken cancellationToken)
         {
             List<bool> emailsSent = new List<bool>();            
-            if (fulfillable != Fulfillable.Accepted_DiyRequest)
-            {
-                var helperResponse = await _userService.GetHelpersByPostcodeAndTaskType(emailJobDTO.PostCode, new List<SupportActivities> { emailJobDTO.Activity }, cancellationToken);
-                if (helperResponse.Volunteers == null || helperResponse.Volunteers.Count() == 0)
-                {
-                    SendEmailRequest emailRequest = new SendEmailRequest
-                    {
-                        ToAddress = _applicationConfig.Value.ManualReferEmail,
-                        ToName = _applicationConfig.Value.ManualReferName,
-                        Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
-                        BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
-                    };
-                    await _communicationService.SendEmail(emailRequest, cancellationToken);
-                }
-
-            
-                foreach (var volunteer in helperResponse.Volunteers)
-                {
-                    emailJobDTO.IsVerified = volunteer.IsVerified.Value;
-                    emailJobDTO.IsStreetChampionOfPostcode = volunteer.IsStreetChampionForGivenPostCode.Value;
-                    emailJobDTO.DistanceFromPostcode = volunteer.DistanceInMiles;
-
-                    SendEmailToUserRequest emailRequest = new SendEmailToUserRequest
-                    {
-                        ToUserID = volunteer.UserID,
-                        Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
-                        BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
-                    };
-                    emailsSent.Add(await _communicationService.SendEmailToUserAsync(emailRequest, cancellationToken));
-                };
-            }
 
             if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
             {
