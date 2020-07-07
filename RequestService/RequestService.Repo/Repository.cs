@@ -390,7 +390,8 @@ namespace RequestService.Repo
                     SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds,
                     Questions = MapToQuestions(j.JobQuestions),
                     ReferringGroupID = j.NewRequest.ReferringGroupId,
-                    Groups = j.JobAvailableToGroup.Select(x=>x.GroupId).ToList()
+                    Groups = j.JobAvailableToGroup.Select(x=>x.GroupId).ToList(),
+                    RecipientOrganisation = j.NewRequest.OrganisationName,
                 });
             }
             return response;
