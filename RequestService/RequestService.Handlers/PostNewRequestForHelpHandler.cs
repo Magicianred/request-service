@@ -74,23 +74,8 @@ namespace RequestService.Handlers
                 };
             }
 
-            // ifdosnet have a volunteerUserId then its a normal request
-            if (!request.HelpRequest.VolunteerUserId.HasValue)
-            {
-                int championCount = await _userService.GetChampionCountByPostcode(postcode, cancellationToken);
-                if (championCount > 0)
-                {
-                    response.Fulfillable = Fulfillable.Accepted_PassToStreetChampion;
-                }
-                else
-                {
-                    response.Fulfillable = Fulfillable.Accepted_ManualReferral;
-                }
-            }
-            else
-            {
-                response.Fulfillable = Fulfillable.Accepted_DiyRequest;
-            }
+            // Currently indicates standard "passed to volunteers" result
+            response.Fulfillable = Fulfillable.Accepted_ManualReferral;
 
             var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
             response.RequestID = result;
@@ -108,50 +93,48 @@ namespace RequestService.Handlers
 
             foreach(int jobID in actions.Actions.Keys)
             {
-                if (actions.Actions[jobID].TaskActions.ContainsKey(NewTaskAction.MakeAvailableToGroups))
+                foreach (NewTaskAction newTaskAction in actions.Actions[jobID].TaskActions.Keys)
                 {
-                    List<int> availableGroups = actions.Actions[jobID].TaskActions[NewTaskAction.MakeAvailableToGroups];
-                    if (availableGroups != null)
-                    {
-                        foreach (int i in availableGroups)
-                        {
-                            await _repository.AddJobAvailableToGroupAsync(jobID, i, cancellationToken);
-                        }
-                    }
-                }
+                    List<int> actionAppliesToIds = actions.Actions[jobID].TaskActions[newTaskAction];
+                    if (actionAppliesToIds == null) { continue; }
 
-                if (actions.Actions[jobID].TaskActions.ContainsKey(NewTaskAction.NotifyMatchingVolunteers))
-                {
-                    List<int> matchingVolunteersGroup = actions.Actions[jobID].TaskActions[NewTaskAction.NotifyMatchingVolunteers];
-                    if (matchingVolunteersGroup != null)
+                    switch (newTaskAction)
                     {
-                        foreach (int i in matchingVolunteersGroup)
-                        {
-                            await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                        case NewTaskAction.MakeAvailableToGroups:
+                            foreach (int i in actionAppliesToIds)
                             {
-                                JobID = jobID,
-                                CommunicationJob = new CommunicationJob()
-                                {
-                                    CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification
-                                },
-                                GroupID = i
-                            }, cancellationToken);
-                        }
-                    }
-                }
+                                await _repository.AddJobAvailableToGroupAsync(jobID, i,cancellationToken);
+                            }
+                            break;
 
-                if (actions.Actions[jobID].TaskActions.ContainsKey(NewTaskAction.AssignToVolunteer))
-                {
-                    List<int> volunteer = actions.Actions[jobID].TaskActions[NewTaskAction.AssignToVolunteer];
-                    if (volunteer != null)
-                    {
-                        foreach (int i in volunteer)
-                        {
-                            await _repository.AssignJobToVolunteerAsync(jobID, i, cancellationToken);
-                        }
+                        case NewTaskAction.NotifyMatchingVolunteers:
+                            foreach (int i in actionAppliesToIds)
+                            {
+                                await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                                {
+                                    JobID = jobID,
+                                    CommunicationJob = new CommunicationJob()
+                                    {
+                                        CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification
+                                    },
+                                    GroupID = i
+                                }, cancellationToken);
+                            }
+                            break;
+
+                        case NewTaskAction.AssignToVolunteer:
+                            foreach (int i in actionAppliesToIds)
+                            {
+                                await _repository.AssignJobToVolunteerAsync(jobID, i, cancellationToken);
+                            }
+
+                            // For now, this only happens with a DIY request
+                            response.Fulfillable = Fulfillable.Accepted_DiyRequest;
+                            break;
                     }
                 }
-            }            
+            }
+            
             return response;
         }
     }
