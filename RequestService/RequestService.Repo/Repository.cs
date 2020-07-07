@@ -252,7 +252,7 @@ namespace RequestService.Repo
             return await _context.ActivityQuestions.Where(x => activity.Any(a => (int)a == x.ActivityId)).GroupBy(x => x.ActivityId).Select(g => new ActivityQuestionDTO
             {
                 Activity = (HelpMyStreet.Utils.Enums.SupportActivities)g.Key,
-                Questions = g.Select(x => new HelpMyStreet.Utils.Models.Question
+                Questions = g.OrderBy(x => x.Order).Select(x => new HelpMyStreet.Utils.Models.Question
                 {
                     Id = x.Question.Id,
                     Name = x.Question.Name,
@@ -267,7 +267,7 @@ namespace RequestService.Repo
         public async Task<bool> UpdateJobStatusOpenAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
         {
             bool response = false;
-            byte openJobStatus = (byte) HelpMyStreet.Utils.Enums.JobStatuses.Open;
+            byte openJobStatus = (byte)JobStatuses.Open;
             var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
             if (job != null)
             {
@@ -289,7 +289,7 @@ namespace RequestService.Repo
         public async Task<bool> UpdateJobStatusInProgressAsync(int jobID, int createdByUserID, int volunteerUserID, CancellationToken cancellationToken)
         {
             bool response = false;
-            byte inProgressJobStatus = (byte)HelpMyStreet.Utils.Enums.JobStatuses.InProgress;
+            byte inProgressJobStatus = (byte)JobStatuses.InProgress;
             var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
             if (job != null)
             {
@@ -311,7 +311,7 @@ namespace RequestService.Repo
         public async Task<bool> UpdateJobStatusDoneAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
         {
             bool response = false;
-            byte doneJobStatus = (byte)HelpMyStreet.Utils.Enums.JobStatuses.Done;
+            byte doneJobStatus = (byte)JobStatuses.Done;
             var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
             if (job != null)
             {
@@ -331,7 +331,7 @@ namespace RequestService.Repo
 
         public List<JobSummary> GetJobsAllocatedToUser(int volunteerUserID)
         {
-            byte jobStatusID_InProgress = (byte)HelpMyStreet.Utils.Enums.JobStatuses.InProgress;
+            byte jobStatusID_InProgress = (byte)JobStatuses.InProgress;
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
                                     .Include(i => i.NewRequest)
