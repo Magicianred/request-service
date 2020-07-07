@@ -13,6 +13,8 @@ using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
 using RequestService.Core.Dto;
 using Newtonsoft.Json;
+using System;
+using HelpMyStreet.Utils.Models;
 
 namespace RequestService.Handlers
 {
@@ -93,16 +95,55 @@ namespace RequestService.Handlers
             var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
             response.RequestID = result;
 
-            //var actions = _groupService.GetNewRequestActions(new HelpMyStreet.Contracts.GroupService.Request.GetNewRequestActionsRequest()
-            //{
-            //    HelpRequest = request.HelpRequest,
-            //    NewJobsRequest = request.NewJobsRequest
-            //},cancellationToken).Result;
+            var actions = _groupService.GetNewRequestActions(new HelpMyStreet.Contracts.GroupService.Request.GetNewRequestActionsRequest()
+            {
+                HelpRequest = request.HelpRequest,
+                NewJobsRequest = request.NewJobsRequest
+            }, cancellationToken).Result;
 
-            //if(actions!=null)
-            //{
-            //   // actions.Actions[]
-            //}
+            if(actions==null)
+            {
+                throw new Exception("No new request actions returned");
+            }
+
+            foreach(int jobID in actions.Actions.Keys)
+            {
+                List<int> availableGroups = actions.Actions[jobID].TaskActions[NewTaskAction.MakeAvailableToGroups];
+                if (availableGroups != null)
+                {
+                    foreach (int i in availableGroups)
+                    {
+                        await _repository.AddJobAvailableToGroupAsync(jobID, i,cancellationToken);
+                    }
+                }
+
+                List<int> matchingVolunteersGroup = actions.Actions[jobID].TaskActions[NewTaskAction.NotifyMatchingVolunteers];
+                if (matchingVolunteersGroup != null)
+                {
+                    foreach (int i in matchingVolunteersGroup)
+                    {
+                        await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                        {
+                            JobID = jobID,
+                            CommunicationJob = new CommunicationJob()
+                            {
+                                CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification
+                            },
+                            GroupID = i
+                        }, cancellationToken);
+                    }
+                }
+
+                List<int> volunteer = actions.Actions[jobID].TaskActions[NewTaskAction.AssignToVolunteer];
+                if (volunteer != null)
+                {
+                    foreach (int i in volunteer)
+                    {
+                        await _repository.AssignJobToVolunteerAsync(jobID, i, cancellationToken);
+                    }
+                }
+
+            }
 
             EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
 
