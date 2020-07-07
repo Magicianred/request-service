@@ -93,44 +93,46 @@ namespace RequestService.Handlers
 
             foreach(int jobID in actions.Actions.Keys)
             {
-                List<int> availableGroups = actions.Actions[jobID].TaskActions[NewTaskAction.MakeAvailableToGroups];
-                if (availableGroups != null)
+                foreach (NewTaskAction newTaskAction in actions.Actions[jobID].TaskActions.Keys)
                 {
-                    foreach (int i in availableGroups)
-                    {
-                        await _repository.AddJobAvailableToGroupAsync(jobID, i,cancellationToken);
-                    }
-                }
+                    List<int> actionAppliesToIds = actions.Actions[jobID].TaskActions[newTaskAction];
+                    if (actionAppliesToIds == null) { continue; }
 
-                List<int> matchingVolunteersGroup = actions.Actions[jobID].TaskActions[NewTaskAction.NotifyMatchingVolunteers];
-                if (matchingVolunteersGroup != null)
-                {
-                    foreach (int i in matchingVolunteersGroup)
+                    switch (newTaskAction)
                     {
-                        await _communicationService.RequestCommunication(new RequestCommunicationRequest()
-                        {
-                            JobID = jobID,
-                            CommunicationJob = new CommunicationJob()
+                        case NewTaskAction.MakeAvailableToGroups:
+                            foreach (int i in actionAppliesToIds)
                             {
-                                CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification
-                            },
-                            GroupID = i
-                        }, cancellationToken);
+                                await _repository.AddJobAvailableToGroupAsync(jobID, i,cancellationToken);
+                            }
+                            break;
+
+                        case NewTaskAction.NotifyMatchingVolunteers:
+                            foreach (int i in actionAppliesToIds)
+                            {
+                                await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                                {
+                                    JobID = jobID,
+                                    CommunicationJob = new CommunicationJob()
+                                    {
+                                        CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification
+                                    },
+                                    GroupID = i
+                                }, cancellationToken);
+                            }
+                            break;
+
+                        case NewTaskAction.AssignToVolunteer:
+                            foreach (int i in actionAppliesToIds)
+                            {
+                                await _repository.AssignJobToVolunteerAsync(jobID, i, cancellationToken);
+                            }
+
+                            // For now, this only happens with a DIY request
+                            response.Fulfillable = Fulfillable.Accepted_DiyRequest;
+                            break;
                     }
                 }
-
-                List<int> volunteer = actions.Actions[jobID].TaskActions[NewTaskAction.AssignToVolunteer];
-                if (volunteer != null)
-                {
-                    foreach (int i in volunteer)
-                    {
-                        await _repository.AssignJobToVolunteerAsync(jobID, i, cancellationToken);
-                    }
-
-                    // For now, this only happens with a DIY request
-                    response.Fulfillable = Fulfillable.Accepted_DiyRequest;
-                }
-
             }
 
             EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
