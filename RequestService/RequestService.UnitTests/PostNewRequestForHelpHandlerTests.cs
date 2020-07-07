@@ -91,6 +91,18 @@ namespace RequestService.UnitTests
         private void SetupGroupService()
         {
             _groupService = new Mock<IGroupService>();
+            Dictionary<int, TaskAction> actions = new Dictionary<int, TaskAction>();
+            actions.Add(1, new TaskAction()
+            {
+                TaskActions = new Dictionary<NewTaskAction, List<int>>()
+            });
+
+            _getNewRequestActionsResponse = new GetNewRequestActionsResponse()
+            {
+                Actions = actions
+            };
+
+
             _groupService.Setup(x => x.GetNewRequestActions(It.IsAny<GetNewRequestActionsRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => _getNewRequestActionsResponse);
         }
