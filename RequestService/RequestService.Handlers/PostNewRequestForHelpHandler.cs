@@ -74,23 +74,8 @@ namespace RequestService.Handlers
                 };
             }
 
-            // ifdosnet have a volunteerUserId then its a normal request
-            if (!request.HelpRequest.VolunteerUserId.HasValue)
-            {
-                int championCount = await _userService.GetChampionCountByPostcode(postcode, cancellationToken);
-                if (championCount > 0)
-                {
-                    response.Fulfillable = Fulfillable.Accepted_PassToStreetChampion;
-                }
-                else
-                {
-                    response.Fulfillable = Fulfillable.Accepted_ManualReferral;
-                }
-            }
-            else
-            {
-                response.Fulfillable = Fulfillable.Accepted_DiyRequest;
-            }
+            // Currently indicates standard "passed to volunteers" result
+            response.Fulfillable = Fulfillable.Accepted_ManualReferral;
 
             var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
             response.RequestID = result;
@@ -141,6 +126,9 @@ namespace RequestService.Handlers
                     {
                         await _repository.AssignJobToVolunteerAsync(jobID, i, cancellationToken);
                     }
+
+                    // For now, this only happens with a DIY request
+                    response.Fulfillable = Fulfillable.Accepted_DiyRequest;
                 }
 
             }
