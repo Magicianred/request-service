@@ -351,6 +351,7 @@ namespace RequestService.Repo
             byte jobStatusID_Open = (byte)JobStatuses.Open;
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.JobAvailableToGroup)
                                     .Include(i => i.NewRequest)
                                     .Include(i => i.JobQuestions)
                                     .ThenInclude(rq => rq.Question)
@@ -363,6 +364,7 @@ namespace RequestService.Repo
         public List<JobSummary> GetJobSummaries()
         {
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.JobAvailableToGroup)
                                     .Include(i => i.NewRequest)
                                     .Include(i => i.JobQuestions)
                                     .ThenInclude(rq => rq.Question)
