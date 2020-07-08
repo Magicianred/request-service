@@ -13,6 +13,8 @@ using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
 using RequestService.Core.Dto;
 using Newtonsoft.Json;
+using System;
+using HelpMyStreet.Utils.Models;
 
 namespace RequestService.Handlers
 {
@@ -22,18 +24,21 @@ namespace RequestService.Handlers
         private readonly ICommunicationService _communicationService;
         private readonly IUserService _userService;
         private readonly IAddressService _addressService;
+        private readonly IGroupService _groupService;
         private readonly IOptionsSnapshot<ApplicationConfig> _applicationConfig;
         public PostNewRequestForHelpHandler(
-            IRepository repository, 
-            IUserService userService, 
+            IRepository repository,
+            IUserService userService,
             IAddressService addressService,
             ICommunicationService communicationService,
+            IGroupService groupService,
             IOptionsSnapshot<ApplicationConfig> applicationConfig)
         {
             _repository = repository;
             _userService = userService;
             _addressService = addressService;
             _communicationService = communicationService;
+            _groupService = groupService;
             _applicationConfig = applicationConfig;
         }
 
@@ -69,133 +74,68 @@ namespace RequestService.Handlers
                 };
             }
 
-            // ifdosnet have a volunteerUserId then its a normal request
-            if (!request.HelpRequest.VolunteerUserId.HasValue)
-            {
-                int championCount = await _userService.GetChampionCountByPostcode(postcode, cancellationToken);
-                if (championCount > 0)
-                {
-                    response.Fulfillable = Fulfillable.Accepted_PassToStreetChampion;
-                }
-                else
-                {
-                    response.Fulfillable = Fulfillable.Accepted_ManualReferral;
-                }
-            }
-            else
-            {
-                response.Fulfillable = Fulfillable.Accepted_DiyRequest;
-            }
-
-            request.NewJobsRequest.Jobs = SplitFacemaskJobs(request.NewJobsRequest.Jobs);
+            // Currently indicates standard "passed to volunteers" result
+            response.Fulfillable = Fulfillable.Accepted_ManualReferral;
 
             var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
             response.RequestID = result;
 
-            EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
+            var actions = _groupService.GetNewRequestActions(new HelpMyStreet.Contracts.GroupService.Request.GetNewRequestActionsRequest()
+            {
+                HelpRequest = request.HelpRequest,
+                NewJobsRequest = request.NewJobsRequest
+            }, cancellationToken).Result;
 
-            bool commsSent = await SendEmailAsync(
-                emailJob
-            , response.Fulfillable
-            , cancellationToken);
-            await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
-            
+            if(actions==null)
+            {
+                throw new Exception("No new request actions returned");
+            }
+
+            foreach(int jobID in actions.Actions.Keys)
+            {
+                foreach (NewTaskAction newTaskAction in actions.Actions[jobID].TaskActions.Keys)
+                {
+                    List<int> actionAppliesToIds = actions.Actions[jobID].TaskActions[newTaskAction];
+                    if (actionAppliesToIds == null) { continue; }
+
+                    switch (newTaskAction)
+                    {
+                        case NewTaskAction.MakeAvailableToGroups:
+                            foreach (int i in actionAppliesToIds)
+                            {
+                                await _repository.AddJobAvailableToGroupAsync(jobID, i,cancellationToken);
+                            }
+                            break;
+
+                        case NewTaskAction.NotifyMatchingVolunteers:
+                            foreach (int i in actionAppliesToIds)
+                            {
+                                await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                                {
+                                    JobID = jobID,
+                                    CommunicationJob = new CommunicationJob()
+                                    {
+                                        CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification
+                                    },
+                                    GroupID = i
+                                }, cancellationToken);
+                            }
+                            break;
+
+                        case NewTaskAction.AssignToVolunteer:
+                            foreach (int i in actionAppliesToIds)
+                            {
+                                await _repository.AssignJobToVolunteerAsync(jobID, i, cancellationToken);
+                            }
+
+                            // For now, this only happens with a DIY request
+                            response.Fulfillable = Fulfillable.Accepted_DiyRequest;
+                            break;
+                    }
+                }
+            }
             
             return response;
-        }
-
-        private List<HelpMyStreet.Utils.Models.Job> SplitFacemaskJobs(List<HelpMyStreet.Utils.Models.Job> jobs)
-        {
-            var faceMaskJobs = jobs.Where(x => x.SupportActivity == HelpMyStreet.Utils.Enums.SupportActivities.FaceMask);
-
-            List<HelpMyStreet.Utils.Models.Job> additionalJobs = new List<HelpMyStreet.Utils.Models.Job>();
-
-            foreach (var faceMaskJob in faceMaskJobs)
-            {
-                var faceMaskAmountQuestion = faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).FirstOrDefault();
-                if (faceMaskAmountQuestion == null) return jobs;
-
-                var chunkSize = _applicationConfig.Value.FaceMaskChunkSize;
-
-                int facemaskQuantityRemaining = 0;
-                int.TryParse(faceMaskAmountQuestion.Answer, out facemaskQuantityRemaining);
-
-                if (facemaskQuantityRemaining > chunkSize)
-                {
-                    faceMaskJob.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = chunkSize.ToString();
-                    facemaskQuantityRemaining -= chunkSize;
-
-                    while (facemaskQuantityRemaining > chunkSize)
-                    {
-                        var job = JsonConvert.DeserializeObject<HelpMyStreet.Utils.Models.Job>(JsonConvert.SerializeObject(faceMaskJob)); // creating clone
-                        job.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = chunkSize.ToString();
-                        additionalJobs.Add(job);
-                        facemaskQuantityRemaining -= chunkSize;
-                    }
-
-                    if (facemaskQuantityRemaining > 0)
-                    {
-                        var job = JsonConvert.DeserializeObject<HelpMyStreet.Utils.Models.Job>(JsonConvert.SerializeObject(faceMaskJob)); // creating clone
-                        job.Questions.Where(x => x.Id == (int)Questions.FaceMask_Amount).First().Answer = facemaskQuantityRemaining.ToString();
-                        additionalJobs.Add(job);
-                    }
-                }
-            }
-
-            jobs.AddRange(additionalJobs);
-
-            return jobs;
-        }
-
-        private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, Fulfillable fulfillable, CancellationToken cancellationToken)
-        {
-            List<bool> emailsSent = new List<bool>();            
-            if (fulfillable != Fulfillable.Accepted_DiyRequest)
-            {
-                var helperResponse = await _userService.GetHelpersByPostcodeAndTaskType(emailJobDTO.PostCode, new List<SupportActivities> { emailJobDTO.Activity }, cancellationToken);
-                if (helperResponse.Volunteers == null || helperResponse.Volunteers.Count() == 0)
-                {
-                    SendEmailRequest emailRequest = new SendEmailRequest
-                    {
-                        ToAddress = _applicationConfig.Value.ManualReferEmail,
-                        ToName = _applicationConfig.Value.ManualReferName,
-                        Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
-                        BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
-                    };
-                    await _communicationService.SendEmail(emailRequest, cancellationToken);
-                }
-
-            
-                foreach (var volunteer in helperResponse.Volunteers)
-                {
-                    emailJobDTO.IsVerified = volunteer.IsVerified.Value;
-                    emailJobDTO.IsStreetChampionOfPostcode = volunteer.IsStreetChampionForGivenPostCode.Value;
-                    emailJobDTO.DistanceFromPostcode = volunteer.DistanceInMiles;
-
-                    SendEmailToUserRequest emailRequest = new SendEmailToUserRequest
-                    {
-                        ToUserID = volunteer.UserID,
-                        Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
-                        BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
-                    };
-                    emailsSent.Add(await _communicationService.SendEmailToUserAsync(emailRequest, cancellationToken));
-                };
-            }
-
-            if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
-            {
-                SendEmailRequest confirmation = new SendEmailRequest()
-                {
-                    Subject = "Thank you for registering your request via HelpMyStreet.org",
-                    ToAddress = emailJobDTO.Requestor.EmailAddress,
-                    ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
-                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true, emailJobDTO, fulfillable == Fulfillable.Accepted_DiyRequest, _applicationConfig.Value.EmailBaseUrl)
-                };
-
-                emailsSent.Add(await _communicationService.SendEmail(confirmation, cancellationToken));
-            }
-
-            return emailsSent.Count > 0;
         }
     }
 }

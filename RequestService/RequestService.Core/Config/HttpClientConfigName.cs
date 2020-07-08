@@ -4,6 +4,7 @@
     {
         UserService = 1,
         CommunicationService = 2,
-        AddressService = 3
+        AddressService = 3,
+        GroupService = 4
     }
 }

@@ -81,10 +81,11 @@ namespace RequestService.AzureFunction
             builder.Services.AddTransient<IUserService, RequestService.Core.Services.UserService>();
             builder.Services.AddTransient<IAddressService, AddressService>();
             builder.Services.AddTransient<ICommunicationService, CommunicationService>();
+            builder.Services.AddTransient<IGroupService, GroupService>();
+
             builder.Services.AddTransient<IRepository, Repository>();
             builder.Services.AddTransient<IDistanceCalculator, DistanceCalculator>();            
             builder.Services.AddTransient<IJobService, JobService>();
-            builder.Services.AddTransient<IDailyDigestService, DailyDigestService>();
             builder.Services.AddTransient<IJobFilteringService, JobFilteringService>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>

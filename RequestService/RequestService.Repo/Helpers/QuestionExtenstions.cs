@@ -25,7 +25,7 @@ namespace RequestService.Repo.Helpers
             });
             entity.HasData(new Question {
                 Id = (int)Questions.FaceMask_SpecificRequirements,
-                Name = "Please tell us about any specific requirements (e.g. colour, style etc.)",
+                Name = "Please tell us about any specific requirements (e.g. size, colour, style etc.)",
                 QuestionType = (int)QuestionType.MultiLineText,
                 Required = false,
                 AdditionalData = GetAdditionalData(Questions.FaceMask_SpecificRequirements)
@@ -88,8 +88,8 @@ namespace RequestService.Repo.Helpers
                         },
                         new AdditonalQuestionData
                         {
-                            Key = "someone",
-                            Value = "Someone else"
+                            Key = "memberspublic",
+                            Value = "Members of the public"
                         },
                     };
                     break;
@@ -157,8 +157,8 @@ namespace RequestService.Repo.Helpers
             {
                 if(activity == SupportActivities.FaceMask)
                 {
-                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_SpecificRequirements, Order = 1 });
-                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Amount, Order= 2 });                    
+                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_SpecificRequirements, Order = 2 });
+                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Amount, Order= 1 });                    
                     entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Recipient, Order=3});
                     entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Cost, Order= 4});
                     entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Order = 5 });

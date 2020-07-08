@@ -13,6 +13,10 @@ namespace RequestService.Core.Interfaces.Repositories
 {
     public interface IRepository
     {
+        Task AddJobAvailableToGroupAsync(int jobID, int groupID, CancellationToken cancellationToken);
+
+        Task AssignJobToVolunteerAsync(int jobID, int volunteerUserID, CancellationToken cancellationToken);
+
         GetJobDetailsResponse GetJobDetails(int jobID);
         List<JobSummary> GetJobSummaries();
         List<JobSummary> GetOpenJobsSummaries();
