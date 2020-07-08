@@ -1,5 +1,6 @@
 ﻿using HelpMyStreet.Contracts.AddressService.Response;
 using HelpMyStreet.Contracts.CommunicationService.Request;
+using HelpMyStreet.Contracts.GroupService.Response;
 using HelpMyStreet.Contracts.UserService.Response;
 using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Models;
@@ -27,12 +28,14 @@ namespace RequestService.UnitTests
         private Mock<IUserService> _userService;
         private Mock<IRepository> _repository;
         private Mock<ICommunicationService> _communicationService;
+        private Mock<IGroupService> _groupService;
         private Mock<IOptionsSnapshot<ApplicationConfig>> _applicationConfig;
         private DailyDigestService _classUnderTest;
         private int _maxDistance = 3;
         private List<JobSummary> _jobSummaries;
         private GetUsersResponse _users;
         private Mock<ILogger<DailyDigestService>> _logger;
+        private GetUserGroupsResponse _groupResponse;
 
         [SetUp]
         public void Setup()
@@ -46,7 +49,8 @@ namespace RequestService.UnitTests
             SetupUserService();
             SetupConfig();
             SetUpJobFilteringService();
-            _classUnderTest = new DailyDigestService(_userService.Object, _applicationConfig.Object, _communicationService.Object, _repository.Object, _logger.Object, _jobFilteringService.Object);
+            SetupGroupService();
+            _classUnderTest = new DailyDigestService(_userService.Object, _applicationConfig.Object, _communicationService.Object, _repository.Object, _logger.Object, _jobFilteringService.Object,_groupService.Object);
         }
 
         private void SetupLogger()
@@ -135,6 +139,20 @@ namespace RequestService.UnitTests
         {
             _communicationService = _mockRepository.Create<ICommunicationService>();
             _communicationService.Setup(X => X.SendEmailToUserAsync(It.IsAny<SendEmailToUserRequest>(), It.IsAny<CancellationToken>()));
+
+        }
+
+        private void SetupGroupService()
+        {
+            _groupService = _mockRepository.Create<IGroupService>();
+
+            _groupResponse = new GetUserGroupsResponse()
+            {
+                Groups = new List<int>() {1,2}
+            };
+
+            _groupService.Setup(X => X.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => _groupResponse);
 
         }
 

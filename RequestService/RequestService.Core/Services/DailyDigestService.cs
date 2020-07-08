@@ -24,12 +24,14 @@ namespace RequestService.Core.Services
         private readonly ICommunicationService _communicationService;
         private readonly ILogger<DailyDigestService> _logger;
         private readonly IJobFilteringService _jobFilteringService;
+        private readonly IGroupService _groupService;
 
         public DailyDigestService(IUserService userService, IOptionsSnapshot<ApplicationConfig> applicationConfig,
             ICommunicationService communicationService,
             IRepository repository,
             ILogger<DailyDigestService> logger,
-            IJobFilteringService jobFilteringService)
+            IJobFilteringService jobFilteringService,
+            IGroupService groupService)
         {
             _userService = userService;
             _repository = repository;
@@ -37,6 +39,7 @@ namespace RequestService.Core.Services
             _applicationConfig = applicationConfig;
             _logger = logger;
             _jobFilteringService = jobFilteringService;
+            _groupService = groupService;
         }
 
 
@@ -67,15 +70,16 @@ namespace RequestService.Core.Services
             {
                 try
                 {
+                    List<int> groupIds = new List<int>();
+                    var groups = _groupService.GetUserGroups(user.UserID, cancellationToken).Result;
+                    if (groups != null)
+                    {
+                        groupIds = groups.Groups;
+                    }
+
                     var activitySpecificSupportDistancesInMiles = nationalSupportActivities.Where(a => user.SupportActivities.Contains(a)).ToDictionary(a => a, a => (double?)null);
 
-                    var attachedDistances = await _jobFilteringService.FilterJobSummaries(openRequests, null, user.PostCode, _applicationConfig.Value.DistanceInMilesForDailyDigest, activitySpecificSupportDistancesInMiles, null, null, new List<JobStatuses>() { JobStatuses.Open }, cancellationToken);
-
-                    //if they dont have the community connector support activity, let remove any open requests in there.
-                    if (!user.SupportActivities.Contains(SupportActivities.CommunityConnector))
-                    {
-                        attachedDistances = attachedDistances.Where(x => x.SupportActivity != SupportActivities.CommunityConnector).ToList();
-                    };
+                    var attachedDistances = await _jobFilteringService.FilterJobSummaries(openRequests, null, user.PostCode, _applicationConfig.Value.DistanceInMilesForDailyDigest, activitySpecificSupportDistancesInMiles, null, groupIds, new List<JobStatuses>() { JobStatuses.Open }, cancellationToken);
 
                     var (criteriaJobs, otherJobs) = attachedDistances.Split(x => user.SupportActivities.Contains(x.SupportActivity) && x.DistanceInMiles < user.SupportRadiusMiles);
 
