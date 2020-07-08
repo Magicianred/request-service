@@ -62,7 +62,7 @@ namespace RequestService.Handlers
                 request.DistanceInMiles, 
                 request.ActivitySpecificSupportDistancesInMiles, 
                 request.ReferringGroupID,
-                request.Groups,
+                request.Groups.Groups,
                 request.JobStatuses?.JobStatuses, 
                 cancellationToken);
 
