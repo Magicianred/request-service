@@ -1,18 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using MediatR;
 using System;
-using System.Net;
-using AzureFunctions.Extensions.Swashbuckle.Attribute;
-using HelpMyStreet.Contracts.RequestService.Response;
-using HelpMyStreet.Contracts.RequestService.Request;
-using HelpMyStreet.Contracts.Shared;
-using Microsoft.AspNetCore.Http;
-using HelpMyStreet.Contracts.ReportService.Response;
-using RequestService.Core.Domains.Entities;
 using RequestService.Core.Services;
 using System.Threading;
 
