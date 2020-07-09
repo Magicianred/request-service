@@ -24,6 +24,23 @@ namespace RequestService.Core.Services
         {
             _httpClientWrapper = httpClientWrapper;
         }
+
+        public async Task<GetGroupMembersResponse> GetGroupMembers(int groupID)
+        {
+            string path = $"/api/GetGroupMembers?groupID=" + groupID;
+            string absolutePath = $"{path}";
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.GroupService, absolutePath, CancellationToken.None).ConfigureAwait(false))
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var getJobsResponse = JsonConvert.DeserializeObject<ResponseWrapper<GetGroupMembersResponse, GroupServiceErrorCode>>(jsonResponse);
+                if (getJobsResponse.HasContent && getJobsResponse.IsSuccessful)
+                {
+                    return getJobsResponse.Content;
+                }
+                return null;
+            }
+        }
+
         public async Task<GetNewRequestActionsResponse> GetNewRequestActions(GetNewRequestActionsRequest request, CancellationToken cancellationToken)
         {
             string path = $"api/GetNewRequestActions";

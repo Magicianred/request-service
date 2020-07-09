@@ -36,6 +36,7 @@ namespace RequestService.UnitTests
         private bool _emailSent;
         private GetNewRequestActionsResponse _getNewRequestActionsResponse;
         private GetVolunteersByPostcodeAndActivityResponse _getVolunteersByPostcodeAndActivityResponse;
+        private GetGroupMembersResponse _getGroupMembersResponse;
         [SetUp]
         public void Setup()
         {
@@ -105,6 +106,14 @@ namespace RequestService.UnitTests
 
             _groupService.Setup(x => x.GetNewRequestActions(It.IsAny<GetNewRequestActionsRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => _getNewRequestActionsResponse);
+
+            _getGroupMembersResponse = new GetGroupMembersResponse()
+            {
+                Users = new List<int>() { 1, 2 }
+            };
+
+            _groupService.Setup(x => x.GetGroupMembers(It.IsAny<int>()))
+                .ReturnsAsync(() => _getGroupMembersResponse);
         }
 
         [Test]

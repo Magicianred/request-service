@@ -110,15 +110,14 @@ namespace RequestService.Handlers
                         case NewTaskAction.NotifyMatchingVolunteers:
                             foreach (int i in actionAppliesToIds)
                             {
-                                await _communicationService.RequestCommunication(new RequestCommunicationRequest()
-                                {
-                                    JobID = jobID,
-                                    CommunicationJob = new CommunicationJob()
-                                    {
-                                        CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification
-                                    },
-                                    GroupID = i
-                                }, cancellationToken);
+                                EmailJobDTO emailJob = EmailJobDTO.GetEmailJobDTO(request, request.NewJobsRequest.Jobs.First(), postcode);
+
+                                bool commsSent = await SendEmailAsync(
+                                    emailJob
+                                , response.Fulfillable
+                                ,i
+                                , cancellationToken);
+                                await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
                             }
                             break;
 
@@ -137,5 +136,64 @@ namespace RequestService.Handlers
             
             return response;
         }
+
+        private async Task<bool> SendEmailAsync(EmailJobDTO emailJobDTO, Fulfillable fulfillable, int groupId, CancellationToken cancellationToken )
+        {
+            List<int> groupUsers = new List<int>();
+            var groupMembers = _groupService.GetGroupMembers(groupId).Result;
+            groupUsers = groupMembers.Users;
+
+            List<bool> emailsSent = new List<bool>();
+            if (fulfillable != Fulfillable.Accepted_DiyRequest)
+            {
+                var helperResponse = await _userService.GetHelpersByPostcodeAndTaskType(emailJobDTO.PostCode, new List<SupportActivities> { emailJobDTO.Activity }, cancellationToken);
+                if (helperResponse.Volunteers == null || helperResponse.Volunteers.Count() == 0)
+                {
+                    SendEmailRequest emailRequest = new SendEmailRequest
+                    {
+                        ToAddress = _applicationConfig.Value.ManualReferEmail,
+                        ToName = _applicationConfig.Value.ManualReferName,
+                        Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
+                        BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
+                    };
+                    await _communicationService.SendEmail(emailRequest, cancellationToken);
+                }
+
+
+                foreach (var volunteer in helperResponse.Volunteers)
+                {
+                    if (groupUsers.Contains(volunteer.UserID))
+                    {
+                        emailJobDTO.IsVerified = volunteer.IsVerified.Value;
+                        emailJobDTO.IsStreetChampionOfPostcode = volunteer.IsStreetChampionForGivenPostCode.Value;
+                        emailJobDTO.DistanceFromPostcode = volunteer.DistanceInMiles;
+
+                        SendEmailToUserRequest emailRequest = new SendEmailToUserRequest
+                        {
+                            ToUserID = volunteer.UserID,
+                            Subject = "ACTION REQUIRED: A REQUEST FOR HELP has arrived via HelpMyStreet.org",
+                            BodyHTML = EmailBuilder.BuildHelpRequestedEmail(emailJobDTO, _applicationConfig.Value.EmailBaseUrl)
+                        };
+                        emailsSent.Add(await _communicationService.SendEmailToUserAsync(emailRequest, cancellationToken));
+                    }
+                };
+            }
+
+            if (!string.IsNullOrEmpty(emailJobDTO.Requestor.EmailAddress))
+            {
+                SendEmailRequest confirmation = new SendEmailRequest()
+                {
+                    Subject = "Thank you for registering your request via HelpMyStreet.org",
+                    ToAddress = emailJobDTO.Requestor.EmailAddress,
+                    ToName = $"{emailJobDTO.Requestor.FirstName} {emailJobDTO.Requestor.LastName}",
+                    BodyHTML = EmailBuilder.BuildConfirmationRequestEmail(true, emailJobDTO, fulfillable == Fulfillable.Accepted_DiyRequest, _applicationConfig.Value.EmailBaseUrl)
+                };
+
+                emailsSent.Add(await _communicationService.SendEmail(confirmation, cancellationToken));
+            }
+
+            return emailsSent.Count > 0;
+        }
+
     }
 }
