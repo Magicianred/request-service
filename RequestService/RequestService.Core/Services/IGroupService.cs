@@ -8,8 +8,8 @@ namespace RequestService.Core.Services
     public interface IGroupService
     {
         Task<GetNewRequestActionsResponse> GetNewRequestActions(GetNewRequestActionsRequest request, CancellationToken cancellationToken);
-
         Task<GetUserGroupsResponse> GetUserGroups(int userId, CancellationToken cancellationToken);
+        Task<GetGroupMembersResponse> GetGroupMembers(int groupID);
     }
 
 }
