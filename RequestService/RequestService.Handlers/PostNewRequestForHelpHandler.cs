@@ -124,7 +124,7 @@ namespace RequestService.Handlers
                         case NewTaskAction.AssignToVolunteer:
                             foreach (int i in actionAppliesToIds)
                             {
-                                await _repository.AssignJobToVolunteerAsync(jobID, i, cancellationToken);
+                                await _repository.UpdateJobStatusInProgressAsync(jobID, request.HelpRequest.CreatedByUserId, i, cancellationToken);
                             }
 
                             // For now, this only happens with a DIY request
