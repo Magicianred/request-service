@@ -149,8 +149,6 @@ namespace RequestService.Repo
             Person requester = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Requestor);
             Person recipient;
             
-            var jobStatus = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId.HasValue ? JobStatuses.InProgress : JobStatuses.Open;
-            
             if (postNewRequestForHelpRequest.HelpRequest.RequestorType == RequestorType.Myself)
             {
                 recipient = requester;
@@ -195,8 +193,7 @@ namespace RequestService.Repo
                             IsHealthCritical = job.HealthCritical,
                             SupportActivityId = (byte)job.SupportActivity,
                             DueDate = DateTime.Now.AddDays(job.DueDays),
-                            JobStatusId = (byte)jobStatus,
-                            VolunteerUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
+                            JobStatusId = (byte) JobStatuses.Open
                         };
                         _context.Job.Add(EFcoreJob);
                         await _context.SaveChangesAsync();
@@ -215,10 +212,9 @@ namespace RequestService.Repo
                         _context.RequestJobStatus.Add(new RequestJobStatus()
                         {
                             DateCreated = DateTime.Now,
-                            JobStatusId = (byte)jobStatus,
+                            JobStatusId = (byte)JobStatuses.Open,
                             Job = EFcoreJob,
-                            VolunteerUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
-                            CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.VolunteerUserId,
+                            CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId,
                         });
                     }
 
@@ -233,8 +229,6 @@ namespace RequestService.Repo
             }
             throw new Exception("Unable to save request");
         }
-
-         
 
         private void AddJobStatus(int jobID, int? createdByUserID, int? volunteerUserID, byte jobStatus)
         {
@@ -491,13 +485,6 @@ namespace RequestService.Repo
                 GroupId = groupID,
                 JobId = jobID
             });
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-
-        public async Task AssignJobToVolunteerAsync(int jobID, int volunteerUserID, CancellationToken cancellationToken)
-        {
-            EntityFramework.Entities.Job job = _context.Job.First(x => x.Id == jobID);
-            job.VolunteerUserId = volunteerUserID;
             await _context.SaveChangesAsync(cancellationToken);
         }
     }
