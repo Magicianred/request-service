@@ -12,6 +12,7 @@ using RequestService.Repo.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using SupportActivities = RequestService.Repo.EntityFramework.Entities.SupportActivities;
@@ -328,6 +329,7 @@ namespace RequestService.Repo
             byte jobStatusID_InProgress = (byte)JobStatuses.InProgress;
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.RequestJobStatus)
                                     .Include(i => i.NewRequest)
                                     .Include(i => i.JobQuestions)
                                     .ThenInclude(rq => rq.Question)
@@ -345,6 +347,7 @@ namespace RequestService.Repo
             byte jobStatusID_Open = (byte)JobStatuses.Open;
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.RequestJobStatus)
                                     .Include(i => i.JobAvailableToGroup)
                                     .Include(i => i.NewRequest)
                                     .Include(i => i.JobQuestions)
@@ -355,9 +358,25 @@ namespace RequestService.Repo
             
         }
 
+        public List<JobSummary> GetJobsInProgressSummaries()
+        {
+            byte jobStatusID_Open = (byte)JobStatuses.InProgress;
+
+            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.RequestJobStatus)
+                                    .Include(i => i.JobAvailableToGroup)
+                                    .Include(i => i.NewRequest)
+                                    .Include(i => i.JobQuestions)
+                                    .ThenInclude(rq => rq.Question)
+                                    .Where(w => w.JobStatusId == jobStatusID_Open
+                                            ).ToList();
+            return GetJobSummaries(jobSummaries);
+        }
+
         public List<JobSummary> GetJobSummaries()
         {
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.RequestJobStatus)
                                     .Include(i => i.JobAvailableToGroup)
                                     .Include(i => i.NewRequest)
                                     .Include(i => i.JobQuestions)
@@ -388,6 +407,7 @@ namespace RequestService.Repo
                     ReferringGroupID = j.NewRequest.ReferringGroupId,
                     Groups = j.JobAvailableToGroup.Select(x=>x.GroupId).ToList(),
                     RecipientOrganisation = j.NewRequest.OrganisationName,
+                    DateStatusLastChanged = j.RequestJobStatus.Max(x=> x.DateCreated)
                 });
             }
             return response;

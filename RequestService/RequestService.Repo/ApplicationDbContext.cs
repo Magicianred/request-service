@@ -44,6 +44,10 @@ namespace RequestService.Repo
         public virtual DbSet<Question> Question { get; set; }
         public virtual DbSet<JobAvailableToGroup> JobAvailableToGroup { get; set; }
         public virtual DbSet<JobQuestions> JobQuestions { get; set; }
+
+        public virtual DbSet<EnumSupportActivities> EnumSupportActivities { get; set; }
+        public virtual DbSet<EnumJobStatuses> EnumJobStatuses { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
         }
@@ -51,6 +55,25 @@ namespace RequestService.Repo
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Query<DailyReport>().ToQuery(() => DailyReport.FromSql("TwoHourlyReport"));
+
+            modelBuilder.Entity<EnumSupportActivities>(entity =>
+            {
+                entity.ToTable("SupportActivity", "Lookup");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.SetEnumSupportActivityData();
+            });
+
+            modelBuilder.Entity<EnumJobStatuses>(entity =>
+            {
+                entity.ToTable("JobStatus", "Lookup");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.SetEnumJobStatusData();
+            });
+
 
             modelBuilder.Entity<Job>(entity =>
             {
