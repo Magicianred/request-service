@@ -408,7 +408,7 @@ namespace RequestService.Repo
                     Groups = j.JobAvailableToGroup.Select(x=>x.GroupId).ToList(),
                     RecipientOrganisation = j.NewRequest.OrganisationName,
                     DateStatusLastChanged = j.RequestJobStatus.Max(x=> x.DateCreated),
-                    DueDays = Convert.ToInt32((j.DueDate - DateTime.Now).TotalDays)
+                    DueDays = Convert.ToInt32((j.DueDate.Date - DateTime.Now.Date).TotalDays)
                 });
             }
             return response;
@@ -482,7 +482,7 @@ namespace RequestService.Repo
                 RequestorType = (RequestorType)efJob.NewRequest.RequestorType,
                 OrganisationName = efJob.NewRequest.OrganisationName,
                 DateStatusLastChanged = efJob.RequestJobStatus.Max(x => x.DateCreated),
-                DueDays = Convert.ToInt32((efJob.DueDate - DateTime.Now).TotalDays)
+                DueDays = Convert.ToInt32((efJob.DueDate.Date - DateTime.Now.Date).TotalDays)
             };
 
             return response;
