@@ -407,7 +407,8 @@ namespace RequestService.Repo
                     ReferringGroupID = j.NewRequest.ReferringGroupId,
                     Groups = j.JobAvailableToGroup.Select(x=>x.GroupId).ToList(),
                     RecipientOrganisation = j.NewRequest.OrganisationName,
-                    DateStatusLastChanged = j.RequestJobStatus.Max(x=> x.DateCreated)
+                    DateStatusLastChanged = j.RequestJobStatus.Max(x=> x.DateCreated),
+                    DueDays = Convert.ToInt32((j.DueDate - DateTime.Now).TotalDays)
                 });
             }
             return response;
@@ -450,6 +451,7 @@ namespace RequestService.Repo
         {
             GetJobDetailsResponse response = new GetJobDetailsResponse();
             var efJob = _context.Job
+                        .Include(i=> i.RequestJobStatus)
                         .Include(i => i.NewRequest)
                         .ThenInclude(i => i.PersonIdRecipientNavigation)
                         .Include(i => i.NewRequest)
@@ -478,7 +480,9 @@ namespace RequestService.Repo
                 ForRequestor = efJob.NewRequest.ForRequestor.Value,
                 DateRequested = efJob.NewRequest.DateRequested,
                 RequestorType = (RequestorType)efJob.NewRequest.RequestorType,
-                OrganisationName = efJob.NewRequest.OrganisationName
+                OrganisationName = efJob.NewRequest.OrganisationName,
+                DateStatusLastChanged = efJob.RequestJobStatus.Max(x => x.DateCreated),
+                DueDays = Convert.ToInt32((efJob.DueDate - DateTime.Now).TotalDays)
             };
 
             return response;
