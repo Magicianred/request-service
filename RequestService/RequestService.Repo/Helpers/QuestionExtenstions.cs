@@ -46,7 +46,7 @@ namespace RequestService.Repo.Helpers
             });
             entity.HasData(new Question { 
              Id = (int)Questions.FaceMask_Cost,
-                Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
+                Name = "Please donate to the For the Love of Scrubs GoFundMe <a href=\"https://www.gofundme.com/f/for-the-love-of-scrubs-face-coverings\" target=\"_blank\">here</a> to help pay for materials and to help us continue our good work. Recommended donation £3 - £4 per face covering.",
                 QuestionType = (int)QuestionType.Radio,
                 Required = false,
                 AdditionalData = GetAdditionalData(Questions.FaceMask_Cost)
