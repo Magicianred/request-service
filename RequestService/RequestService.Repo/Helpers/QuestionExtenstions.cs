@@ -60,6 +60,14 @@ namespace RequestService.Repo.Helpers
                 QuestionType = (int)QuestionType.Radio,
                 AdditionalData = GetAdditionalData(Questions.WillYouCompleteYourself)
             });
+
+            entity.HasData(new Question
+            {
+                Id = (int)Questions.FtlosDonationInformation,
+                Name = "Please donate to the For the Love of Scrubs GoFundMe <a href=\"https://www.gofundme.com/f/for-the-love-of-scrubs-face-coverings\" target=\"_blank\">here</a> to help pay for materials and to help us continue our good work. Recommended donation £3 - £4 per face covering.",
+                QuestionType = (int)QuestionType.LabelOnly,
+                AdditionalData = string.Empty
+            });
         }
         private static string GetAdditionalData(Questions question)
         {
@@ -161,6 +169,11 @@ namespace RequestService.Repo.Helpers
                         {
                             entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Cost, Order = 4, RequestFormVariantId = (int)form, Required = false });
                         }
+                        else
+                        {
+                            entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FtlosDonationInformation, Order = 4, RequestFormVariantId = (int)form, Required = false });
+                        }
+
                         if (form == RequestHelpFormVariant.DIY)
                         {
                             entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Order = 5, RequestFormVariantId = (int)form, Required = true });
