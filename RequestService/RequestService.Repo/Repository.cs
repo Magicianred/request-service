@@ -242,16 +242,16 @@ namespace RequestService.Repo
             });
         }
 
-        public async Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<HelpMyStreet.Utils.Enums.SupportActivities> activity,  CancellationToken cancellationToken)
+        public async Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<HelpMyStreet.Utils.Enums.SupportActivities> activity, RequestHelpFormVariant requestHelpFormVariant, CancellationToken cancellationToken)
         {
-            return await _context.ActivityQuestions.Where(x => activity.Any(a => (int)a == x.ActivityId)).GroupBy(x => x.ActivityId).Select(g => new ActivityQuestionDTO
+            return await _context.ActivityQuestions.Where(x => activity.Any(a => (int)a == x.ActivityId)  && x.RequestFormVariantId == (int)requestHelpFormVariant).GroupBy(x => x.ActivityId).Select(g => new ActivityQuestionDTO
             {
                 Activity = (HelpMyStreet.Utils.Enums.SupportActivities)g.Key,
                 Questions = g.OrderBy(x => x.Order).Select(x => new HelpMyStreet.Utils.Models.Question
                 {
                     Id = x.Question.Id,
                     Name = x.Question.Name,
-                    Required = x.Question.Required,
+                    Required = x.Required,
                     Type = (QuestionType)x.Question.QuestionType,
                     AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>()
                 }).ToList()
@@ -421,7 +421,7 @@ namespace RequestService.Repo
                 Id = x.QuestionId,
                 Answer = x.Answer,
                 Name = x.Question.Name,
-                Required = x.Question.Required,
+                //Required = x.Question.Required,
                 Type = (QuestionType)x.Question.QuestionType,
                 AddtitonalData = JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData),
             }).ToList();
