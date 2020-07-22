@@ -42,7 +42,7 @@ namespace RequestService.Repo.Helpers
             });
             entity.HasData(new Question { 
              Id = (int)Questions.FaceMask_Cost,
-                Name = "Are you able to pay the cost of materials for your face covering(usually £2 - £3 each)?",
+                Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
                 QuestionType = (int)QuestionType.Radio,
                 AdditionalData = GetAdditionalData(Questions.FaceMask_Cost)
             });
