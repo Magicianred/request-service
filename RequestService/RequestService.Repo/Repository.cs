@@ -252,6 +252,9 @@ namespace RequestService.Repo
                     Id = x.Question.Id,
                     Name = x.Question.Name,
                     Required = x.Required,
+                    SubText = x.Subtext,
+                    Location = x.Location,
+                    PlaceholderText = x.PlaceholderText,
                     Type = (QuestionType)x.Question.QuestionType,
                     AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>()
                 }).ToList()
