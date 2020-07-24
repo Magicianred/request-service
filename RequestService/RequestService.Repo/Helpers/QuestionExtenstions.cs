@@ -15,43 +15,50 @@ namespace RequestService.Repo.Helpers
 {
     public static class QuestionExtenstions
     {
-        public static void SetQuestionData(this EntityTypeBuilder<Question> entity) {
-            entity.HasData(new Question {
+        public static void SetQuestionData(this EntityTypeBuilder<Question> entity)
+        {
+            entity.HasData(new Question
+            {
                 Id = (int)Questions.SupportRequesting,
                 Name = "Please tell us more about the help or support you're requesting",
                 QuestionType = (int)QuestionType.MultiLineText,
                 AdditionalData = GetAdditionalData(Questions.SupportRequesting)
             });
-            entity.HasData(new Question {
+            entity.HasData(new Question
+            {
                 Id = (int)Questions.FaceMask_SpecificRequirements,
                 Name = "Please tell us about any specific requirements (e.g. size, colour, style etc.)",
                 QuestionType = (int)QuestionType.MultiLineText,
                 AdditionalData = GetAdditionalData(Questions.FaceMask_SpecificRequirements)
             });
-            entity.HasData(new Question {
+            entity.HasData(new Question
+            {
                 Id = (int)Questions.FaceMask_Amount,
                 Name = "How many face coverings do you need?",
                 QuestionType = (int)QuestionType.Number,
                 AdditionalData = GetAdditionalData(Questions.FaceMask_Amount)
             });
-            entity.HasData(new Question {
+            entity.HasData(new Question
+            {
                 Id = (int)Questions.FaceMask_Recipient,
                 Name = "Who will be using the face coverings?",
                 QuestionType = (int)QuestionType.Radio,
                 AdditionalData = GetAdditionalData(Questions.FaceMask_Recipient)
             });
-            entity.HasData(new Question { 
-             Id = (int)Questions.FaceMask_Cost,
+            entity.HasData(new Question
+            {
+                Id = (int)Questions.FaceMask_Cost,
                 Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
                 QuestionType = (int)QuestionType.Radio,
                 AdditionalData = GetAdditionalData(Questions.FaceMask_Cost)
             });
 
-            entity.HasData(new Question { 
-            Id = (int)Questions.IsHealthCritical,
+            entity.HasData(new Question
+            {
+                Id = (int)Questions.IsHealthCritical,
                 Name = "Is this request critical to someone's health or wellbeing?",
                 QuestionType = (int)QuestionType.Radio,
-                AdditionalData = GetAdditionalData(Questions.IsHealthCritical) 
+                AdditionalData = GetAdditionalData(Questions.IsHealthCritical)
             });
             entity.HasData(new Question
             {
@@ -150,18 +157,17 @@ namespace RequestService.Repo.Helpers
         }
 
 
-        public static void SetActivityQuestionData(this EntityTypeBuilder<ActivityQuestions> entity)        
+        public static void SetActivityQuestionData(this EntityTypeBuilder<ActivityQuestions> entity)
         {
-            var activites = Enum.GetValues(typeof(SupportActivities)).Cast<SupportActivities>();
             var requestFormVariants = Enum.GetValues(typeof(RequestHelpFormVariant)).Cast<RequestHelpFormVariant>();
 
-            foreach (var activity in activites)
+            foreach (var form in requestFormVariants)
             {
-                foreach (var form in requestFormVariants)
+                foreach (var activity in GetSupportActivitiesForRequestFormVariant(form))
                 {
                     if (activity == SupportActivities.FaceMask)
                     {
-                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_SpecificRequirements, Order = 2, RequestFormVariantId = (int)form , Required= false });
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_SpecificRequirements, Order = 2, RequestFormVariantId = (int)form, Required = false });
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Amount, Order = 1, RequestFormVariantId = (int)form, Required = true });
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Recipient, Order = 3, RequestFormVariantId = (int)form, Required = false });
 
@@ -181,8 +187,8 @@ namespace RequestService.Repo.Helpers
                         continue;
 
                     }
-                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.SupportRequesting, Order = 1, RequestFormVariantId = (int)form , Required = false });
-                    
+                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.SupportRequesting, Order = 1, RequestFormVariantId = (int)form, Required = false });
+
                     if (form != RequestHelpFormVariant.HLP_CommunityConnector)
                     {
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.IsHealthCritical, Order = 2, RequestFormVariantId = (int)form, Required = true });
@@ -194,6 +200,39 @@ namespace RequestService.Repo.Helpers
                     }
                 }
             }
+        }
+
+        private static IEnumerable<SupportActivities> GetSupportActivitiesForRequestFormVariant(RequestHelpFormVariant form)
+        {
+            IEnumerable<SupportActivities> activites;
+            IEnumerable<SupportActivities> genericSupportActivities = Enum.GetValues(typeof(SupportActivities)).Cast<SupportActivities>()
+                .Where(sa => sa != SupportActivities.WellbeingPackage && sa != SupportActivities.CommunityConnector);
+
+            switch (form)
+            {
+                case RequestHelpFormVariant.FtLOS:
+                    activites = new List<SupportActivities>() { SupportActivities.FaceMask };
+                    break;
+
+                case RequestHelpFormVariant.HLP_CommunityConnector:
+                    activites = new List<SupportActivities>() { SupportActivities.CommunityConnector };
+                    break;
+
+                case RequestHelpFormVariant.Default:
+                case RequestHelpFormVariant.DIY:
+                case RequestHelpFormVariant.FaceMasks:
+                    activites = genericSupportActivities;
+                    break;
+
+                case RequestHelpFormVariant.VitalsForVeterans:
+                    activites = new List<SupportActivities>(genericSupportActivities);
+                    ((List<SupportActivities>)activites).Add(SupportActivities.WellbeingPackage);
+                    break;
+
+                default: activites = new List<SupportActivities>(); break;
+            };
+
+            return activites;
         }
     }
 }
