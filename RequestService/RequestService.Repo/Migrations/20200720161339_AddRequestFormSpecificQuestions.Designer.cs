@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200720161339_AddRequestFormSpecificQuestions")]
+    partial class AddRequestFormSpecificQuestions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,11 +187,14 @@ namespace RequestService.Repo.Migrations
                     b.Property<int>("RequestFormVariantId")
                         .HasColumnName("RequestFormVariantID");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .IsUnicode(false);
+
                     b.Property<int>("Order")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValue(1);
-
-                    b.Property<bool>("Required");
 
                     b.HasKey("ActivityId", "QuestionId", "RequestFormVariantId");
 
@@ -203,1448 +208,1408 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 1,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 1,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 1,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 2,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 2,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 2,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 2,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 2,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 2,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 2,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 2,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 2,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 2,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 2,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 2,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 3,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 3,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 3,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 3,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 3,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 3,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 3,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 3,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 3,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 3,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 3,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 3,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 4,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 4,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 4,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 4,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 4,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 4,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 4,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 4,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 4,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 4,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 4,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 4,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 5,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 5,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 5,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 5,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 5,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 5,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 5,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 5,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 5,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 5,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 5,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 5,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 6,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 6,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 6,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 6,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 6,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 6,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 6,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 6,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 6,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 6,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 6,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 6,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 7,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 7,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 7,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 7,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 7,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 7,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 7,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 7,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 7,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 7,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 7,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 7,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 8,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 8,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 8,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 8,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 8,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 8,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 8,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 8,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 8,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 8,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 8,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 8,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 9,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 9,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 9,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 9,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 9,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 9,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 9,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 9,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 9,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 9,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 9,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 9,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 10,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 10,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 10,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 10,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 10,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 10,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 10,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 10,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 10,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 10,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 10,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 10,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 11,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 11,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 11,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 11,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 11,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 11,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 11,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 11,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 11,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 11,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 11,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 11,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 2,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = false
+                            Name = "Please tell us about any specific requirements (e.g. size, colour, style etc.)",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 3,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = true
+                            Name = "How many face coverings do you need?",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 4,
                             RequestFormVariantId = 1,
-                            Order = 3,
-                            Required = false
+                            Name = "Who will be using the face coverings?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 5,
                             RequestFormVariantId = 1,
-                            Order = 4,
-                            Required = false
+                            Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
+                            Order = 4
+                        },
+                        new
+                        {
+                            ActivityId = 12,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 5
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 2,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = false
+                            Name = "Please tell us about any specific requirements (e.g. size, colour, style etc.)",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 3,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = true
+                            Name = "How many face coverings do you need?",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 4,
                             RequestFormVariantId = 2,
-                            Order = 3,
-                            Required = false
+                            Name = "Who will be using the face coverings?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 5,
                             RequestFormVariantId = 2,
-                            Order = 4,
-                            Required = false
+                            Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
+                            Order = 4
+                        },
+                        new
+                        {
+                            ActivityId = 12,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 5
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 2,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = false
+                            Name = "Please tell us about any specific requirements (e.g. size, colour, style etc.)",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 3,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = true
+                            Name = "How many face coverings do you need?",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 4,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = false
+                            Name = "Who will be using the face coverings?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 5,
                             RequestFormVariantId = 3,
-                            Order = 4,
-                            Required = false
+                            Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
+                            Order = 4
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 5,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 5
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 2,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = false
+                            Name = "Please tell us about any specific requirements (e.g. size, colour, style etc.)",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 3,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = true
+                            Name = "How many face coverings do you need?",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 4,
                             RequestFormVariantId = 4,
-                            Order = 3,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 8,
-                            RequestFormVariantId = 4,
-                            Order = 4,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 2,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 3,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 4,
-                            RequestFormVariantId = 5,
-                            Order = 3,
-                            Required = false
+                            Name = "Who will be using the face coverings?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 5,
-                            RequestFormVariantId = 5,
-                            Order = 4,
-                            Required = false
+                            RequestFormVariantId = 4,
+                            Name = "Please donate to the For the Love of Scrubs GoFundMe <a href=\"https://www.gofundme.com/f/for-the-love-of-scrubs-face-coverings\" target=\"_blank\">here</a> to help pay for materials and to help us continue our good work. Recommended donation £3 - £4 per face covering.",
+                            Order = 4
                         },
                         new
                         {
                             ActivityId = 12,
-                            QuestionId = 2,
-                            RequestFormVariantId = 6,
-                            Order = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 3,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 4,
-                            RequestFormVariantId = 6,
-                            Order = 3,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 5,
-                            RequestFormVariantId = 6,
-                            Order = 4,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 5
                         },
                         new
                         {
                             ActivityId = 13,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 13,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 13,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 13,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 13,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 13,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 13,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 13,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 13,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 13,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 13,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 13,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 13,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 13,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 14,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 14,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 14,
+                            QuestionId = 7,
+                            RequestFormVariantId = 1,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 14,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 14,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
+                        },
+                        new
+                        {
+                            ActivityId = 14,
+                            QuestionId = 7,
+                            RequestFormVariantId = 2,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 14,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 14,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 14,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Order = 3,
-                            Required = true
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         },
                         new
                         {
                             ActivityId = 14,
                             QuestionId = 1,
                             RequestFormVariantId = 4,
-                            Order = 1,
-                            Required = false
+                            Name = "Please tell us more about the help or support you're requesting",
+                            Order = 1
                         },
                         new
                         {
                             ActivityId = 14,
                             QuestionId = 6,
                             RequestFormVariantId = 4,
-                            Order = 2,
-                            Required = true
+                            Name = "Is this request critical to someone's health or wellbeing?",
+                            Order = 2
                         },
                         new
                         {
                             ActivityId = 14,
-                            QuestionId = 1,
-                            RequestFormVariantId = 5,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 14,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 14,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
+                            QuestionId = 7,
+                            RequestFormVariantId = 4,
+                            Name = "Will you complete this request yourself?",
+                            Order = 3
                         });
                 });
 
@@ -1929,12 +1894,9 @@ namespace RequestService.Repo.Migrations
                     b.Property<string>("AdditionalData")
                         .IsUnicode(false);
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .IsUnicode(false);
-
                     b.Property<byte>("QuestionType");
+
+                    b.Property<bool>("Required");
 
                     b.HasKey("Id");
 
@@ -1945,57 +1907,50 @@ namespace RequestService.Repo.Migrations
                         {
                             Id = 1,
                             AdditionalData = "[]",
-                            Name = "Please tell us more about the help or support you're requesting",
-                            QuestionType = (byte)3
+                            QuestionType = (byte)3,
+                            Required = false
                         },
                         new
                         {
                             Id = 2,
                             AdditionalData = "[]",
-                            Name = "Please tell us about any specific requirements (e.g. size, colour, style etc.)",
-                            QuestionType = (byte)3
+                            QuestionType = (byte)3,
+                            Required = false
                         },
                         new
                         {
                             Id = 3,
                             AdditionalData = "[]",
-                            Name = "How many face coverings do you need?",
-                            QuestionType = (byte)1
+                            QuestionType = (byte)1,
+                            Required = true
                         },
                         new
                         {
                             Id = 4,
                             AdditionalData = "[{\"Key\":\"keyworkers\",\"Value\":\"Key workers\"},{\"Key\":\"somonekeyworkers\",\"Value\":\"Someone helping key workers stay safe in their role (e.g. care home residents, visitors etc.)\"},{\"Key\":\"memberspublic\",\"Value\":\"Members of the public\"}]",
-                            Name = "Who will be using the face coverings?",
-                            QuestionType = (byte)4
+                            QuestionType = (byte)4,
+                            Required = false
                         },
                         new
                         {
                             Id = 5,
                             AdditionalData = "[{\"Key\":\"Yes\",\"Value\":\"Yes\"},{\"Key\":\"No\",\"Value\":\"No\"},{\"Key\":\"Contribution\",\"Value\":\"I can make a contribution\"}]",
-                            Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
-                            QuestionType = (byte)4
+                            QuestionType = (byte)4,
+                            Required = false
                         },
                         new
                         {
                             Id = 6,
                             AdditionalData = "[{\"Key\":\"true\",\"Value\":\"Yes\"},{\"Key\":\"false\",\"Value\":\"No\"}]",
-                            Name = "Is this request critical to someone's health or wellbeing?",
-                            QuestionType = (byte)4
+                            QuestionType = (byte)4,
+                            Required = true
                         },
                         new
                         {
                             Id = 7,
                             AdditionalData = "[{\"Key\":\"true\",\"Value\":\"Yes\"},{\"Key\":\"false\",\"Value\":\"No, please make it visible to other volunteers\"}]",
-                            Name = "Will you complete this request yourself?",
-                            QuestionType = (byte)4
-                        },
-                        new
-                        {
-                            Id = 8,
-                            AdditionalData = "",
-                            Name = "Please donate to the For the Love of Scrubs GoFundMe <a href=\"https://www.gofundme.com/f/for-the-love-of-scrubs-face-coverings\" target=\"_blank\">here</a> to help pay for materials and to help us continue our good work. Recommended donation £3 - £4 per face covering.",
-                            QuestionType = (byte)5
+                            QuestionType = (byte)4,
+                            Required = true
                         });
                 });
 

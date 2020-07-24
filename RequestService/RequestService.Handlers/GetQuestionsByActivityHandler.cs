@@ -23,7 +23,7 @@ namespace RequestService.Handlers
 
         public async Task<GetQuestionsByActivtiesResponse> Handle(GetQuestionsByActivitiesRequest request, CancellationToken cancellationToken)
         {            
-            var questions = await _repository.GetActivityQuestions(request.ActivitesRequest.Activities, cancellationToken);
+            var questions = await _repository.GetActivityQuestions(request.ActivitesRequest.Activities, request.RequestHelpFormVariantRequest.RequestHelpFormVariant, cancellationToken);
 
             GetQuestionsByActivtiesResponse response = new GetQuestionsByActivtiesResponse();
             response.SupportActivityQuestions = new Dictionary<HelpMyStreet.Utils.Enums.SupportActivities, List<Question>>();

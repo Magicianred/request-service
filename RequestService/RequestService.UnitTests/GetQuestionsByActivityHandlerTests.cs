@@ -28,15 +28,20 @@ namespace RequestService.UnitTests
             _request = new GetQuestionsByActivitiesRequest()
             {
 
-             ActivitesRequest = new ActivitesRequest
-            {
-                Activities = new List<HelpMyStreet.Utils.Enums.SupportActivities> {
+                ActivitesRequest = new ActivitesRequest
+                {
+                    Activities = new List<HelpMyStreet.Utils.Enums.SupportActivities> {
                 HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn,
                 HelpMyStreet.Utils.Enums.SupportActivities.CollectingPrescriptions,
                 HelpMyStreet.Utils.Enums.SupportActivities.FaceMask,
                 HelpMyStreet.Utils.Enums.SupportActivities.MealPreparation
                 }
-            }};
+                },
+                RequestHelpFormVariantRequest = new RequestHelpFormVariantRequest()
+                {
+                    RequestHelpFormVariant = HelpMyStreet.Utils.Enums.RequestHelpFormVariant.Default
+                }
+            };
 
             _response = new List<ActivityQuestionDTO>
             {
@@ -66,7 +71,7 @@ namespace RequestService.UnitTests
         private void SetupRepository()
         {
             _repository = new Mock<IRepository>();
-            _repository.Setup(x => x.GetActivityQuestions(It.IsAny<List<HelpMyStreet.Utils.Enums.SupportActivities>>(), It.IsAny<CancellationToken>())).ReturnsAsync(()=> _response);
+            _repository.Setup(x => x.GetActivityQuestions(It.IsAny<List<HelpMyStreet.Utils.Enums.SupportActivities>>(), It.IsAny<HelpMyStreet.Utils.Enums.RequestHelpFormVariant>(), It.IsAny<CancellationToken>())).ReturnsAsync(()=> _response);
         }
 
         [Test]
@@ -81,7 +86,7 @@ namespace RequestService.UnitTests
                 Assert.IsTrue(response.SupportActivityQuestions.Where(x => x.Key == activity).Count() == 1);
             }
 
-            _repository.Verify(X => X.GetActivityQuestions(_request.ActivitesRequest.Activities, It.IsAny<CancellationToken>()), Times.Once);
+            _repository.Verify(X => X.GetActivityQuestions(_request.ActivitesRequest.Activities, _request.RequestHelpFormVariantRequest.RequestHelpFormVariant,It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]

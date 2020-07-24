@@ -267,13 +267,15 @@ namespace RequestService.Repo
             });
             modelBuilder.Entity<ActivityQuestions>(entity =>
             {
-                entity.HasKey(e => new { e.ActivityId, e.QuestionId });
+                entity.HasKey(e => new { e.ActivityId, e.QuestionId, e.RequestFormVariantId });
 
                 entity.ToTable("ActivityQuestions", "QuestionSet");
 
                 entity.Property(e => e.ActivityId).HasColumnName("ActivityID");
 
                 entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
+
+                entity.Property(e => e.RequestFormVariantId).HasColumnName("RequestFormVariantID");
 
                 entity.SetActivityQuestionData();
 
@@ -295,13 +297,12 @@ namespace RequestService.Repo
 
                 entity.Property(e => e.AdditionalData).IsUnicode(false);
 
-                entity.SetQuestionData();
-
                 entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
-                
+                   .IsRequired()
+                   .HasMaxLength(500)
+                   .IsUnicode(false);
+
+                entity.SetQuestionData();
               
             });
             modelBuilder.Entity<JobQuestions>(entity =>

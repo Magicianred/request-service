@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200721131525_AddLabelQuestionType")]
+    partial class AddLabelQuestionType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,14 +290,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 1,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 2,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
@@ -381,14 +375,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Order = 2,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
                         },
                         new
                         {
@@ -480,14 +466,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 3,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 4,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
@@ -573,14 +551,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Order = 2,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
                         },
                         new
                         {
@@ -672,14 +642,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 5,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 6,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
@@ -765,14 +727,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Order = 2,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
                         },
                         new
                         {
@@ -864,14 +818,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 7,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 8,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
@@ -957,14 +903,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Order = 2,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
                         },
                         new
                         {
@@ -1056,14 +994,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 9,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 10,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
@@ -1152,14 +1082,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 10,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 11,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
@@ -1245,14 +1167,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Order = 2,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
                         },
                         new
                         {
@@ -1424,38 +1338,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 12,
-                            QuestionId = 2,
-                            RequestFormVariantId = 6,
-                            Order = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 3,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 4,
-                            RequestFormVariantId = 6,
-                            Order = 3,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 5,
-                            RequestFormVariantId = 6,
-                            Order = 4,
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 13,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
@@ -1544,14 +1426,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 13,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 14,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
@@ -1637,14 +1511,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Order = 2,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 14,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
                         });
                 });
 
@@ -1973,7 +1839,7 @@ namespace RequestService.Repo.Migrations
                         {
                             Id = 5,
                             AdditionalData = "[{\"Key\":\"Yes\",\"Value\":\"Yes\"},{\"Key\":\"No\",\"Value\":\"No\"},{\"Key\":\"Contribution\",\"Value\":\"I can make a contribution\"}]",
-                            Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
+                            Name = "Are you able to pay the cost of materials for your face covering(usually £2 - £3 each) ?",
                             QuestionType = (byte)4
                         },
                         new

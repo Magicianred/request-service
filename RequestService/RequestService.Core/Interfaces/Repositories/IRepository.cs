@@ -1,6 +1,7 @@
 ﻿using HelpMyStreet.Contracts.ReportService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Models;
 using RequestService.Core.Dto;
 using System;
@@ -31,7 +32,7 @@ namespace RequestService.Core.Interfaces.Repositories
         Task<string> GetRequestPostCodeAsync(int requestId, CancellationToken cancellationToken);
         Task UpdateCommunicationSentAsync(int requestId, bool communicationSent, CancellationToken cancellationToken);
         Task<List<LatitudeAndLongitudeDTO>> GetLatitudeAndLongitudes(List<string> postCodes, CancellationToken cancellationToken);
-        Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<HelpMyStreet.Utils.Enums.SupportActivities> activity, CancellationToken cancellationToken);
+        Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<SupportActivities> activity, RequestHelpFormVariant requestHelpFormVariant,  CancellationToken cancellationToken);
 
     }
 }
