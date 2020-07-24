@@ -277,6 +277,12 @@ namespace RequestService.Repo
 
                 entity.Property(e => e.RequestFormVariantId).HasColumnName("RequestFormVariantID");
 
+                entity.Property(e => e.Location).HasColumnName("Location");
+
+                entity.Property(e => e.Subtext).HasColumnName("Subtext");
+
+                entity.Property(e => e.PlaceholderText).HasColumnName("PlaceholderText");
+
                 entity.SetActivityQuestionData();
 
                 entity.Property(e => e.Order)
