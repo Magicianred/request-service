@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200724160702_ReduceRowsInActivityQuestions")]
+    partial class ReduceRowsInActivityQuestions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,9 +214,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -222,7 +222,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -231,9 +230,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 2,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -241,7 +238,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 2,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -250,9 +246,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 3,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -260,7 +254,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 3,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -269,9 +262,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 4,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -279,7 +270,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 4,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -288,9 +278,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 5,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -298,7 +286,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 5,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -307,9 +294,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 6,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -317,7 +302,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 6,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -326,9 +310,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 7,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -336,7 +318,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 7,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -345,9 +326,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 8,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -355,7 +334,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 8,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -364,9 +342,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 9,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -374,7 +350,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 9,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -383,9 +358,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 10,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -393,7 +366,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 10,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -402,9 +374,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 11,
                             QuestionId = 1,
                             RequestFormVariantId = 1,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -412,7 +382,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 11,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -421,28 +390,22 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 12,
                             QuestionId = 2,
                             RequestFormVariantId = 1,
-                            Location = "pos2",
                             Order = 2,
-                            PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.",
-                            Required = false,
-                            Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)"
+                            Required = false
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 3,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 1,
-                            Required = true,
-                            Subtext = "Remember they’re washable and reusable, so only request what you need between washes."
+                            Required = true
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 4,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 3,
                             Required = false
                         },
@@ -451,19 +414,15 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 12,
                             QuestionId = 5,
                             RequestFormVariantId = 1,
-                            Location = "pos3",
                             Order = 4,
-                            Required = false,
-                            Subtext = "Volunteers are providing their time and skills free of charge."
+                            Required = false
                         },
                         new
                         {
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -471,7 +430,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -480,9 +438,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 2,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -490,7 +446,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 2,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -499,9 +454,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 3,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -509,7 +462,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 3,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -518,9 +470,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 4,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -528,7 +478,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 4,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -537,9 +486,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 5,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -547,7 +494,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 5,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -556,9 +502,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 6,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -566,7 +510,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 6,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -575,9 +518,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 7,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -585,7 +526,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 7,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -594,9 +534,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 8,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -604,7 +542,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 8,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -613,9 +550,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 9,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -623,7 +558,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 9,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -632,9 +566,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 10,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -642,7 +574,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 10,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -651,9 +582,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 11,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -661,7 +590,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 11,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -670,28 +598,22 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 12,
                             QuestionId = 2,
                             RequestFormVariantId = 2,
-                            Location = "pos2",
                             Order = 2,
-                            PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.",
-                            Required = false,
-                            Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)"
+                            Required = false
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 3,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 1,
-                            Required = true,
-                            Subtext = "Remember they’re washable and reusable, so only request what you need between washes."
+                            Required = true
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 4,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 3,
                             Required = false
                         },
@@ -700,19 +622,15 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 12,
                             QuestionId = 5,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 4,
-                            Required = false,
-                            Subtext = "Volunteers are providing their time and skills free of charge."
+                            Required = false
                         },
                         new
                         {
                             ActivityId = 13,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -720,7 +638,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 13,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -729,9 +646,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -739,7 +654,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -748,7 +662,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 1,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -757,9 +670,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 2,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -767,7 +678,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 2,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -776,7 +686,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 2,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -785,9 +694,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 3,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -795,7 +702,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 3,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -804,7 +710,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 3,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -813,9 +718,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 4,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -823,7 +726,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 4,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -832,7 +734,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 4,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -841,9 +742,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 5,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -851,7 +750,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 5,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -860,7 +758,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 5,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -869,9 +766,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 6,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -879,7 +774,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 6,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -888,7 +782,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 6,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -897,9 +790,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 7,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -907,7 +798,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 7,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -916,7 +806,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 7,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -925,9 +814,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 8,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -935,7 +822,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 8,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -944,7 +830,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 8,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -953,9 +838,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 9,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -963,7 +846,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 9,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -972,7 +854,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 9,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -981,9 +862,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 10,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -991,7 +870,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 10,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1000,7 +878,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 10,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -1009,9 +886,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 11,
                             QuestionId = 1,
                             RequestFormVariantId = 3,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1019,7 +894,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 11,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1028,7 +902,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 11,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = true
                         },
@@ -1037,28 +910,22 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 12,
                             QuestionId = 2,
                             RequestFormVariantId = 3,
-                            Location = "pos2",
                             Order = 2,
-                            PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.",
-                            Required = false,
-                            Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)"
+                            Required = false
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 3,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 1,
-                            Required = true,
-                            Subtext = "Remember they’re washable and reusable, so only request what you need between washes."
+                            Required = true
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 4,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 3,
                             Required = false
                         },
@@ -1067,17 +934,14 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 12,
                             QuestionId = 5,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 4,
-                            Required = false,
-                            Subtext = "Volunteers are providing their time and skills free of charge."
+                            Required = false
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 7,
                             RequestFormVariantId = 3,
-                            Location = "pos3",
                             Order = 5,
                             Required = true
                         },
@@ -1086,28 +950,22 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 12,
                             QuestionId = 2,
                             RequestFormVariantId = 4,
-                            Location = "pos2",
                             Order = 2,
-                            PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.",
-                            Required = false,
-                            Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)"
+                            Required = false
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 3,
                             RequestFormVariantId = 4,
-                            Location = "pos3",
                             Order = 1,
-                            Required = true,
-                            Subtext = "Remember they’re washable and reusable, so only request what you need between washes."
+                            Required = true
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 4,
                             RequestFormVariantId = 4,
-                            Location = "pos3",
                             Order = 3,
                             Required = false
                         },
@@ -1116,7 +974,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 12,
                             QuestionId = 8,
                             RequestFormVariantId = 4,
-                            Location = "pos3",
                             Order = 4,
                             Required = false
                         },
@@ -1125,9 +982,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1135,7 +990,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1144,9 +998,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 2,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1154,7 +1006,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 2,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1163,9 +1014,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 3,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1173,7 +1022,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 3,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1182,9 +1030,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 4,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1192,7 +1038,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 4,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1201,9 +1046,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 5,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1211,7 +1054,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 5,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1220,9 +1062,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 6,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1230,7 +1070,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 6,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1239,9 +1078,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 7,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1249,7 +1086,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 7,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1258,9 +1094,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 8,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1268,7 +1102,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 8,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1277,9 +1110,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 9,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1287,7 +1118,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 9,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1296,9 +1126,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 10,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1306,7 +1134,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 10,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1315,9 +1142,7 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 11,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         },
                         new
@@ -1325,7 +1150,6 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 11,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 2,
                             Required = true
                         },
@@ -1334,28 +1158,22 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 12,
                             QuestionId = 2,
                             RequestFormVariantId = 5,
-                            Location = "pos2",
                             Order = 2,
-                            PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.",
-                            Required = false,
-                            Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)"
+                            Required = false
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 3,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 1,
-                            Required = true,
-                            Subtext = "Remember they’re washable and reusable, so only request what you need between washes."
+                            Required = true
                         },
                         new
                         {
                             ActivityId = 12,
                             QuestionId = 4,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 3,
                             Required = false
                         },
@@ -1364,19 +1182,15 @@ namespace RequestService.Repo.Migrations
                             ActivityId = 12,
                             QuestionId = 5,
                             RequestFormVariantId = 5,
-                            Location = "pos3",
                             Order = 4,
-                            Required = false,
-                            Subtext = "Volunteers are providing their time and skills free of charge."
+                            Required = false
                         },
                         new
                         {
                             ActivityId = 14,
                             QuestionId = 1,
                             RequestFormVariantId = 6,
-                            Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             Required = false
                         });
                 });

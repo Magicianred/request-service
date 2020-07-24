@@ -167,36 +167,36 @@ namespace RequestService.Repo.Helpers
                 {
                     if (activity == SupportActivities.FaceMask)
                     {
-                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_SpecificRequirements, Order = 2, RequestFormVariantId = (int)form, Required = false });
-                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Amount, Order = 1, RequestFormVariantId = (int)form, Required = true });
-                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Recipient, Order = 3, RequestFormVariantId = (int)form, Required = false });
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_SpecificRequirements, Location = "pos2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.", Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)" });
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Amount, Location = "pos3", Order = 1, RequestFormVariantId = (int)form, Required = true, Subtext = "Remember they’re washable and reusable, so only request what you need between washes." });
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Recipient, Location = "pos3", Order = 3, RequestFormVariantId = (int)form, Required = false });
 
                         if (form != RequestHelpFormVariant.FtLOS)
                         {
-                            entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Cost, Order = 4, RequestFormVariantId = (int)form, Required = false });
+                            entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FaceMask_Cost, Location = "pos3", Order = 4, RequestFormVariantId = (int)form, Required = false, Subtext = "Volunteers are providing their time and skills free of charge." });
                         }
                         else
                         {
-                            entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FtlosDonationInformation, Order = 4, RequestFormVariantId = (int)form, Required = false });
+                            entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FtlosDonationInformation, Location = "pos3", Order = 4, RequestFormVariantId = (int)form, Required = false });
                         }
 
                         if (form == RequestHelpFormVariant.DIY)
                         {
-                            entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Order = 5, RequestFormVariantId = (int)form, Required = true });
+                            entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Location = "pos3", Order = 5, RequestFormVariantId = (int)form, Required = true });
                         }
                         continue;
 
                     }
-                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.SupportRequesting, Order = 1, RequestFormVariantId = (int)form, Required = false });
+                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.SupportRequesting, Location = "pos1", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you" });
 
                     if (form != RequestHelpFormVariant.HLP_CommunityConnector)
                     {
-                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.IsHealthCritical, Order = 2, RequestFormVariantId = (int)form, Required = true });
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.IsHealthCritical, Location = "pos3", Order = 2, RequestFormVariantId = (int)form, Required = true });
                     }
 
                     if (form == RequestHelpFormVariant.DIY)
                     {
-                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Order = 3, RequestFormVariantId = (int)form, Required = true });
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Location = "pos3", Order = 3, RequestFormVariantId = (int)form, Required = true });
                     }
                 }
             }
