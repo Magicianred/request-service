@@ -218,18 +218,14 @@ namespace RequestService.Repo.Helpers
                     activites = new List<SupportActivities>() { SupportActivities.CommunityConnector };
                     break;
 
-                case RequestHelpFormVariant.Default:
-                case RequestHelpFormVariant.DIY:
-                case RequestHelpFormVariant.FaceMasks:
-                    activites = genericSupportActivities;
-                    break;
-
                 case RequestHelpFormVariant.VitalsForVeterans:
                     activites = new List<SupportActivities>(genericSupportActivities);
                     ((List<SupportActivities>)activites).Add(SupportActivities.WellbeingPackage);
                     break;
 
-                default: activites = new List<SupportActivities>(); break;
+                default: 
+                    activites = genericSupportActivities; 
+                    break;
             };
 
             return activites;
