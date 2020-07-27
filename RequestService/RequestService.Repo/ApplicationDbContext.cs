@@ -1,4 +1,4 @@
-using RequestService.Repo.EntityFramework.Entities;
+﻿using RequestService.Repo.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Data.SqlClient;
@@ -48,6 +48,7 @@ namespace RequestService.Repo
         public virtual DbSet<EnumSupportActivities> EnumSupportActivities { get; set; }
         public virtual DbSet<EnumJobStatuses> EnumJobStatuses { get; set; }
         public virtual DbSet<EnumRequestFormVariants> EnumRequestFormVariants { get; set; }
+        public virtual DbSet<EnumQuestionTypes> EnumQuestionTypes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
@@ -82,6 +83,15 @@ namespace RequestService.Repo
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.SetEnumRequestFormVariantsData();
+            });
+
+            modelBuilder.Entity<EnumQuestionTypes>(entity =>
+            {
+                entity.ToTable("QuestionType", "Lookup");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.SetEnumQuestionTypeData();
             });
 
 
