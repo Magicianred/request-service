@@ -75,6 +75,21 @@ namespace RequestService.Repo.Helpers
                 QuestionType = (int)QuestionType.LabelOnly,
                 AdditionalData = string.Empty
             });
+
+            entity.HasData(new Question
+            {
+                Id = (int)Questions.CommunicationNeeds,
+                Name = "Are there any communication needs that volunteers need to know about before they contact you or the person who needs help?",
+                QuestionType = (int)QuestionType.MultiLineText,
+                AdditionalData = string.Empty
+            });
+            entity.HasData(new Question
+            {
+                Id = (int)Questions.AnythingElseToTellUs,
+                Name = "Is there anything else you would like to tell us about the request?",
+                QuestionType = (int)QuestionType.MultiLineText,
+                AdditionalData = string.Empty
+            });
         }
         private static string GetAdditionalData(Questions question)
         {
@@ -179,17 +194,16 @@ namespace RequestService.Repo.Helpers
                         {
                             entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.FtlosDonationInformation, Location = "pos3", Order = 4, RequestFormVariantId = (int)form, Required = false });
                         }
-
-                        if (form == RequestHelpFormVariant.DIY)
-                        {
-                            entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Location = "pos3", Order = 5, RequestFormVariantId = (int)form, Required = true });
-                        }
-                        continue;
-
                     }
-                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.SupportRequesting, Location = "pos1", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you" });
+                    else
+                    {
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.SupportRequesting, Location = "pos1", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you" });
+                        
+                        string placeholderText = activity == SupportActivities.CommunityConnector ? "Is there a specific issue you would like to discuss with the Community Connector, e.g. dealing with a bereavement (please don’t include personal details here)" : "For example, if it’s a request for some shopping and you know what you want, you could give us the list.";
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = placeholderText });
+                    }
 
-                    if (form != RequestHelpFormVariant.HLP_CommunityConnector)
+                    if (form != RequestHelpFormVariant.HLP_CommunityConnector && activity != SupportActivities.FaceMask)
                     {
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.IsHealthCritical, Location = "pos3", Order = 2, RequestFormVariantId = (int)form, Required = true });
                     }
@@ -198,6 +212,8 @@ namespace RequestService.Repo.Helpers
                     {
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.WillYouCompleteYourself, Location = "pos3", Order = 3, RequestFormVariantId = (int)form, Required = true });
                     }
+
+                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.CommunicationNeeds, Location = "details2", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?" });
                 }
             }
         }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200727103808_AddingDetailsPageQuestions")]
+    partial class AddingDetailsPageQuestions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,6 +222,15 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 1,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
@@ -230,15 +241,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 1,
                             QuestionId = 9,
                             RequestFormVariantId = 1,
                             Location = "details2",
@@ -259,21 +261,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 2,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -298,21 +300,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 3,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 3,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -337,21 +339,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 4,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 4,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -376,21 +378,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 5,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 5,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -415,21 +417,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 6,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 6,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -454,21 +456,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 7,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 7,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -493,21 +495,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 8,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 8,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -532,21 +534,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 9,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 9,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -571,21 +573,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 10,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 10,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -610,21 +612,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 11,
+                            QuestionId = 6,
+                            RequestFormVariantId = 1,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 11,
                             QuestionId = 10,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 6,
-                            RequestFormVariantId = 1,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -678,16 +680,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 12,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
@@ -699,21 +691,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 1,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -738,21 +730,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 2,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -777,21 +769,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 3,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 3,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -816,21 +808,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 4,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 4,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -855,21 +847,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 5,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 5,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -894,21 +886,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 6,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 6,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -933,21 +925,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 7,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 7,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -972,21 +964,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 8,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 8,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -1011,21 +1003,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 9,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 9,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -1050,21 +1042,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 10,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 10,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -1089,21 +1081,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 11,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 11,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -1157,16 +1149,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 12,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 13,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
@@ -1178,21 +1160,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 13,
+                            QuestionId = 6,
+                            RequestFormVariantId = 2,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 13,
                             QuestionId = 10,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 13,
-                            QuestionId = 6,
-                            RequestFormVariantId = 2,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -1217,16 +1199,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
                             Location = "pos3",
@@ -1245,6 +1217,16 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 1,
                             QuestionId = 9,
                             RequestFormVariantId = 3,
                             Location = "details2",
@@ -1260,16 +1242,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
                         },
                         new
@@ -1293,6 +1265,16 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 2,
                             QuestionId = 9,
                             RequestFormVariantId = 3,
                             Location = "details2",
@@ -1308,16 +1290,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
                         },
                         new
@@ -1341,6 +1313,16 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 3,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 3,
                             QuestionId = 9,
                             RequestFormVariantId = 3,
                             Location = "details2",
@@ -1361,16 +1343,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 4,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 4,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
                             Location = "pos3",
@@ -1385,6 +1357,16 @@ namespace RequestService.Repo.Migrations
                             Location = "pos3",
                             Order = 3,
                             Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 4,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
                         },
                         new
                         {
@@ -1409,16 +1391,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 5,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 5,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
                             Location = "pos3",
@@ -1433,6 +1405,16 @@ namespace RequestService.Repo.Migrations
                             Location = "pos3",
                             Order = 3,
                             Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 5,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
                         },
                         new
                         {
@@ -1457,16 +1439,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 6,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 6,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
                             Location = "pos3",
@@ -1481,6 +1453,16 @@ namespace RequestService.Repo.Migrations
                             Location = "pos3",
                             Order = 3,
                             Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 6,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
                         },
                         new
                         {
@@ -1505,16 +1487,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 7,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 7,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
                             Location = "pos3",
@@ -1529,6 +1501,16 @@ namespace RequestService.Repo.Migrations
                             Location = "pos3",
                             Order = 3,
                             Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 7,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
                         },
                         new
                         {
@@ -1553,16 +1535,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 8,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 8,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
                             Location = "pos3",
@@ -1577,6 +1549,16 @@ namespace RequestService.Repo.Migrations
                             Location = "pos3",
                             Order = 3,
                             Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 8,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
                         },
                         new
                         {
@@ -1601,16 +1583,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 9,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 9,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
                             Location = "pos3",
@@ -1625,6 +1597,16 @@ namespace RequestService.Repo.Migrations
                             Location = "pos3",
                             Order = 3,
                             Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 9,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
                         },
                         new
                         {
@@ -1649,16 +1631,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 10,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 10,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
                             Location = "pos3",
@@ -1673,6 +1645,16 @@ namespace RequestService.Repo.Migrations
                             Location = "pos3",
                             Order = 3,
                             Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 10,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
                         },
                         new
                         {
@@ -1697,16 +1679,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 11,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
                             QuestionId = 6,
                             RequestFormVariantId = 3,
                             Location = "pos3",
@@ -1721,6 +1693,16 @@ namespace RequestService.Repo.Migrations
                             Location = "pos3",
                             Order = 3,
                             Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 11,
+                            QuestionId = 10,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 2,
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
+                            Required = false
                         },
                         new
                         {
@@ -1778,18 +1760,8 @@ namespace RequestService.Repo.Migrations
                             QuestionId = 7,
                             RequestFormVariantId = 3,
                             Location = "pos3",
-                            Order = 3,
+                            Order = 5,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            Required = false
                         },
                         new
                         {
@@ -1832,16 +1804,6 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
-                            ActivityId = 12,
-                            QuestionId = 9,
-                            RequestFormVariantId = 4,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 5,
@@ -1853,21 +1815,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 1,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -1892,21 +1854,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 2,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -1931,21 +1893,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 3,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 3,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -1970,21 +1932,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 4,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 4,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -2009,21 +1971,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 5,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 5,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -2048,21 +2010,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 6,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 6,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -2087,21 +2049,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 7,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 7,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -2126,21 +2088,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 8,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 8,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -2165,21 +2127,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 9,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 9,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -2204,21 +2166,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 10,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 10,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -2243,21 +2205,21 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 11,
+                            QuestionId = 6,
+                            RequestFormVariantId = 5,
+                            Location = "pos3",
+                            Order = 2,
+                            Required = true
+                        },
+                        new
+                        {
+                            ActivityId = 11,
                             QuestionId = 10,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
                             PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 6,
-                            RequestFormVariantId = 5,
-                            Location = "pos3",
-                            Order = 2,
-                            Required = true
                         },
                         new
                         {
@@ -2308,16 +2270,6 @@ namespace RequestService.Repo.Migrations
                             Order = 4,
                             Required = false,
                             Subtext = "Volunteers are providing their time and skills free of charge."
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            Required = false
                         },
                         new
                         {
