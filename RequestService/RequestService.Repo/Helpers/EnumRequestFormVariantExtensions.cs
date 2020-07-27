@@ -10,7 +10,7 @@ namespace RequestService.Repo.Helpers
 {
     public static class EnumRequestFormVariantExtensions
     {
-        public static void SetEnumSupportActivityData(this EntityTypeBuilder<EnumRequestFormVariants> entity)
+        public static void SetEnumRequestFormVariantsData(this EntityTypeBuilder<EnumRequestFormVariants> entity)
         {
             var variants = Enum.GetValues(typeof(RequestHelpFormVariant)).Cast<RequestHelpFormVariant>();
 

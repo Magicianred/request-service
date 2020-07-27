@@ -1,4 +1,4 @@
-﻿using RequestService.Repo.EntityFramework.Entities;
+using RequestService.Repo.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Data.SqlClient;
@@ -81,7 +81,7 @@ namespace RequestService.Repo
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.SetEnumSupportActivityData();
+                entity.SetEnumRequestFormVariantsData();
             });
 
 
