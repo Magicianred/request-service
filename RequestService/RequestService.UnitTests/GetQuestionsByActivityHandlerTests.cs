@@ -86,7 +86,7 @@ namespace RequestService.UnitTests
                 Assert.IsTrue(response.SupportActivityQuestions.Where(x => x.Key == activity).Count() == 1);
             }
 
-            _repository.Verify(X => X.GetActivityQuestions(_request.ActivitesRequest.Activities, _request.RequestHelpFormVariantRequest.RequestHelpFormVariant, _request.RequestHelpFormStage, It.IsAny<CancellationToken>()), Times.Once);
+            _repository.Verify(X => X.GetActivityQuestions(_request.ActivitesRequest.Activities, _request.RequestHelpFormVariantRequest.RequestHelpFormVariant, _request.RequestHelpFormStageRequest.RequestHelpFormStage, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
