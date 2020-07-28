@@ -2,28 +2,21 @@
 using System.Threading;
 using System.Threading.Tasks;
 using RequestService.Core.Interfaces.Repositories;
-using RequestService.Core.Dto;
 using RequestService.Core.Services;
-using System.Collections.Generic;
-using System.Linq;
-using System;
-using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Contracts.RequestService.Request;
-using HelpMyStreet.Contracts.CommunicationService.Request;
-using Microsoft.Extensions.Options;
-using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Contracts.CommunicationService.Request;
 
 namespace RequestService.Handlers
 {
     public class PutUpdateJobStatusToOpenHandler : IRequestHandler<PutUpdateJobStatusToOpenRequest, PutUpdateJobStatusToOpenResponse>
     {
         private readonly IRepository _repository;
-        private readonly IJobService _jobService;
-        public PutUpdateJobStatusToOpenHandler(IRepository repository, IJobService jobService)
+        private readonly ICommunicationService _communicationService;
+        public PutUpdateJobStatusToOpenHandler(IRepository repository, ICommunicationService communicationService)
         {
             _repository = repository;
-            _jobService = jobService;
+            _communicationService = communicationService;
         }
 
         public async Task<PutUpdateJobStatusToOpenResponse> Handle(PutUpdateJobStatusToOpenRequest request, CancellationToken cancellationToken)
@@ -32,7 +25,13 @@ namespace RequestService.Handlers
 
             if (result)
             {
-                await _jobService.SendUpdateStatusEmail(request.JobID, JobStatuses.Open, cancellationToken);
+                await _communicationService.RequestCommunication(
+                    new RequestCommunicationRequest()
+                    {
+                        CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate },
+                        JobID = request.JobID
+                    },
+                    cancellationToken);
             }
             PutUpdateJobStatusToOpenResponse response = new PutUpdateJobStatusToOpenResponse()
             {

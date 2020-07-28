@@ -1,3 +1,4 @@
+using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Enums;
@@ -14,7 +15,8 @@ namespace RequestService.UnitTests
     public class PutUpdateJobStatusToDoneHandlerTests
     {
         private Mock<IRepository> _repository;
-        private Mock<IJobService> _jobService;
+        private Mock<ICommunicationService> _communicationService;
+
         private PutUpdateJobStatusToDoneHandler _classUnderTest;
         private PutUpdateJobStatusToDoneRequest _request;
         private bool _success;
@@ -23,8 +25,8 @@ namespace RequestService.UnitTests
         public void Setup()
         {
             SetupRepository();
-            SetupJobService();
-            _classUnderTest = new PutUpdateJobStatusToDoneHandler(_repository.Object, _jobService.Object);
+            SetupCommunicationService();
+            _classUnderTest = new PutUpdateJobStatusToDoneHandler(_repository.Object, _communicationService.Object);
         }
 
         private void SetupRepository()
@@ -38,10 +40,10 @@ namespace RequestService.UnitTests
 
         }
 
-        private void SetupJobService()
+        private void SetupCommunicationService()
         {
-            _jobService = new Mock<IJobService>();
-            _jobService.Setup(x => x.SendUpdateStatusEmail(It.IsAny<int>(), It.IsAny<JobStatuses>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
+            _communicationService = new Mock<ICommunicationService>();
+            _communicationService.Setup(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
         }
 
         [Test]
