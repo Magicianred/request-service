@@ -71,7 +71,7 @@ namespace RequestService.UnitTests
         private void SetupRepository()
         {
             _repository = new Mock<IRepository>();
-            _repository.Setup(x => x.GetActivityQuestions(It.IsAny<List<HelpMyStreet.Utils.Enums.SupportActivities>>(), It.IsAny<HelpMyStreet.Utils.Enums.RequestHelpFormVariant>(), It.IsAny<CancellationToken>())).ReturnsAsync(()=> _response);
+            _repository.Setup(x => x.GetActivityQuestions(It.IsAny<List<HelpMyStreet.Utils.Enums.SupportActivities>>(), It.IsAny<HelpMyStreet.Utils.Enums.RequestHelpFormVariant>(), It.IsAny<HelpMyStreet.Utils.Enums.RequestHelpFormStage>(), It.IsAny<CancellationToken>())).ReturnsAsync(()=> _response);
         }
 
         [Test]
@@ -86,7 +86,7 @@ namespace RequestService.UnitTests
                 Assert.IsTrue(response.SupportActivityQuestions.Where(x => x.Key == activity).Count() == 1);
             }
 
-            _repository.Verify(X => X.GetActivityQuestions(_request.ActivitesRequest.Activities, _request.RequestHelpFormVariantRequest.RequestHelpFormVariant,It.IsAny<CancellationToken>()), Times.Once);
+            _repository.Verify(X => X.GetActivityQuestions(_request.ActivitesRequest.Activities, _request.RequestHelpFormVariantRequest.RequestHelpFormVariant, _request.RequestHelpFormStage, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]

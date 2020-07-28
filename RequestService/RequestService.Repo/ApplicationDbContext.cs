@@ -297,6 +297,8 @@ namespace RequestService.Repo
 
                 entity.Property(e => e.RequestFormVariantId).HasColumnName("RequestFormVariantID");
 
+                entity.Property(e => e.RequestFormStageId).HasColumnName("RequestFormStageID");
+
                 entity.Property(e => e.Location).HasColumnName("Location");
 
                 entity.Property(e => e.Subtext).HasColumnName("Subtext");
