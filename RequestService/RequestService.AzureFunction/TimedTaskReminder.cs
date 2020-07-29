@@ -9,31 +9,31 @@ using HelpMyStreet.Contracts.RequestService.Response;
 
 namespace RequestService.AzureFunction
 {
-    public class TimedDailyDigest
+    public class TimedTaskReminder
     {
         private readonly ICommunicationService _commmunicationService;
 
-        public TimedDailyDigest(ICommunicationService commmunicationService)
+        public TimedTaskReminder(ICommunicationService commmunicationService)
         {
             _commmunicationService = commmunicationService;
         }
 
-        [FunctionName("TimedDailyDigest")]
-        public async Task Run([TimerTrigger("%TimedDailyDigestCronExpression%")] TimerInfo timerInfo, ILogger log, CancellationToken cancellationToken)
+        [FunctionName("TimedTaskReminder")]
+        public async Task Run([TimerTrigger("%TimedTaskReminderCronExpression%")] TimerInfo timerInfo, ILogger log, CancellationToken cancellationToken)
         {
             try
             {
-                log.LogInformation($"GetDailyDigest started at: {DateTime.Now}");
+                log.LogInformation($"TaskReminder started at: {DateTime.Now}");
                 await _commmunicationService.RequestCommunication(new RequestCommunicationRequest()
                 {
-                    CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendOpenTaskDigest}
+                    CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskReminder}
                 }, cancellationToken);
-                log.LogInformation($"GetDailyDigest completed at: {DateTime.Now}");
+                log.LogInformation($"TaskReminder completed at: {DateTime.Now}");
 
             }
             catch (Exception ex)
             {
-                log.LogError($"Unhandled error in GetDailyDigest {ex}");
+                log.LogError($"Unhandled error in TaskReminder {ex}");
             }
 
         }
