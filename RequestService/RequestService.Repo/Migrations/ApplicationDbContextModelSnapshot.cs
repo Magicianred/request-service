@@ -1116,6 +1116,14 @@ namespace RequestService.Repo.Migrations
                         },
                         new
                         {
+                            ActivityId = 8,
+                            QuestionId = 1,
+                            RequestFormVariantId = 6,
+                            Order = 1,
+                            Required = false
+                        },
+                        new
+                        {
                             ActivityId = 9,
                             QuestionId = 9,
                             RequestFormVariantId = 2,

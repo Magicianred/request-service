@@ -208,6 +208,13 @@ namespace RequestService.Repo.Helpers
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.IsHealthCritical, Location = "pos3", Order = 2, RequestFormVariantId = (int)form, Required = true });
                     }
 
+                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.SupportRequesting, Order = 1, RequestFormVariantId = (int)form , Required = false });
+                    
+                    if (form != RequestHelpFormVariant.HLP_CommunityConnector)
+                    {
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, QuestionId = (int)Questions.IsHealthCritical, Order = 2, RequestFormVariantId = (int)form, Required = true });
+                    }
+
                     if (form == RequestHelpFormVariant.DIY)
                     {
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.WillYouCompleteYourself, Location = "pos3", Order = 3, RequestFormVariantId = (int)form, Required = true });
