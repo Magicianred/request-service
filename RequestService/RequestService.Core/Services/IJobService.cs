@@ -11,7 +11,5 @@ namespace RequestService.Core.Services
     public interface IJobService
     {
         Task<List<JobSummary>> AttachedDistanceToJobSummaries(string volunteerPostCode, List<JobSummary> jobSummaries, CancellationToken cancellationToken);
-
-        Task<bool> SendUpdateStatusEmail(int jobId, JobStatuses status, CancellationToken cancellationToken);
     }
 }
