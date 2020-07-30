@@ -47,6 +47,9 @@ namespace RequestService.Repo
 
         public virtual DbSet<EnumSupportActivities> EnumSupportActivities { get; set; }
         public virtual DbSet<EnumJobStatuses> EnumJobStatuses { get; set; }
+        public virtual DbSet<EnumRequestFormVariants> EnumRequestFormVariants { get; set; }
+        public virtual DbSet<EnumQuestionTypes> EnumQuestionTypes { get; set; }
+        public virtual DbSet<EnumRequestFormStages> EnumRequestFormStages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
@@ -72,6 +75,33 @@ namespace RequestService.Repo
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.SetEnumJobStatusData();
+            });
+
+            modelBuilder.Entity<EnumRequestFormVariants>(entity =>
+            {
+                entity.ToTable("RequestFormVariant", "Lookup");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.SetEnumRequestFormVariantsData();
+            });
+
+            modelBuilder.Entity<EnumQuestionTypes>(entity =>
+            {
+                entity.ToTable("QuestionType", "Lookup");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.SetEnumQuestionTypeData();
+            });
+
+            modelBuilder.Entity<EnumRequestFormStages>(entity =>
+            {
+                entity.ToTable("RequestFormStage", "Lookup");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.SetEnumRequestFormStagesData();
             });
 
 
@@ -276,6 +306,14 @@ namespace RequestService.Repo
                 entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
 
                 entity.Property(e => e.RequestFormVariantId).HasColumnName("RequestFormVariantID");
+
+                entity.Property(e => e.RequestFormStageId).HasColumnName("RequestFormStageID");
+
+                entity.Property(e => e.Location).HasColumnName("Location");
+
+                entity.Property(e => e.Subtext).HasColumnName("Subtext");
+
+                entity.Property(e => e.PlaceholderText).HasColumnName("PlaceholderText");
 
                 entity.SetActivityQuestionData();
 

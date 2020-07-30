@@ -37,7 +37,6 @@ namespace RequestService.Handlers
 
         public async Task<GetJobsByFilterResponse> Handle(GetJobsByFilterRequest request, CancellationToken cancellationToken)
         {
-            string postcode = request.Postcode;
             request.Postcode = HelpMyStreet.Utils.Utils.PostcodeFormatter.FormatPostcode(request.Postcode);
 
             try

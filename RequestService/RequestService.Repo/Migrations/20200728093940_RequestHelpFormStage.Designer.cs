@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200728093940_RequestHelpFormStage")]
+    partial class RequestHelpFormStage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1113,14 +1115,6 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
                         },
                         new
                         {
@@ -2651,37 +2645,6 @@ namespace RequestService.Repo.Migrations
                         {
                             Id = 5,
                             Name = "LabelOnly"
-                        });
-                });
-
-            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.EnumRequestFormStages", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RequestFormStage","Lookup");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Request"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Detail"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Review"
                         });
                 });
 

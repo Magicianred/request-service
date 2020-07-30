@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200727101330_CreateLookupQuestionType")]
+    partial class CreateLookupQuestionType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,9 +197,6 @@ namespace RequestService.Repo.Migrations
                     b.Property<string>("PlaceholderText")
                         .HasColumnName("PlaceholderText");
 
-                    b.Property<int>("RequestFormStageId")
-                        .HasColumnName("RequestFormStageID");
-
                     b.Property<bool>("Required");
 
                     b.Property<string>("Subtext")
@@ -218,18 +217,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -239,19 +226,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -261,18 +236,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -282,19 +245,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -304,18 +255,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -325,19 +264,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -347,18 +274,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -368,19 +283,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -390,18 +293,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -411,19 +302,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -433,18 +312,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -454,19 +321,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -476,18 +331,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -497,19 +340,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -519,18 +350,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -540,19 +359,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -562,18 +369,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -583,19 +378,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -605,18 +388,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -626,19 +397,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -648,18 +407,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -669,19 +416,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -691,7 +426,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos2",
                             Order = 2,
                             PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.",
-                            RequestFormStageId = 1,
                             Required = false,
                             Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)"
                         },
@@ -702,7 +436,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 1,
-                            RequestFormStageId = 1,
                             Required = true,
                             Subtext = "Remember they’re washable and reusable, so only request what you need between washes."
                         },
@@ -713,7 +446,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = false
                         },
                         new
@@ -723,41 +455,17 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "pos3",
                             Order = 4,
-                            RequestFormStageId = 1,
                             Required = false,
                             Subtext = "Volunteers are providing their time and skills free of charge."
                         },
                         new
                         {
-                            ActivityId = 12,
-                            QuestionId = 9,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 1,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -767,19 +475,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -789,18 +485,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -810,19 +494,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -832,18 +504,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -853,19 +513,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -875,18 +523,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -896,19 +532,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -918,18 +542,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -939,19 +551,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -961,18 +561,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -982,19 +570,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1004,18 +580,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1025,19 +589,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1047,18 +599,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1068,19 +608,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1090,18 +618,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1111,27 +627,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 1,
-                            RequestFormVariantId = 6,
-                            Order = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1141,18 +637,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1162,19 +646,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1184,18 +656,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1205,19 +665,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1227,7 +675,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos2",
                             Order = 2,
                             PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.",
-                            RequestFormStageId = 1,
                             Required = false,
                             Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)"
                         },
@@ -1238,7 +685,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 1,
-                            RequestFormStageId = 1,
                             Required = true,
                             Subtext = "Remember they’re washable and reusable, so only request what you need between washes."
                         },
@@ -1249,7 +695,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = false
                         },
                         new
@@ -1259,41 +704,17 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 4,
-                            RequestFormStageId = 1,
                             Required = false,
                             Subtext = "Volunteers are providing their time and skills free of charge."
                         },
                         new
                         {
-                            ActivityId = 12,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
                             ActivityId = 13,
                             QuestionId = 1,
                             RequestFormVariantId = 2,
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 13,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1303,19 +724,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 13,
-                            QuestionId = 9,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1325,18 +734,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1346,7 +743,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1356,19 +752,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1378,18 +762,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1399,7 +771,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1409,19 +780,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1431,18 +790,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1452,7 +799,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1462,19 +808,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1484,18 +818,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1505,7 +827,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1515,19 +836,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1537,18 +846,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1558,7 +855,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1568,19 +864,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1590,18 +874,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1611,7 +883,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1621,19 +892,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1643,18 +902,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1664,7 +911,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1674,19 +920,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1696,18 +930,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1717,7 +939,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1727,19 +948,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1749,18 +958,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1770,7 +967,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1780,19 +976,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1802,18 +986,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1823,7 +995,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1833,19 +1004,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1855,18 +1014,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -1876,7 +1023,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
                         },
                         new
@@ -1886,19 +1032,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1908,7 +1042,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos2",
                             Order = 2,
                             PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.",
-                            RequestFormStageId = 1,
                             Required = false,
                             Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)"
                         },
@@ -1919,7 +1052,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 1,
-                            RequestFormStageId = 1,
                             Required = true,
                             Subtext = "Remember they’re washable and reusable, so only request what you need between washes."
                         },
@@ -1930,7 +1062,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = false
                         },
                         new
@@ -1940,7 +1071,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "pos3",
                             Order = 4,
-                            RequestFormStageId = 1,
                             Required = false,
                             Subtext = "Volunteers are providing their time and skills free of charge."
                         },
@@ -1950,20 +1080,8 @@ namespace RequestService.Repo.Migrations
                             QuestionId = 7,
                             RequestFormVariantId = 3,
                             Location = "pos3",
-                            Order = 3,
-                            RequestFormStageId = 1,
+                            Order = 5,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 9,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1973,7 +1091,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos2",
                             Order = 2,
                             PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.",
-                            RequestFormStageId = 1,
                             Required = false,
                             Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)"
                         },
@@ -1984,7 +1101,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 4,
                             Location = "pos3",
                             Order = 1,
-                            RequestFormStageId = 1,
                             Required = true,
                             Subtext = "Remember they’re washable and reusable, so only request what you need between washes."
                         },
@@ -1995,7 +1111,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 4,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = false
                         },
                         new
@@ -2005,18 +1120,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 4,
                             Location = "pos3",
                             Order = 4,
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 9,
-                            RequestFormVariantId = 4,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2027,18 +1130,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2048,19 +1139,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2070,18 +1149,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2091,19 +1158,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2113,18 +1168,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2134,19 +1177,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2156,18 +1187,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2177,19 +1196,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2199,18 +1206,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2220,19 +1215,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2242,18 +1225,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2263,19 +1234,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2285,18 +1244,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2306,19 +1253,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 7,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2328,18 +1263,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2349,19 +1272,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 8,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2371,18 +1282,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2392,19 +1291,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 9,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2414,18 +1301,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2435,19 +1310,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 10,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2457,18 +1320,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
@@ -2478,19 +1329,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 2,
-                            RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2500,7 +1339,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos2",
                             Order = 2,
                             PlaceholderText = "Don’t forget to tell us how many of each size you need. If you have very specific style requirements it may take longer to find a volunteer to help with your request. Please don’t include personal information such as name or address in this box, we’ll ask for that later.",
-                            RequestFormStageId = 1,
                             Required = false,
                             Subtext = "Size guide:<br />&nbsp;- Men’s (Small / Medium / Large)<br />&nbsp;- Ladies’ (Small / Medium / Large)<br />&nbsp;- Children’s (One Size - under 12)"
                         },
@@ -2511,7 +1349,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 1,
-                            RequestFormStageId = 1,
                             Required = true,
                             Subtext = "Remember they’re washable and reusable, so only request what you need between washes."
                         },
@@ -2522,7 +1359,6 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 3,
-                            RequestFormStageId = 1,
                             Required = false
                         },
                         new
@@ -2532,20 +1368,8 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "pos3",
                             Order = 4,
-                            RequestFormStageId = 1,
                             Required = false,
                             Subtext = "Volunteers are providing their time and skills free of charge."
-                        },
-                        new
-                        {
-                            ActivityId = 12,
-                            QuestionId = 9,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2555,29 +1379,6 @@ namespace RequestService.Repo.Migrations
                             Location = "pos1",
                             Order = 1,
                             PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 14,
-                            QuestionId = 10,
-                            RequestFormVariantId = 6,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "Is there a specific issue you would like to discuss with the Community Connector, e.g. dealing with a bereavement (please don’t include personal details here)",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 14,
-                            QuestionId = 9,
-                            RequestFormVariantId = 6,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
                             Required = false
                         });
                 });
@@ -2651,37 +1452,6 @@ namespace RequestService.Repo.Migrations
                         {
                             Id = 5,
                             Name = "LabelOnly"
-                        });
-                });
-
-            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.EnumRequestFormStages", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RequestFormStage","Lookup");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Request"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Detail"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Review"
                         });
                 });
 
@@ -3048,20 +1818,6 @@ namespace RequestService.Repo.Migrations
                             AdditionalData = "",
                             Name = "Please donate to the For the Love of Scrubs GoFundMe <a href=\"https://www.gofundme.com/f/for-the-love-of-scrubs-face-coverings\" target=\"_blank\">here</a> to help pay for materials and to help us continue our good work. Recommended donation £3 - £4 per face covering.",
                             QuestionType = (byte)5
-                        },
-                        new
-                        {
-                            Id = 9,
-                            AdditionalData = "",
-                            Name = "Are there any communication needs that volunteers need to know about before they contact you or the person who needs help?",
-                            QuestionType = (byte)3
-                        },
-                        new
-                        {
-                            Id = 10,
-                            AdditionalData = "",
-                            Name = "Is there anything else you would like to tell us about the request?",
-                            QuestionType = (byte)3
                         });
                 });
 
