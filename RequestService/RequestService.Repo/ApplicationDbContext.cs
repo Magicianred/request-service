@@ -50,6 +50,7 @@ namespace RequestService.Repo
         public virtual DbSet<EnumRequestFormVariants> EnumRequestFormVariants { get; set; }
         public virtual DbSet<EnumQuestionTypes> EnumQuestionTypes { get; set; }
         public virtual DbSet<EnumRequestFormStages> EnumRequestFormStages { get; set; }
+        public virtual DbSet<EnumQuestions> EnumQuestions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
@@ -102,6 +103,15 @@ namespace RequestService.Repo
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.SetEnumRequestFormStagesData();
+            });
+
+            modelBuilder.Entity<EnumQuestions>(entity =>
+            {
+                entity.ToTable("Question", "Lookup");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.SetEnumQuestionsData();
             });
 
 

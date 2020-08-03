@@ -90,6 +90,13 @@ namespace RequestService.Repo.Helpers
                 QuestionType = (int)QuestionType.MultiLineText,
                 AdditionalData = string.Empty
             });
+            entity.HasData(new Question
+            {
+                Id = (int)Questions.AgeUKReference,
+                Name = "AgeUK Reference",
+                QuestionType = (int)QuestionType.Text,
+                AdditionalData = string.Empty
+            });
         }
         private static string GetAdditionalData(Questions question)
         {
@@ -201,6 +208,11 @@ namespace RequestService.Repo.Helpers
                         
                         string placeholderText = activity == SupportActivities.CommunityConnector ? "Is there a specific issue you would like to discuss with the Community Connector, e.g. dealing with a bereavement (please don’t include personal details here)" : "For example, if it’s a request for some shopping and you know what you want, you could give us the list.";
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = placeholderText });
+                    }
+
+                    if (form == RequestHelpFormVariant.VitalsForVeterans)
+                    {
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.AgeUKReference, Location = "pos1", Order = 2, RequestFormVariantId = (int)form, Required = true });
                     }
 
                     if (form != RequestHelpFormVariant.HLP_CommunityConnector && activity != SupportActivities.FaceMask)

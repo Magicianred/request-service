@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200731151706_AddingAgeUKReference")]
+    partial class AddingAgeUKReference
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2778,77 +2780,6 @@ namespace RequestService.Repo.Migrations
                         {
                             Id = 5,
                             Name = "LabelOnly"
-                        });
-                });
-
-            modelBuilder.Entity("RequestService.Repo.EntityFramework.Entities.EnumQuestions", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ID")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Question","Lookup");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "SupportRequesting"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "FaceMask_SpecificRequirements"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "FaceMask_Amount"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "FaceMask_Recipient"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "FaceMask_Cost"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "IsHealthCritical"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "WillYouCompleteYourself"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "FtlosDonationInformation"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "CommunicationNeeds"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "AnythingElseToTellUs"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "AgeUKReference"
                         });
                 });
 
