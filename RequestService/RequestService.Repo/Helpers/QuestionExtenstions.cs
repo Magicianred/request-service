@@ -212,7 +212,7 @@ namespace RequestService.Repo.Helpers
 
                     if (form == RequestHelpFormVariant.VitalsForVeterans)
                     {
-                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.AgeUKReference, Location = "pos1", Order = 2, RequestFormVariantId = (int)form, Required = true });
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.AgeUKReference, Location = "pos1", Order = 2, RequestFormVariantId = (int)form, Required = false });
                     }
 
                     if (form != RequestHelpFormVariant.HLP_CommunityConnector && activity != SupportActivities.FaceMask)
