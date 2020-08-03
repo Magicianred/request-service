@@ -30,16 +30,21 @@ namespace RequestService.UnitTests
 
                 ActivitesRequest = new ActivitesRequest
                 {
-                    Activities = new List<HelpMyStreet.Utils.Enums.SupportActivities> {
-                HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn,
-                HelpMyStreet.Utils.Enums.SupportActivities.CollectingPrescriptions,
-                HelpMyStreet.Utils.Enums.SupportActivities.FaceMask,
-                HelpMyStreet.Utils.Enums.SupportActivities.MealPreparation
-                }
+                    Activities = new List<HelpMyStreet.Utils.Enums.SupportActivities>
+                    {
+                        HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn,
+                        HelpMyStreet.Utils.Enums.SupportActivities.CollectingPrescriptions,
+                        HelpMyStreet.Utils.Enums.SupportActivities.FaceMask,
+                        HelpMyStreet.Utils.Enums.SupportActivities.MealPreparation
+                    }
                 },
                 RequestHelpFormVariantRequest = new RequestHelpFormVariantRequest()
                 {
                     RequestHelpFormVariant = HelpMyStreet.Utils.Enums.RequestHelpFormVariant.Default
+                },
+                RequestHelpFormStageRequest = new RequestHelpFormStageRequest()
+                {
+                    RequestHelpFormStage = HelpMyStreet.Utils.Enums.RequestHelpFormStage.Request
                 }
             };
 

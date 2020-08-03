@@ -20,10 +20,8 @@ namespace RequestService.UnitTests
         private MockRepository _mockRepository;                
         Mock<IDistanceCalculator> _mockDistanceCalculator;
         Mock<IRepository> _repository;
-        Mock<ICommunicationService> _communicationService;
         private JobService _classUnderTest;
         private double _distance;
-        private bool _emailSent;
         private List<LatitudeAndLongitudeDTO> _getPostcodeCoordinatesResponse;
         private GetJobDetailsResponse _jobDetails;
 
@@ -33,14 +31,7 @@ namespace RequestService.UnitTests
             _mockRepository = new MockRepository(MockBehavior.Loose);
             SetupRepository();
             SetupDistanceCalculator();
-            SetupCommunicationService();
-            _classUnderTest = new JobService(_mockDistanceCalculator.Object, _communicationService.Object, _repository.Object );
-        }
-
-        private void SetupCommunicationService()
-        {
-            _communicationService = _mockRepository.Create<ICommunicationService>();
-            _communicationService.Setup(x => x.SendEmail(It.IsAny<SendEmailRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => _emailSent);
+            _classUnderTest = new JobService(_mockDistanceCalculator.Object, _repository.Object );
         }
 
         private void SetupRepository()
@@ -118,84 +109,6 @@ namespace RequestService.UnitTests
             });
             var response = await _classUnderTest.AttachedDistanceToJobSummaries(postCode, jobSummaries, CancellationToken.None);
             _mockDistanceCalculator.Verify(v => v.GetDistanceInMiles(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>()), Times.Never);
-        }
-
-
-        [Test]
-        public async Task WhenISendUpdateEmail_ForRequestor_IsendEmailToRequestor()
-        {
-            _jobDetails = new GetJobDetailsResponse
-            {
-                ForRequestor = true,
-                Requestor = new RequestPersonalDetails
-                {
-                    EmailAddress = "requestor@email.com",
-                    FirstName = "Requestor",
-                    LastName = "Req",
-                },
-                DueDate = DateTime.Now,
-                SupportActivity = HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn,
-                
-
-                
-            };
-            await _classUnderTest.SendUpdateStatusEmail(1, HelpMyStreet.Utils.Enums.JobStatuses.Done, new CancellationToken());
-
-            _communicationService.Verify(x => x.SendEmail(It.Is<SendEmailRequest>(e => e.ToAddress == "requestor@email.com"), It.IsAny<CancellationToken>()));
-        }
-
-
-        [Test]
-        public async Task WhenISendUpdateEmail_OnBehalf_WithRequestorEmailAddress_IsendEmailToRequestor()
-        {
-            _jobDetails = new GetJobDetailsResponse
-            {
-                ForRequestor = false,
-                Requestor = new RequestPersonalDetails
-                {
-                    EmailAddress = "requestor@email.com",
-                    FirstName = "Requestor",
-                    LastName = "Req",
-                },
-                Recipient = new RequestPersonalDetails
-                {
-                    EmailAddress = "recipient@email.com",
-                    FirstName = "Requestor",
-                    LastName = "Req",
-                },
-                DueDate = DateTime.Now,
-                SupportActivity = HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn,
-            };
-                await _classUnderTest.SendUpdateStatusEmail(1, HelpMyStreet.Utils.Enums.JobStatuses.Done, new CancellationToken());
-               _communicationService.Verify(x => x.SendEmail(It.Is<SendEmailRequest>(e => e.ToAddress == "requestor@email.com"), It.IsAny<CancellationToken>()));
-
-                   
-        }
-
-        [Test]
-        public async Task WhenISendUpdateEmail_OnBehalf_WithNoRequestorEmailAddress_IsendEmailToRecipient()
-        {
-            _jobDetails = new GetJobDetailsResponse
-            {
-                ForRequestor = false,
-                Requestor = new RequestPersonalDetails
-                {
-                    EmailAddress = "",
-                    FirstName = "Requestor",
-                    LastName = "Req",
-                },
-                Recipient = new RequestPersonalDetails
-                {
-                    EmailAddress = "recipient@email.com",
-                    FirstName = "Requestor",
-                    LastName = "Req",
-                },
-                DueDate = DateTime.Now,
-                SupportActivity = HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn,
-            };
-            await _classUnderTest.SendUpdateStatusEmail(1, HelpMyStreet.Utils.Enums.JobStatuses.Done, new CancellationToken());
-            _communicationService.Verify(x => x.SendEmail(It.Is<SendEmailRequest>(e => e.ToAddress == "recipient@email.com"), It.IsAny<CancellationToken>()));
-
         }
     }
 }
