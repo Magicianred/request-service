@@ -1,10 +1,8 @@
-﻿
-using HelpMyStreet.Utils.Enums;
+﻿using HelpMyStreet.Utils.Enums;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RequestService.Repo.EntityFramework.Entities;
 using System;
 using System.Linq;
-using SupportActivities = HelpMyStreet.Utils.Enums.SupportActivities;
 
 namespace RequestService.Repo.Helpers
 {

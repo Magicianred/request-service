@@ -33,6 +33,12 @@ namespace RequestService.Core.Services
         {
             jobs = await _jobService.AttachedDistanceToJobSummaries(postcode, jobs, cancellationToken);
 
+            if (jobs == null)
+            {
+                // For now, return no jobs to avoid breaking things downstream
+                return new List<JobSummary>();
+            }
+
             jobs = jobs.Where(w => supportActivities == null || supportActivities.Contains(w.SupportActivity))
                        .Where(w => w.DistanceInMiles <= GetSupportDistanceForActivity(w.SupportActivity, distanceInMiles, activitySpecificSupportDistancesInMiles))
                        .ToList();
