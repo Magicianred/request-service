@@ -7,7 +7,6 @@ using MediatR;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 using System.Collections.Generic;
 using RequestService.Core.Config;
 using Microsoft.Extensions.Configuration;
@@ -18,8 +17,9 @@ using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Net;
 using RequestService.Core.Services;
-using RequestService.Core.Utils;
 using UserService.Core.Utils;
+using HelpMyStreet.Utils.Enums;
+using HelpMyStreet.Utils.Utils;
 
 [assembly: FunctionsStartup(typeof(RequestService.AzureFunction.Startup))]
 namespace RequestService.AzureFunction
@@ -78,7 +78,7 @@ namespace RequestService.AzureFunction
             builder.Services.AddMediatR(typeof(PostNewRequestForHelpHandler).Assembly);
             builder.Services.AddAutoMapper(typeof(AddressDetailsProfile).Assembly);
             builder.Services.AddTransient<IHttpClientWrapper, HttpClientWrapper>();
-            builder.Services.AddTransient<IUserService, RequestService.Core.Services.UserService>();
+            builder.Services.AddTransient<IUserService, Core.Services.UserService>();
             builder.Services.AddTransient<IAddressService, AddressService>();
             builder.Services.AddTransient<ICommunicationService, CommunicationService>();
             builder.Services.AddTransient<IGroupService, GroupService>();
