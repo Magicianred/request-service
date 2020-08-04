@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using Question = RequestService.Repo.EntityFramework.Entities.Question;
 using Job = RequestService.Repo.EntityFramework.Entities.Job;
 using RequestService.Repo.Helpers;
+using HelpMyStreet.Utils.Extensions;
+
 namespace RequestService.Repo
 {
     public class ApplicationDbContext : DbContext
@@ -25,11 +27,7 @@ namespace RequestService.Repo
             : base(options)
         {
             SqlConnection conn = (SqlConnection)Database.GetDbConnection();
-  
-            if (conn.DataSource.Contains("database.windows.net"))
-            {
-                conn.AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync("https://database.windows.net/").Result;
-            }
+            conn.AddAzureToken();
         }
 
         public virtual DbSet<Job> Job { get; set; }

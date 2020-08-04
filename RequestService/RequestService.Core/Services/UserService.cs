@@ -1,17 +1,13 @@
 ﻿using HelpMyStreet.Contracts.UserService.Request;
 using HelpMyStreet.Contracts.UserService.Response;
 using HelpMyStreet.Utils.Enums;
-using HelpMyStreet.Utils.Models;
+using HelpMyStreet.Utils.Utils;
 using Marvin.StreamExtensions;
 using Newtonsoft.Json;
-using RequestService.Core.Config;
 using RequestService.Core.Dto;
-using RequestService.Core.Utils;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
