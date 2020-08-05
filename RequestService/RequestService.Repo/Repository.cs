@@ -286,6 +286,28 @@ namespace RequestService.Repo
             return response;
         }
 
+        public async Task<bool> UpdateJobStatusCancelledAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
+        {
+            bool response = false;
+            byte openJobStatus = (byte)JobStatuses.Cancelled;
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job != null)
+            {
+                if (job.JobStatusId != openJobStatus)
+                {
+                    job.JobStatusId = openJobStatus;
+                    job.VolunteerUserId = null;
+                    AddJobStatus(jobID, createdByUserID, null, openJobStatus);
+                    int result = await _context.SaveChangesAsync(cancellationToken);
+                    if (result == 2)
+                    {
+                        response = true;
+                    }
+                }
+            }
+            return response;
+        }
+
         public async Task<bool> UpdateJobStatusInProgressAsync(int jobID, int createdByUserID, int volunteerUserID, CancellationToken cancellationToken)
         {
             bool response = false;
@@ -515,6 +537,16 @@ namespace RequestService.Repo
                 JobId = jobID
             });
             await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public List<StatusHistory> GetJobStatusHistory(int jobID)
+        {
+            return _context.RequestJobStatus.Where(x => x.JobId == jobID)
+                .Select(x => new StatusHistory
+                {
+                    JobStatus = (JobStatuses) x.JobStatusId,
+                    StatusDate = x.DateCreated
+                }).ToList();
         }
     }
 }
