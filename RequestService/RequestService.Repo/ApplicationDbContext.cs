@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using Question = RequestService.Repo.EntityFramework.Entities.Question;
 using Job = RequestService.Repo.EntityFramework.Entities.Job;
 using RequestService.Repo.Helpers;
+using HelpMyStreet.Utils.Extensions;
+
 namespace RequestService.Repo
 {
     public class ApplicationDbContext : DbContext
@@ -25,11 +27,7 @@ namespace RequestService.Repo
             : base(options)
         {
             SqlConnection conn = (SqlConnection)Database.GetDbConnection();
-  
-            if (conn.DataSource.Contains("database.windows.net"))
-            {
-                conn.AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync("https://database.windows.net/").Result;
-            }
+            conn.AddAzureToken();
         }
 
         public virtual DbSet<Job> Job { get; set; }
@@ -50,6 +48,7 @@ namespace RequestService.Repo
         public virtual DbSet<EnumRequestFormVariants> EnumRequestFormVariants { get; set; }
         public virtual DbSet<EnumQuestionTypes> EnumQuestionTypes { get; set; }
         public virtual DbSet<EnumRequestFormStages> EnumRequestFormStages { get; set; }
+        public virtual DbSet<EnumQuestions> EnumQuestions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
@@ -102,6 +101,15 @@ namespace RequestService.Repo
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.SetEnumRequestFormStagesData();
+            });
+
+            modelBuilder.Entity<EnumQuestions>(entity =>
+            {
+                entity.ToTable("Question", "Lookup");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.SetEnumQuestionsData();
             });
 
 
