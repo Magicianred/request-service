@@ -29,10 +29,6 @@ namespace RequestService.Handlers
         public async Task<PutUpdateJobStatusToCancelledResponse> Handle(PutUpdateJobStatusToCancelledRequest request, CancellationToken cancellationToken)
         {
             var result = await _repository.UpdateJobStatusCancelledAsync(request.JobID, request.CreatedByUserID, cancellationToken);
-            if (result)
-            {
-                await _jobService.SendUpdateStatusEmail(request.JobID, JobStatuses.Cancelled, cancellationToken);
-            }
             PutUpdateJobStatusToCancelledResponse response = new PutUpdateJobStatusToCancelledResponse()
             {
                 Success = result
