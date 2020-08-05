@@ -90,7 +90,7 @@ namespace RequestService.UnitTests
         public async Task WhenPassesInGoodRequest_ReturnsNoJobsDueToDistance()
         {
             List<SupportActivities> supportActivities = null;
-            string postcode = "";
+            string postcode = "POSTCODE";
             double? distanceInMiles = 0d;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 
@@ -102,7 +102,7 @@ namespace RequestService.UnitTests
         public async Task WhenPassesInGoodRequest_ReturnsJobs()
         {
             List<SupportActivities> supportActivities = null;
-            string postcode = "";
+            string postcode = "POSTCODE";
             double? distanceInMiles = 20d;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 
@@ -126,7 +126,7 @@ namespace RequestService.UnitTests
         public async Task WhenPassesInGoodRequestWithActivitySpecificSupportDistance_ReturnsJobs()
         {
             List<SupportActivities> supportActivities = null;
-            string postcode = "";
+            string postcode = "POSTCODE";
             double? distanceInMiles = null;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = new Dictionary<SupportActivities, double?>() { { SupportActivities.Errands, 10d } };
 
@@ -141,7 +141,7 @@ namespace RequestService.UnitTests
         public async Task WhenPassesInGoodRequestWithNullActivitySpecificSupportDistance_ReturnsJobs()
         {
             List<SupportActivities> supportActivities = null;
-            string postcode = "";
+            string postcode = "POSTCODE";
             double? distanceInMiles = 0d;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = new Dictionary<SupportActivities, double?>() { { SupportActivities.Errands, 100d } };
 
@@ -156,7 +156,7 @@ namespace RequestService.UnitTests
         public async Task WhenPassesInGoodRequestWithSupportActivityFilter_ReturnsJobs()
         {
             List<SupportActivities> supportActivities = new List<SupportActivities>() { SupportActivities.Errands, SupportActivities.DogWalking };
-            string postcode = "";
+            string postcode = "POSTCODE";
             double? distanceInMiles = null;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 
@@ -191,7 +191,7 @@ namespace RequestService.UnitTests
             if (pGroups != null)
                 groups = pGroups.ToList();
 
-            string postcode = "";
+            string postcode = "POSTCODE";
             double? distanceInMiles = null;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
             int count = _jobSummaries.Count;
@@ -216,7 +216,7 @@ namespace RequestService.UnitTests
             if(jobStatuses!=null)
                statuses  = jobStatuses.ToList();
             
-            string postcode = "";
+            string postcode = "POSTCODE";
             double? distanceInMiles = null;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
             int count = _jobSummaries.Count;
@@ -235,7 +235,7 @@ namespace RequestService.UnitTests
         public async Task TestRefferingGroupFilter_ReturnsCorrectJobs(int? pReferringGroupId)
         {
             int? referringGroupId = pReferringGroupId;
-            string postcode = "";
+            string postcode = "POSTCODE";
             double? distanceInMiles = null;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 

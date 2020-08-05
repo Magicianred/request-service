@@ -2,19 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using RequestService.Core.Interfaces.Repositories;
-using RequestService.Core.Dto;
 using RequestService.Core.Services;
 using System.Collections.Generic;
-using System.Linq;
-using System;
-using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Contracts.RequestService.Request;
-using HelpMyStreet.Contracts.CommunicationService.Request;
-using Microsoft.Extensions.Options;
-using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Models;
-using UserService.Core.Utils;
 using RequestService.Core.Exceptions;
 using System.Net.Http;
 
@@ -37,18 +29,20 @@ namespace RequestService.Handlers
 
         public async Task<GetJobsByFilterResponse> Handle(GetJobsByFilterRequest request, CancellationToken cancellationToken)
         {
-            request.Postcode = HelpMyStreet.Utils.Utils.PostcodeFormatter.FormatPostcode(request.Postcode);
+            if (!string.IsNullOrEmpty(request.Postcode))
+            {
+                request.Postcode = HelpMyStreet.Utils.Utils.PostcodeFormatter.FormatPostcode(request.Postcode);
 
-            try
-            {
-                var postcodeValid = await _addressService.IsValidPostcode(request.Postcode, cancellationToken);
-            }
-            catch(HttpRequestException)
-            {
-                throw new PostCodeException();
+                try
+                {
+                    var postcodeValid = await _addressService.IsValidPostcode(request.Postcode, cancellationToken);
+                }
+                catch (HttpRequestException)
+                {
+                    throw new PostCodeException();
+                }
             }
         
-
             GetJobsByFilterResponse result = new GetJobsByFilterResponse() { JobSummaries = new List<JobSummary>() };
             List<JobSummary> jobSummaries = _repository.GetJobSummaries();
 
