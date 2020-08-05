@@ -16,10 +16,12 @@ namespace RequestService.Core.Interfaces.Repositories
     {
         Task AddJobAvailableToGroupAsync(int jobID, int groupID, CancellationToken cancellationToken);
         GetJobDetailsResponse GetJobDetails(int jobID);
+        List<StatusHistory> GetJobStatusHistory(int jobID);
         List<JobSummary> GetJobSummaries();
         List<JobSummary> GetOpenJobsSummaries();
         List<JobSummary> GetJobsInProgressSummaries();
         List<JobSummary> GetJobsAllocatedToUser(int volunteerUserID);
+        Task<bool> UpdateJobStatusCancelledAsync(int jobID, int createdByUserID, CancellationToken cancellationToken);
         Task<bool> UpdateJobStatusOpenAsync(int jobID, int createdByUserID, CancellationToken cancellationToken);
         Task<bool> UpdateJobStatusInProgressAsync(int jobID, int createdByUserID, int volunteerUserID, CancellationToken cancellationToken);
         Task<bool> UpdateJobStatusDoneAsync(int jobID, int createdByUserID, CancellationToken cancellationToken);
