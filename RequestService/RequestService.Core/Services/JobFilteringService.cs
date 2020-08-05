@@ -31,7 +31,13 @@ namespace RequestService.Core.Services
             List<JobStatuses> statuses,
             CancellationToken cancellationToken)
         {
-            jobs = await _jobService.AttachedDistanceToJobSummaries(postcode, jobs, cancellationToken);
+            bool applyDistanceFilter = false;
+            //if postcode has been pased calculate distance between volunteer postcode and jobs
+            if (!string.IsNullOrEmpty(postcode))
+            {
+                jobs = await _jobService.AttachedDistanceToJobSummaries(postcode, jobs, cancellationToken);
+                applyDistanceFilter = true;
+            }
 
             if (jobs == null)
             {
@@ -40,8 +46,13 @@ namespace RequestService.Core.Services
             }
 
             jobs = jobs.Where(w => supportActivities == null || supportActivities.Contains(w.SupportActivity))
-                       .Where(w => w.DistanceInMiles <= GetSupportDistanceForActivity(w.SupportActivity, distanceInMiles, activitySpecificSupportDistancesInMiles))
                        .ToList();
+
+            if(applyDistanceFilter)
+            {
+                jobs = jobs.Where(w => w.DistanceInMiles <= GetSupportDistanceForActivity(w.SupportActivity, distanceInMiles, activitySpecificSupportDistancesInMiles))
+                        .ToList();
+            }
 
             if(referringGroupID.HasValue)
             {
