@@ -69,5 +69,22 @@ namespace RequestService.Core.Services
             }
             throw new Exception("Unable to get user groups");
         }
+
+        public async Task<GetUserRolesResponse> GetUserRoles(int userId, CancellationToken cancellationToken)
+        {
+            string path = $"api/GetUserRoles?UserID={userId}";
+
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.GroupService, path, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync();
+                var jsonResponse = JsonConvert.DeserializeObject<ResponseWrapper<GetUserRolesResponse, GroupServiceErrorCode>>(content);
+                if (jsonResponse.IsSuccessful)
+                {
+                    return jsonResponse.Content;
+                }
+            }
+            throw new Exception("Unable to get user roles");
+        }
     }
 }

@@ -548,5 +548,27 @@ namespace RequestService.Repo
                     StatusDate = x.DateCreated
                 }).ToList();
         }
+
+        public async Task<List<int>> GetGroupsForJobAsync(int jobID, CancellationToken cancellationToken)
+        {
+            return _context.JobAvailableToGroup.Where(x => x.JobId == jobID)
+                .Select(x => x.GroupId).ToList();
+        }
+
+        public async Task<int?> GetReferringGroupIDForJobAsync(int jobID, CancellationToken cancellationToken)
+        {
+            int? referringGroupId = null;
+            var job = await _context.Job
+                .Include(x => x.NewRequest)
+                .FirstAsync(x => x.Id == jobID);
+
+            if(job!=null)
+            {
+                referringGroupId = job.NewRequest.ReferringGroupId;
+            }
+
+            return referringGroupId;
+
+        }
     }
 }

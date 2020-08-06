@@ -14,6 +14,8 @@ namespace RequestService.Core.Interfaces.Repositories
 {
     public interface IRepository
     {
+        Task<int?> GetReferringGroupIDForJobAsync(int jobID, CancellationToken cancellationToken);
+        Task<List<int>> GetGroupsForJobAsync(int jobID, CancellationToken cancellationToken);
         Task AddJobAvailableToGroupAsync(int jobID, int groupID, CancellationToken cancellationToken);
         GetJobDetailsResponse GetJobDetails(int jobID);
         List<StatusHistory> GetJobStatusHistory(int jobID);
