@@ -17,12 +17,16 @@ namespace RequestService.Core.Services
     {
         private readonly IRepository _repository;
         private readonly IDistanceCalculator _distanceCalculator;
+        private readonly IGroupService _groupService;
+
         public JobService(
             IDistanceCalculator distanceCalculator,
-            IRepository repository)
+            IRepository repository,
+            IGroupService groupService)
         {
             _repository = repository;
             _distanceCalculator = distanceCalculator;
+            _groupService = groupService;
         }
 
         public async Task<List<JobSummary>> AttachedDistanceToJobSummaries(string volunteerPostCode, List<JobSummary> jobSummaries, CancellationToken cancellationToken)
@@ -63,6 +67,33 @@ namespace RequestService.Core.Services
                 }
             }
             return jobSummaries;
+        }
+
+        public async Task<bool> HasPermissionToChangeStatusAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
+        {
+            int? referringGroupId = await _repository.GetReferringGroupIDForJobAsync(jobID, cancellationToken);
+            var jobDetails = _repository.GetJobDetails(jobID);
+
+            if (jobDetails == null)
+            {
+                throw new Exception($"Unable to retrieve job details for jobID:{jobID}");
+            }
+
+            if (!referringGroupId.HasValue)
+            {
+                throw new Exception($"Unable to retrieve referring groupId for jobID:{jobID}");
+            }
+
+            var userRoles = await _groupService.GetUserRoles(createdByUserID, cancellationToken);
+
+            if (userRoles.UserGroupRoles[referringGroupId.Value].Contains((int)GroupRoles.TaskAdmin) || createdByUserID == jobDetails.VolunteerUserID)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

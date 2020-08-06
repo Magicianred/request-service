@@ -16,17 +16,20 @@ namespace RequestService.UnitTests
     {
         private Mock<IRepository> _repository;
         private Mock<ICommunicationService> _communicationService;
+        private Mock<IJobService> _jobService;
 
         private PutUpdateJobStatusToDoneHandler _classUnderTest;
         private PutUpdateJobStatusToDoneRequest _request;
         private bool _success;
+        private bool _hasPermission = true;
 
         [SetUp]
         public void Setup()
         {
             SetupRepository();
             SetupCommunicationService();
-            _classUnderTest = new PutUpdateJobStatusToDoneHandler(_repository.Object, _communicationService.Object);
+            SetupJobService();
+            _classUnderTest = new PutUpdateJobStatusToDoneHandler(_repository.Object, _communicationService.Object,_jobService.Object);
         }
 
         private void SetupRepository()
@@ -38,6 +41,13 @@ namespace RequestService.UnitTests
                 It.IsAny<CancellationToken>()))
                 .ReturnsAsync(()=> _success);
 
+        }
+
+        private void SetupJobService()
+        {
+            _jobService = new Mock<IJobService>();
+            _jobService.Setup(x => x.HasPermissionToChangeStatusAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => _hasPermission);
         }
 
         private void SetupCommunicationService()
@@ -56,8 +66,10 @@ namespace RequestService.UnitTests
                 JobID = 1
             };
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-            
-            Assert.AreEqual(true, response.Success);
+            _repository.Verify(x => x.UpdateJobStatusDoneAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Once);
+
+            Assert.AreEqual(UpdateJobStatusOutcome.Success, response.Outcome);
         }
 
         [Test]
@@ -70,7 +82,41 @@ namespace RequestService.UnitTests
                 JobID = 1
             };
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-            Assert.AreEqual(false, response.Success);
+            _repository.Verify(x => x.UpdateJobStatusDoneAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            Assert.AreEqual(UpdateJobStatusOutcome.BadRequest, response.Outcome);
+        }
+
+        [Test]
+        public async Task WhenVolunteerDoesNotHavePermission_ReturnsUnauthorised()
+        { 
+            _success = false;
+            _hasPermission = false;
+            _request = new PutUpdateJobStatusToDoneRequest
+            {
+                CreatedByUserID = 1,
+                JobID = 1
+            };
+            var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            _repository.Verify(x => x.UpdateJobStatusDoneAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+            _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            Assert.AreEqual(UpdateJobStatusOutcome.Unauthorized, response.Outcome);
+        }
+
+        [Test]
+        public async Task WhenJobStatusIsAlreadyDone_ReturnsBadRequest()
+        {
+            _success = false;
+            _hasPermission = true;
+            _request = new PutUpdateJobStatusToDoneRequest
+            {
+                CreatedByUserID = 1,
+                JobID = 1
+            };
+            var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            _repository.Verify(x => x.UpdateJobStatusDoneAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            Assert.AreEqual(UpdateJobStatusOutcome.BadRequest, response.Outcome);
         }
     }
 }

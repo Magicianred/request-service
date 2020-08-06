@@ -12,13 +12,12 @@ using System.Threading.Tasks;
 
 namespace RequestService.UnitTests
 {
-    public class PutUpdateJobStatusToOpenHandlerTests
+    public class PutUpdateJobStatusToCancelledHandlerTests
     {
         private Mock<IRepository> _repository;
-        private Mock<ICommunicationService> _communicationService;
         private Mock<IJobService> _jobService;
-        private PutUpdateJobStatusToOpenHandler _classUnderTest;
-        private PutUpdateJobStatusToOpenRequest _request;
+        private PutUpdateJobStatusToCancelledHandler _classUnderTest;
+        private PutUpdateJobStatusToCancelledRequest _request;
         private bool _success;
         private bool _hasPermission = true;
 
@@ -26,17 +25,8 @@ namespace RequestService.UnitTests
         public void Setup()
         {
             SetupRepository();
-            SetupCommunicationService();
             SetupJobService();
-            _classUnderTest = new PutUpdateJobStatusToOpenHandler(_repository.Object, _communicationService.Object, _jobService.Object);
-        }
-
-
-        private void SetupCommunicationService()
-        {
-            _communicationService = new Mock<ICommunicationService>();
-            _communicationService.Setup(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+            _classUnderTest = new PutUpdateJobStatusToCancelledHandler(_repository.Object, _jobService.Object);
         }
 
         private void SetupJobService()
@@ -49,7 +39,7 @@ namespace RequestService.UnitTests
         private void SetupRepository()
         {
             _repository = new Mock<IRepository>();
-            _repository.Setup(x => x.UpdateJobStatusOpenAsync(
+            _repository.Setup(x => x.UpdateJobStatusCancelledAsync(
                 It.IsAny<int>(), 
                 It.IsAny<int>(), 
                 It.IsAny<CancellationToken>()))
@@ -58,33 +48,31 @@ namespace RequestService.UnitTests
         }
 
         [Test]
-        public async Task WhenSuccessfullyChangingJobStatusToDone_ReturnsTrue()
+        public async Task WhenSuccessfullyChangingJobStatusToCancelled_ReturnsTrue()
         {
             _success = true;
-            _request = new PutUpdateJobStatusToOpenRequest
+            _request = new PutUpdateJobStatusToCancelledRequest
             {
                 CreatedByUserID = 1,
                 JobID = 1
             };
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-            _repository.Verify(x => x.UpdateJobStatusOpenAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
-            _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Once);
-
+            _repository.Verify(x => x.UpdateJobStatusCancelledAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            
             Assert.AreEqual(UpdateJobStatusOutcome.Success, response.Outcome);
         }
 
         [Test]
-        public async Task WhenUnSuccessfullyChangingJobStatusToDone_ReturnsFalse()
+        public async Task WhenUnSuccessfullyChangingJobStatusToCancelled_ReturnsFalse()
         {
             _success = false;
-            _request = new PutUpdateJobStatusToOpenRequest
+            _request = new PutUpdateJobStatusToCancelledRequest
             {
                 CreatedByUserID = 1,
                 JobID = 1
             };
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-            _repository.Verify(x => x.UpdateJobStatusOpenAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
-            _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            _repository.Verify(x => x.UpdateJobStatusCancelledAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             Assert.AreEqual(UpdateJobStatusOutcome.BadRequest, response.Outcome);
         }
 
@@ -93,30 +81,28 @@ namespace RequestService.UnitTests
         {
             _success = false;
             _hasPermission = false;
-            _request = new PutUpdateJobStatusToOpenRequest
+            _request = new PutUpdateJobStatusToCancelledRequest
             {
                 CreatedByUserID = 1,
                 JobID = 1
             };
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-            _repository.Verify(x => x.UpdateJobStatusOpenAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
-            _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            _repository.Verify(x => x.UpdateJobStatusCancelledAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
             Assert.AreEqual(UpdateJobStatusOutcome.Unauthorized, response.Outcome);
         }
 
         [Test]
-        public async Task WhenJobStatusIsAlreadyOpen_ReturnsBadRequest()
+        public async Task WhenJobStatusIsAlreadyCancelled_ReturnsBadRequest()
         {
             _success = false;
             _hasPermission = true;
-            _request = new PutUpdateJobStatusToOpenRequest
+            _request = new PutUpdateJobStatusToCancelledRequest
             {
                 CreatedByUserID = 1,
                 JobID = 1
             };
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-            _repository.Verify(x => x.UpdateJobStatusOpenAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
-            _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            _repository.Verify(x => x.UpdateJobStatusCancelledAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             Assert.AreEqual(UpdateJobStatusOutcome.BadRequest, response.Outcome);
         }
     }

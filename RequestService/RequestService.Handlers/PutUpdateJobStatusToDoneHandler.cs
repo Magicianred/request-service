@@ -6,6 +6,7 @@ using RequestService.Core.Services;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Enums;
 
 namespace RequestService.Handlers
 {
@@ -13,29 +14,47 @@ namespace RequestService.Handlers
     {
         private readonly IRepository _repository;
         private readonly ICommunicationService _communicationService;
-        public PutUpdateJobStatusToDoneHandler(IRepository repository, ICommunicationService communicationService)
+        private readonly IJobService _jobService;
+        public PutUpdateJobStatusToDoneHandler(IRepository repository, ICommunicationService communicationService, IJobService jobService)
         {
             _repository = repository;
             _communicationService = communicationService;
+            _jobService = jobService;
         }
 
         public async Task<PutUpdateJobStatusToDoneResponse> Handle(PutUpdateJobStatusToDoneRequest request, CancellationToken cancellationToken)
         {
-            var result = await  _repository.UpdateJobStatusDoneAsync(request.JobID, request.CreatedByUserID, cancellationToken);
-            if (result) 
+            PutUpdateJobStatusToDoneResponse response = new PutUpdateJobStatusToDoneResponse()
             {
-                await _communicationService.RequestCommunication(
+                Outcome = UpdateJobStatusOutcome.Unauthorized
+            };
+
+            bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+
+            if (hasPermission)
+            {
+                var result = await _repository.UpdateJobStatusDoneAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+
+                if (result)
+                {
+                    response.Outcome = UpdateJobStatusOutcome.Success;
+                    await _communicationService.RequestCommunication(
                     new RequestCommunicationRequest()
                     {
                         CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate},
-                        JobID = request.JobID
+                       JobID = request.JobID
                     },
                     cancellationToken);
+                }
+                else
+                {
+                    response.Outcome = UpdateJobStatusOutcome.BadRequest;
+                }
             }
-            PutUpdateJobStatusToDoneResponse response = new PutUpdateJobStatusToDoneResponse()
+            else
             {
-                Success = result
-            };
+                response.Outcome = UpdateJobStatusOutcome.Unauthorized;
+            }
             return response;
         }
     }

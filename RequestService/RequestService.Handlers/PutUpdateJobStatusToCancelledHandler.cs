@@ -13,6 +13,7 @@ using HelpMyStreet.Contracts.CommunicationService.Request;
 using Microsoft.Extensions.Options;
 using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Models;
 
 namespace RequestService.Handlers
 {
@@ -28,11 +29,30 @@ namespace RequestService.Handlers
 
         public async Task<PutUpdateJobStatusToCancelledResponse> Handle(PutUpdateJobStatusToCancelledRequest request, CancellationToken cancellationToken)
         {
-            var result = await _repository.UpdateJobStatusCancelledAsync(request.JobID, request.CreatedByUserID, cancellationToken);
             PutUpdateJobStatusToCancelledResponse response = new PutUpdateJobStatusToCancelledResponse()
             {
-                Success = result
+                Outcome = UpdateJobStatusOutcome.Unauthorized
             };
+
+            bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID,cancellationToken);
+
+            if(hasPermission)
+            {
+                var result = await _repository.UpdateJobStatusCancelledAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+
+                if (result)
+                {
+                    response.Outcome = UpdateJobStatusOutcome.Success;
+                }
+                else
+                {
+                    response.Outcome = UpdateJobStatusOutcome.BadRequest;
+                }
+            }
+            else
+            {
+                response.Outcome = UpdateJobStatusOutcome.Unauthorized;
+            }
             return response;
         }
     }
