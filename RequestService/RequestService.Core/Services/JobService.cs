@@ -71,13 +71,19 @@ namespace RequestService.Core.Services
 
         public async Task<bool> HasPermissionToChangeStatusAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
         {
-            int? referringGroupId = await _repository.GetReferringGroupIDForJobAsync(jobID, cancellationToken);
             var jobDetails = _repository.GetJobDetails(jobID);
 
             if (jobDetails == null)
             {
                 throw new Exception($"Unable to retrieve job details for jobID:{jobID}");
             }
+
+            if (createdByUserID == jobDetails.VolunteerUserID)
+            {
+                return true;
+            }
+
+            int? referringGroupId = await _repository.GetReferringGroupIDForJobAsync(jobID, cancellationToken);
 
             if (!referringGroupId.HasValue)
             {
@@ -86,7 +92,7 @@ namespace RequestService.Core.Services
 
             var userRoles = await _groupService.GetUserRoles(createdByUserID, cancellationToken);
 
-            if (userRoles.UserGroupRoles[referringGroupId.Value].Contains((int)GroupRoles.TaskAdmin) || createdByUserID == jobDetails.VolunteerUserID)
+            if (userRoles.UserGroupRoles[referringGroupId.Value].Contains((int)GroupRoles.TaskAdmin))
             {
                 return true;
             }

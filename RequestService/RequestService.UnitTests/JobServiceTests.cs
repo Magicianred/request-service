@@ -149,11 +149,15 @@ namespace RequestService.UnitTests
             };
             var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, CancellationToken.None);
 
+            _repository.Verify(x => x.GetJobDetails(It.IsAny<int>()), Times.Once);
+            _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            _groupService.Verify(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+
             Assert.AreEqual(true, response);
         }
 
         [Test]
-        public async Task WhenVolunteerIsSameAsCreatedByAndUserIsNotTaskAdmin_ReturnsTrue()
+        public async Task WhenVolunteerIsSameAsCreatedBy_ReturnsTrue()
         {
             int jobId = 1;
             int createdByUserID = 1;
@@ -171,6 +175,9 @@ namespace RequestService.UnitTests
                 UserGroupRoles = roles
             };
             var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, CancellationToken.None);
+            _repository.Verify(x => x.GetJobDetails(It.IsAny<int>()), Times.Once);
+            _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+            _groupService.Verify(x=> x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
 
             Assert.AreEqual(true, response);
         }
@@ -195,6 +202,10 @@ namespace RequestService.UnitTests
                 UserGroupRoles = roles
             };
             var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, CancellationToken.None);
+
+            _repository.Verify(x => x.GetJobDetails(It.IsAny<int>()), Times.Once);
+            _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            _groupService.Verify(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
 
             Assert.AreEqual(false, response);
         }
