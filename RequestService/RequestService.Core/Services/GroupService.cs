@@ -2,18 +2,13 @@
 using HelpMyStreet.Contracts.GroupService.Response;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.Shared;
+using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Utils;
 using Newtonsoft.Json;
-using RequestService.Core.Config;
-using RequestService.Core.Utils;
 using System;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Utf8Json.Resolvers;
 
 namespace RequestService.Core.Services
 {
