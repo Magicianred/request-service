@@ -428,14 +428,15 @@ namespace RequestService.Repo
                     JobStatus = (JobStatuses)j.JobStatusId,
                     SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)j.SupportActivityId,
                     PostCode = j.NewRequest.PostCode,
-                    OtherDetails = j.NewRequest.OtherDetails,                    
-                    SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds,
                     Questions = MapToQuestions(j.JobQuestions),
                     ReferringGroupID = j.NewRequest.ReferringGroupId,
                     Groups = j.JobAvailableToGroup.Select(x=>x.GroupId).ToList(),
                     RecipientOrganisation = j.NewRequest.OrganisationName,
                     DateStatusLastChanged = j.RequestJobStatus.Max(x=> x.DateCreated),
-                    DueDays = Convert.ToInt32((j.DueDate.Date - DateTime.Now.Date).TotalDays)
+                    DueDays = Convert.ToInt32((j.DueDate.Date - DateTime.Now.Date).TotalDays),
+                    ForRequestor = j.NewRequest.ForRequestor.Value,
+                    DateRequested = j.NewRequest.DateRequested,
+                    RequestorType = (RequestorType) j.NewRequest.RequestorType
                 });
             }
             return response;
@@ -492,24 +493,26 @@ namespace RequestService.Repo
             
             response = new GetJobDetailsResponse()
             {
-                PostCode = efJob.NewRequest.PostCode,
-                OtherDetails = efJob.NewRequest.OtherDetails,
-                SpecialCommunicationNeeds = efJob.NewRequest.SpecialCommunicationNeeds,
+                JobSummary = new JobSummary()
+                {
+                    PostCode = efJob.NewRequest.PostCode,
+                    Details = efJob.Details,
+                    IsHealthCritical = efJob.IsHealthCritical,
+                    JobID = efJob.Id,
+                    VolunteerUserID = efJob.VolunteerUserId,
+                    JobStatus = (JobStatuses)efJob.JobStatusId,
+                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
+                    DueDate = efJob.DueDate,
+                    ForRequestor = efJob.NewRequest.ForRequestor.Value,
+                    DateRequested = efJob.NewRequest.DateRequested,
+                    RequestorType = (RequestorType)efJob.NewRequest.RequestorType,
+                    RecipientOrganisation = efJob.NewRequest.OrganisationName,
+                    DateStatusLastChanged = efJob.RequestJobStatus.Max(x => x.DateCreated),
+                    DueDays = Convert.ToInt32((efJob.DueDate.Date - DateTime.Now.Date).TotalDays),
+                    ReferringGroupID = efJob.NewRequest.ReferringGroupId,
+                },
                 Recipient = GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),
                 Requestor = GetPerson(efJob.NewRequest.PersonIdRequesterNavigation),
-                Details = efJob.Details,
-                HealthCritical = efJob.IsHealthCritical,
-                JobID = efJob.Id,
-                VolunteerUserID = efJob.VolunteerUserId,
-                JobStatus = (JobStatuses)efJob.JobStatusId,
-                SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
-                DueDate= efJob.DueDate,
-                ForRequestor = efJob.NewRequest.ForRequestor.Value,
-                DateRequested = efJob.NewRequest.DateRequested,
-                RequestorType = (RequestorType)efJob.NewRequest.RequestorType,
-                OrganisationName = efJob.NewRequest.OrganisationName,
-                DateStatusLastChanged = efJob.RequestJobStatus.Max(x => x.DateCreated),
-                DueDays = Convert.ToInt32((efJob.DueDate.Date - DateTime.Now.Date).TotalDays)
             };
 
             return response;

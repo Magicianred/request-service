@@ -78,7 +78,7 @@ namespace RequestService.Core.Services
                 throw new Exception($"Unable to retrieve job details for jobID:{jobID}");
             }
 
-            if (createdByUserID == jobDetails.VolunteerUserID)
+            if (createdByUserID == jobDetails.JobSummary.VolunteerUserID)
             {
                 return true;
             }
