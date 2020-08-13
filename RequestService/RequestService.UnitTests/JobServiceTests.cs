@@ -137,7 +137,7 @@ namespace RequestService.UnitTests
             _refferingGroupID = 1;
             _getjobdetailsResponse = new GetJobDetailsResponse()
             {
-                VolunteerUserID = 2
+                JobSummary = new JobSummary() { VolunteerUserID = 2 }
             };
 
             Dictionary<int, List<int>> roles = new Dictionary<int, List<int>>();
@@ -164,7 +164,7 @@ namespace RequestService.UnitTests
             _refferingGroupID = 1;
             _getjobdetailsResponse = new GetJobDetailsResponse()
             {
-                VolunteerUserID = 1
+                JobSummary = new JobSummary() { VolunteerUserID = 1 }
             };
 
             Dictionary<int, List<int>> roles = new Dictionary<int, List<int>>();
@@ -191,7 +191,7 @@ namespace RequestService.UnitTests
             _refferingGroupID = 1;
             _getjobdetailsResponse = new GetJobDetailsResponse()
             {
-                VolunteerUserID = 2
+                JobSummary = new JobSummary() { VolunteerUserID = 2 }
             };
 
             Dictionary<int, List<int>> roles = new Dictionary<int, List<int>>();
