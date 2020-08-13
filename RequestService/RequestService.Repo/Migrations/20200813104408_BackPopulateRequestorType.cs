@@ -13,9 +13,6 @@ namespace RequestService.Repo.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"
-                UPDATE [Request].[Request] SET RequestorType = 2 WHERE RequestorType is null;
-            ");
         }
     }
 }
