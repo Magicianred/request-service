@@ -174,7 +174,6 @@ namespace RequestService.Repo
                         OtherDetails = postNewRequestForHelpRequest.HelpRequest.OtherDetails,
                         OrganisationName = postNewRequestForHelpRequest.HelpRequest.OrganisationName,
                         PostCode = postNewRequestForHelpRequest.HelpRequest.Recipient.Address.Postcode,
-                        ForRequestor = postNewRequestForHelpRequest.HelpRequest.ForRequestor,
                         PersonIdRecipientNavigation = recipient,
                         PersonIdRequesterNavigation = requester,
                         RequestorType = (byte)postNewRequestForHelpRequest.HelpRequest.RequestorType,
@@ -434,7 +433,6 @@ namespace RequestService.Repo
                     RecipientOrganisation = j.NewRequest.OrganisationName,
                     DateStatusLastChanged = j.RequestJobStatus.Max(x=> x.DateCreated),
                     DueDays = Convert.ToInt32((j.DueDate.Date - DateTime.Now.Date).TotalDays),
-                    ForRequestor = j.NewRequest.ForRequestor.Value,
                     DateRequested = j.NewRequest.DateRequested,
                     RequestorType = (RequestorType) j.NewRequest.RequestorType
                 });
@@ -503,7 +501,6 @@ namespace RequestService.Repo
                     JobStatus = (JobStatuses)efJob.JobStatusId,
                     SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
                     DueDate = efJob.DueDate,
-                    ForRequestor = efJob.NewRequest.ForRequestor.Value,
                     DateRequested = efJob.NewRequest.DateRequested,
                     RequestorType = (RequestorType)efJob.NewRequest.RequestorType,
                     RecipientOrganisation = efJob.NewRequest.OrganisationName,
