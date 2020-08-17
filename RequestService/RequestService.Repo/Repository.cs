@@ -400,6 +400,26 @@ namespace RequestService.Repo
             return GetJobSummaries(jobSummaries);
         }
 
+        public List<JobSummary> GetJobsByStatusesSummaries(List<JobStatuses> jobStatuses)
+        {
+            List<byte> statuses = new List<byte>();
+
+            foreach(JobStatuses js in jobStatuses)
+            {
+                statuses.Add((byte)js);
+            }
+
+            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
+                                    .Include(i => i.RequestJobStatus)
+                                    .Include(i => i.JobAvailableToGroup)
+                                    .Include(i => i.NewRequest)
+                                    .Include(i => i.JobQuestions)
+                                    .ThenInclude(rq => rq.Question)
+                                    .Where(w =>statuses.Contains(w.JobStatusId.Value)
+                                            ).ToList();
+            return GetJobSummaries(jobSummaries);
+        }
+
         public List<JobSummary> GetJobSummaries()
         {
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job

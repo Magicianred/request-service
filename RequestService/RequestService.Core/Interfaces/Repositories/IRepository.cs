@@ -35,6 +35,6 @@ namespace RequestService.Core.Interfaces.Repositories
         Task UpdateCommunicationSentAsync(int requestId, bool communicationSent, CancellationToken cancellationToken);
         Task<List<LatitudeAndLongitudeDTO>> GetLatitudeAndLongitudes(List<string> postCodes, CancellationToken cancellationToken);
         Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<SupportActivities> activity, RequestHelpFormVariant requestHelpFormVariant, RequestHelpFormStage requestHelpFormStage, CancellationToken cancellationToken);
-
+        List<JobSummary> GetJobsByStatusesSummaries(List<JobStatuses> jobStatuses);
     }
 }
