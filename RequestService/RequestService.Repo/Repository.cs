@@ -353,20 +353,20 @@ namespace RequestService.Repo
 
         public List<JobSummary> GetJobsAllocatedToUser(int volunteerUserID)
         {
-            byte jobStatusID_InProgress = (byte)JobStatuses.InProgress;
+            //byte jobStatusID_InProgress = (byte)JobStatuses.InProgress;
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
                                     .Include(i => i.RequestJobStatus)
                                     .Include(i => i.NewRequest)
                                     .Include(i => i.JobQuestions)
                                     .ThenInclude(rq => rq.Question)
-                                    .Where(w => w.VolunteerUserId == volunteerUserID 
-                                                && w.JobStatusId == jobStatusID_InProgress
+                                    .Where(w => w.VolunteerUserId == volunteerUserID
                                             ).ToList();
 
             return GetJobSummaries(jobSummaries);
             
         }
+
 
         public List<JobSummary> GetOpenJobsSummaries()
         {
