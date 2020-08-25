@@ -22,6 +22,7 @@ namespace RequestService.Core.Services
 
         public async Task<List<JobSummary>> FilterJobSummaries(
             List<JobSummary> jobs, 
+            int? UserID,
             List<SupportActivities> supportActivities, 
             string postcode, 
             double? distanceInMiles, 
@@ -43,6 +44,12 @@ namespace RequestService.Core.Services
             {
                 // For now, return no jobs to avoid breaking things downstream
                 return new List<JobSummary>();
+            }
+
+            if(UserID.HasValue)
+            {
+                jobs = jobs.Where(w => w.VolunteerUserID == UserID.Value)
+                    .ToList();
             }
 
             jobs = jobs.Where(w => supportActivities == null || supportActivities.Contains(w.SupportActivity))

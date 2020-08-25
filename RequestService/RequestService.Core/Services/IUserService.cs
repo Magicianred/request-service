@@ -1,10 +1,6 @@
 ﻿using HelpMyStreet.Contracts.UserService.Response;
 using HelpMyStreet.Utils.Enums;
-using HelpMyStreet.Utils.Models;
-using RequestService.Core.Dto;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
