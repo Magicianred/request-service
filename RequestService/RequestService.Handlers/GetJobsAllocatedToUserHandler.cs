@@ -9,6 +9,7 @@ using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Models;
 using System.Linq;
+using HelpMyStreet.Contracts.UserService.Response;
 
 namespace RequestService.Handlers
 {

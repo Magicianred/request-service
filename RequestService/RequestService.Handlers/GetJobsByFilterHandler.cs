@@ -50,6 +50,7 @@ namespace RequestService.Handlers
                 return result;
 
             jobSummaries = await _jobFilteringService.FilterJobSummaries(jobSummaries, 
+                request.UserID,
                 request.SupportActivities?.SupportActivities, 
                 request.Postcode, 
                 request.DistanceInMiles, 

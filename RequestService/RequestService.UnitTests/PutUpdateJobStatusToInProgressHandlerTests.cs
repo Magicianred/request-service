@@ -2,6 +2,7 @@ using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.GroupService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Contracts.UserService.Response;
 using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Models;
 using Moq;
