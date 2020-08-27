@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using RequestService.Core.Interfaces.Repositories;
 using System.Collections.Generic;
 using HelpMyStreet.Utils.Models;
-using RequestService.Core.Domains.Entities;
+using HelpMyStreet.Contracts.RequestService.Request;
+using HelpMyStreet.Contracts.RequestService.Response;
 
 namespace RequestService.Handlers
 {
