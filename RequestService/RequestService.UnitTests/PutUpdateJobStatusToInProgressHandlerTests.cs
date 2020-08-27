@@ -1,4 +1,5 @@
 using HelpMyStreet.Contracts.CommunicationService.Request;
+using HelpMyStreet.Contracts.GroupService.Request;
 using HelpMyStreet.Contracts.GroupService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
@@ -32,6 +33,7 @@ namespace RequestService.UnitTests
         private List<int> _getGroupsForJobResponse;
         private int? _referringGroupId;
         private GetUserByIDResponse _getUserbyIdResponse;
+        private PostAssignRoleResponse _postAssignRoleResponse;
 
         [SetUp]
         public void Setup()
@@ -75,6 +77,11 @@ namespace RequestService.UnitTests
 
             _groupService.Setup(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => _getUserRolesResponse);
+
+            _postAssignRoleResponse = new PostAssignRoleResponse() { Outcome = GroupPermissionOutcome.Success };
+
+            _groupService.Setup(x => x.PostAssignRole(It.IsAny<PostAssignRoleRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => _postAssignRoleResponse);
 
         }
 
@@ -323,6 +330,7 @@ namespace RequestService.UnitTests
             };
 
             _referringGroupId = 1;
+            
 
             Dictionary<int, List<int>> roles = new Dictionary<int, List<int>>();
             roles.Add(1, new List<int>() { (int)GroupRoles.TaskAdmin });
