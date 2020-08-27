@@ -19,6 +19,7 @@ namespace RequestService.Handlers
         private readonly ICommunicationService _communicationService;
         private readonly IGroupService _groupService;
         private readonly IUserService _userService;
+        private const int ADMIN_USERID = -1;
 
         public PutUpdateJobStatusToInProgressHandler(IRepository repository, ICommunicationService communicationService, IGroupService groupService, IUserService userService)
         {
@@ -74,7 +75,16 @@ namespace RequestService.Handlers
 
                 if (result)
                 {
+                    await _groupService.PostAssignRole(new HelpMyStreet.Contracts.GroupService.Request.PostAssignRoleRequest()
+                    {
+                        Role = new HelpMyStreet.Contracts.GroupService.Request.RoleRequest() { GroupRole = GroupRoles.Volunteer },
+                        UserID = request.VolunteerUserID,
+                        GroupID = referringGroupId.Value,
+                        AuthorisedByUserID = ADMIN_USERID
+                    },cancellationToken);
+
                     response.Outcome = UpdateJobStatusOutcome.Success;
+
                     await _communicationService.RequestCommunication(
                         new RequestCommunicationRequest()
                         {
