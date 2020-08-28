@@ -3,6 +3,7 @@ using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Models;
+using Newtonsoft.Json.Bson;
 using RequestService.Core.Dto;
 using System;
 using System.Collections.Generic;
@@ -38,5 +39,7 @@ namespace RequestService.Core.Interfaces.Repositories
         Task<List<LatitudeAndLongitudeDTO>> GetLatitudeAndLongitudes(List<string> postCodes, CancellationToken cancellationToken);
         Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<SupportActivities> activity, RequestHelpFormVariant requestHelpFormVariant, RequestHelpFormStage requestHelpFormStage, CancellationToken cancellationToken);
         List<JobSummary> GetJobsByStatusesSummaries(List<JobStatuses> jobStatuses);
+
+        void ArchiveOldRequests(int daysSinceJobRequested, int daysSinceJobStatusChanged);
     }
 }

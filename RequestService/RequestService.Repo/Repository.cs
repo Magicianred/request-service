@@ -516,11 +516,17 @@ namespace RequestService.Repo
                 return response;
             }
 
+            bool isArchived = false;
+            if(efJob.NewRequest.Archive.HasValue)
+            {
+                isArchived = efJob.NewRequest.Archive.Value;
+            }
+
             response = new GetJobDetailsResponse()
             {
                 JobSummary = MapEFJobToSummary(efJob),
-                Recipient = GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),
-                Requestor = GetPerson(efJob.NewRequest.PersonIdRequesterNavigation),
+                Recipient = isArchived ? null:  GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),
+                Requestor = isArchived ? null : GetPerson(efJob.NewRequest.PersonIdRequesterNavigation),
             };
 
             return response;
@@ -580,6 +586,31 @@ namespace RequestService.Repo
 
             return referringGroupId;
 
+        }
+
+        public void ArchiveOldRequests(int daysSinceJobRequested, int daysSinceJobStatusChanged)
+        {
+            DateTime dtExpire = DateTime.Now.AddDays(-daysSinceJobRequested);
+            var requests =_context.Request
+                .Include(x=> x.Job)
+                .ThenInclude(x=> x.RequestJobStatus)
+                .Where(x => (x.PersonIdRecipient.HasValue || x.PersonIdRequester.HasValue) && x.DateRequested < dtExpire)
+                .ToList();
+
+            foreach(Request r in requests)
+            {
+                foreach(EntityFramework.Entities.Job j in r.Job)
+                {
+                    bool inactive = j.RequestJobStatus.Min(x => (DateTime.Now.Date - x.DateCreated.Date).TotalDays > daysSinceJobStatusChanged);
+
+                    if(inactive)
+                    {
+                        r.Archive = true;
+                        _context.Request.Update(r);
+                    }
+                }
+            }
+            _context.SaveChanges();
         }
     }
 }
