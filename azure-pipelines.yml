@@ -6,6 +6,7 @@
 trigger:
 - master
 - next-major-release
+- NetCoreV3
 
 pool:
   vmImage: 'windows-latest'
