@@ -33,6 +33,7 @@ namespace RequestService.Repo.EntityFramework.Entities
 
         public int? ReferringGroupId { get; set; }
         public string Source { get; set; }
+        public bool? Archive { get; set; }
 
         public virtual Person PersonIdRecipientNavigation { get; set; }
         public virtual Person PersonIdRequesterNavigation { get; set; }

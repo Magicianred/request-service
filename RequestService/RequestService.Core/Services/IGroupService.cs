@@ -10,6 +10,8 @@ namespace RequestService.Core.Services
         Task<GetNewRequestActionsResponse> GetNewRequestActions(GetNewRequestActionsRequest request, CancellationToken cancellationToken);
         Task<GetUserGroupsResponse> GetUserGroups(int userId, CancellationToken cancellationToken);
         Task<GetGroupMembersResponse> GetGroupMembers(int groupID);
+        Task<GetUserRolesResponse> GetUserRoles(int userId, CancellationToken cancellationToken);
+        Task<PostAssignRoleResponse> PostAssignRole(PostAssignRoleRequest postAssignRoleRequest, CancellationToken cancellationToken);
     }
 
 }

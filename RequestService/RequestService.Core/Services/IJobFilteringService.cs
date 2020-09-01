@@ -12,6 +12,7 @@ namespace RequestService.Core.Services
     {
         Task<List<JobSummary>> FilterJobSummaries(
             List<JobSummary> jobs, 
+            int? UserID,
             List<SupportActivities> supportActivities, 
             string postcode, 
             double? distanceInMiles, 

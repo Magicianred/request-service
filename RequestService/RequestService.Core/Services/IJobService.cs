@@ -11,5 +11,7 @@ namespace RequestService.Core.Services
     public interface IJobService
     {
         Task<List<JobSummary>> AttachedDistanceToJobSummaries(string volunteerPostCode, List<JobSummary> jobSummaries, CancellationToken cancellationToken);
+
+        Task<bool> HasPermissionToChangeStatusAsync(int jobID, int createdByUserID, CancellationToken cancellationToken);
     }
 }

@@ -125,7 +125,6 @@ namespace RequestService.UnitTests
             {
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
-                    ForRequestor = true,
                     RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
@@ -169,7 +168,6 @@ namespace RequestService.UnitTests
             {
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
-                    ForRequestor = true,
                     RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
@@ -215,7 +213,6 @@ namespace RequestService.UnitTests
             {
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
-                    ForRequestor = true,
                     RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {
@@ -267,7 +264,6 @@ namespace RequestService.UnitTests
             {
                 HelpRequest = new HelpMyStreet.Utils.Models.HelpRequest
                 {
-                    ForRequestor = true,
                     RequestorType = RequestorType.Myself,
                     Requestor = new HelpMyStreet.Utils.Models.RequestPersonalDetails
                     {

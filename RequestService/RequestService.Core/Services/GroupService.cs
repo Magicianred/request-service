@@ -7,6 +7,7 @@ using HelpMyStreet.Utils.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -68,6 +69,43 @@ namespace RequestService.Core.Services
                 }
             }
             throw new Exception("Unable to get user groups");
+        }
+
+        public async Task<GetUserRolesResponse> GetUserRoles(int userId, CancellationToken cancellationToken)
+        {
+            string path = $"api/GetUserRoles?UserID={userId}";
+
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.GroupService, path, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync();
+                var jsonResponse = JsonConvert.DeserializeObject<ResponseWrapper<GetUserRolesResponse, GroupServiceErrorCode>>(content);
+                if (jsonResponse.IsSuccessful)
+                {
+                    return jsonResponse.Content;
+                }
+            }
+            throw new Exception("Unable to get user roles");
+        }
+
+        public async Task<PostAssignRoleResponse> PostAssignRole(PostAssignRoleRequest postAssignRoleRequest, CancellationToken cancellationToken)
+        {
+            string path = $"api/PostAssignRole";
+
+            string json = JsonConvert.SerializeObject(postAssignRoleRequest);
+            StringContent data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using (HttpResponseMessage response = await _httpClientWrapper.PostAsync(HttpClientConfigName.GroupService, path, data, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync();
+                var jsonResponse = JsonConvert.DeserializeObject<ResponseWrapper<PostAssignRoleResponse, GroupServiceErrorCode>>(content);
+                if (jsonResponse.IsSuccessful)
+                {
+                    return jsonResponse.Content;
+                }
+            }
+            throw new Exception("Unable to assign role");
         }
     }
 }

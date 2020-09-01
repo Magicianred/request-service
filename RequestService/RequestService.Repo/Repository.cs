@@ -174,7 +174,6 @@ namespace RequestService.Repo
                         OtherDetails = postNewRequestForHelpRequest.HelpRequest.OtherDetails,
                         OrganisationName = postNewRequestForHelpRequest.HelpRequest.OrganisationName,
                         PostCode = postNewRequestForHelpRequest.HelpRequest.Recipient.Address.Postcode,
-                        ForRequestor = postNewRequestForHelpRequest.HelpRequest.ForRequestor,
                         PersonIdRecipientNavigation = recipient,
                         PersonIdRequesterNavigation = requester,
                         RequestorType = (byte)postNewRequestForHelpRequest.HelpRequest.RequestorType,
@@ -387,7 +386,7 @@ namespace RequestService.Repo
 
         public List<JobSummary> GetJobsInProgressSummaries()
         {
-            byte jobStatusID_Open = (byte)JobStatuses.InProgress;
+            byte jobStatusID_InProgress = (byte)JobStatuses.InProgress;
 
             List<EntityFramework.Entities.Job> jobSummaries = _context.Job
                                     .Include(i => i.RequestJobStatus)
@@ -395,7 +394,7 @@ namespace RequestService.Repo
                                     .Include(i => i.NewRequest)
                                     .Include(i => i.JobQuestions)
                                     .ThenInclude(rq => rq.Question)
-                                    .Where(w => w.JobStatusId == jobStatusID_Open
+                                    .Where(w => w.JobStatusId == jobStatusID_InProgress
                                             ).ToList();
             return GetJobSummaries(jobSummaries);
         }
@@ -433,30 +432,35 @@ namespace RequestService.Repo
 
         }
 
+        private JobSummary MapEFJobToSummary(EntityFramework.Entities.Job job)
+        {
+            return new JobSummary()
+            {
+                IsHealthCritical = job.IsHealthCritical,
+                DueDate = job.DueDate,
+                Details = job.Details,
+                JobID = job.Id,
+                VolunteerUserID = job.VolunteerUserId,
+                JobStatus = (JobStatuses)job.JobStatusId,
+                SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)job.SupportActivityId,
+                PostCode = job.NewRequest.PostCode,
+                Questions = MapToQuestions(job.JobQuestions),
+                ReferringGroupID = job.NewRequest.ReferringGroupId,
+                Groups = job.JobAvailableToGroup.Select(x => x.GroupId).ToList(),
+                RecipientOrganisation = job.NewRequest.OrganisationName,
+                DateStatusLastChanged = job.RequestJobStatus.Max(x => x.DateCreated),
+                DueDays = Convert.ToInt32((job.DueDate.Date - DateTime.Now.Date).TotalDays),
+                DateRequested = job.NewRequest.DateRequested,
+                RequestorType = (RequestorType)job.NewRequest.RequestorType
+            };
+        }
+
         public List<JobSummary> GetJobSummaries(List<EntityFramework.Entities.Job> jobs)
         {
             List<JobSummary> response = new List<JobSummary>();
             foreach (EntityFramework.Entities.Job j in jobs)
             {
-                response.Add(new JobSummary()
-                {
-                    IsHealthCritical = j.IsHealthCritical,
-                    DueDate = j.DueDate,
-                    Details = j.Details,
-                    JobID = j.Id,
-                    VolunteerUserID = j.VolunteerUserId,
-                    JobStatus = (JobStatuses)j.JobStatusId,
-                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)j.SupportActivityId,
-                    PostCode = j.NewRequest.PostCode,
-                    OtherDetails = j.NewRequest.OtherDetails,                    
-                    SpecialCommunicationNeeds = j.NewRequest.SpecialCommunicationNeeds,
-                    Questions = MapToQuestions(j.JobQuestions),
-                    ReferringGroupID = j.NewRequest.ReferringGroupId,
-                    Groups = j.JobAvailableToGroup.Select(x=>x.GroupId).ToList(),
-                    RecipientOrganisation = j.NewRequest.OrganisationName,
-                    DateStatusLastChanged = j.RequestJobStatus.Max(x=> x.DateCreated),
-                    DueDays = Convert.ToInt32((j.DueDate.Date - DateTime.Now.Date).TotalDays)
-                });
+                response.Add(MapEFJobToSummary(j));
             }
             return response;
         }
@@ -499,6 +503,8 @@ namespace RequestService.Repo
             GetJobDetailsResponse response = new GetJobDetailsResponse();
             var efJob = _context.Job
                         .Include(i=> i.RequestJobStatus)
+                        .Include(i => i.JobQuestions)
+                        .ThenInclude(rq => rq.Question)
                         .Include(i => i.NewRequest)
                         .ThenInclude(i => i.PersonIdRecipientNavigation)
                         .Include(i => i.NewRequest)
@@ -509,27 +515,18 @@ namespace RequestService.Repo
             {
                 return response;
             }
-            
+
+            bool isArchived = false;
+            if(efJob.NewRequest.Archive.HasValue)
+            {
+                isArchived = efJob.NewRequest.Archive.Value;
+            }
+
             response = new GetJobDetailsResponse()
             {
-                PostCode = efJob.NewRequest.PostCode,
-                OtherDetails = efJob.NewRequest.OtherDetails,
-                SpecialCommunicationNeeds = efJob.NewRequest.SpecialCommunicationNeeds,
-                Recipient = GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),
-                Requestor = GetPerson(efJob.NewRequest.PersonIdRequesterNavigation),
-                Details = efJob.Details,
-                HealthCritical = efJob.IsHealthCritical,
-                JobID = efJob.Id,
-                VolunteerUserID = efJob.VolunteerUserId,
-                JobStatus = (JobStatuses)efJob.JobStatusId,
-                SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)efJob.SupportActivityId,
-                DueDate= efJob.DueDate,
-                ForRequestor = efJob.NewRequest.ForRequestor.Value,
-                DateRequested = efJob.NewRequest.DateRequested,
-                RequestorType = (RequestorType)efJob.NewRequest.RequestorType,
-                OrganisationName = efJob.NewRequest.OrganisationName,
-                DateStatusLastChanged = efJob.RequestJobStatus.Max(x => x.DateCreated),
-                DueDays = Convert.ToInt32((efJob.DueDate.Date - DateTime.Now.Date).TotalDays)
+                JobSummary = MapEFJobToSummary(efJob),
+                Recipient = isArchived ? null:  GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),
+                Requestor = isArchived ? null : GetPerson(efJob.NewRequest.PersonIdRequesterNavigation),
             };
 
             return response;
@@ -567,6 +564,53 @@ namespace RequestService.Repo
                     JobStatus = (JobStatuses) x.JobStatusId,
                     StatusDate = x.DateCreated
                 }).ToList();
+        }
+
+        public async Task<List<int>> GetGroupsForJobAsync(int jobID, CancellationToken cancellationToken)
+        {
+            return _context.JobAvailableToGroup.Where(x => x.JobId == jobID)
+                .Select(x => x.GroupId).ToList();
+        }
+
+        public async Task<int?> GetReferringGroupIDForJobAsync(int jobID, CancellationToken cancellationToken)
+        {
+            int? referringGroupId = null;
+            var job = await _context.Job
+                .Include(x => x.NewRequest)
+                .FirstAsync(x => x.Id == jobID);
+
+            if(job!=null)
+            {
+                referringGroupId = job.NewRequest.ReferringGroupId;
+            }
+
+            return referringGroupId;
+
+        }
+
+        public void ArchiveOldRequests(int daysSinceJobRequested, int daysSinceJobStatusChanged)
+        {
+            DateTime dtExpire = DateTime.Now.AddDays(-daysSinceJobRequested);
+            var requests =_context.Request
+                .Include(x=> x.Job)
+                .ThenInclude(x=> x.RequestJobStatus)
+                .Where(x => (x.PersonIdRecipient.HasValue || x.PersonIdRequester.HasValue) && x.DateRequested < dtExpire)
+                .ToList();
+
+            foreach(Request r in requests)
+            {
+                foreach(EntityFramework.Entities.Job j in r.Job)
+                {
+                    bool inactive = j.RequestJobStatus.Min(x => (DateTime.Now.Date - x.DateCreated.Date).TotalDays > daysSinceJobStatusChanged);
+
+                    if(inactive)
+                    {
+                        r.Archive = true;
+                        _context.Request.Update(r);
+                    }
+                }
+            }
+            _context.SaveChanges();
         }
     }
 }

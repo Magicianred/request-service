@@ -77,7 +77,7 @@ namespace RequestService.UnitTests
         private void SetUpJobFilteringService()
         {
             _jobFilteringService = _mockRepository.Create<IJobFilteringService>();
-            _jobFilteringService.Setup(x => x.FilterJobSummaries(It.IsAny<List<JobSummary>>(), It.IsAny<List<SupportActivities>>(), It.IsAny<string>(), It.IsAny<double?>(), It.IsAny<Dictionary<SupportActivities,double?>>(), null,null,null,It.IsAny<CancellationToken>()))
+            _jobFilteringService.Setup(x => x.FilterJobSummaries(It.IsAny<List<JobSummary>>(), It.IsAny<int?>(), It.IsAny<List<SupportActivities>>(), It.IsAny<string>(), It.IsAny<double?>(), It.IsAny<Dictionary<SupportActivities,double?>>(), null,null,null,It.IsAny<CancellationToken>()))
                 .ReturnsAsync(()=>_jobSummaries);
         }
 
