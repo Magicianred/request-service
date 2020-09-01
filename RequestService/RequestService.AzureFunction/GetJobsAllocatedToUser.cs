@@ -5,8 +5,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using MediatR;
 using System;
-using System.Net;
-using AzureFunctions.Extensions.Swashbuckle.Attribute;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
@@ -23,11 +21,10 @@ namespace RequestService.AzureFunction
             _mediator = mediator;
         }
 
-        [FunctionName("GetJobsAllocatedToUser")]        
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(GetJobsAllocatedToUserResponse))]
+        [FunctionName("GetJobsAllocatedToUser")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)]
-            [RequestBodyType(typeof(GetJobsAllocatedToUserRequest), "log request")] GetJobsAllocatedToUserRequest req,
+            GetJobsAllocatedToUserRequest req,
             ILogger log)
         {
             try

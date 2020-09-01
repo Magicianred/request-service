@@ -5,13 +5,10 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using MediatR;
 using System;
-using System.Net;
-using AzureFunctions.Extensions.Swashbuckle.Attribute;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
-using RequestService.Core.Exceptions;
 
 namespace RequestService.AzureFunction
 {
@@ -24,11 +21,10 @@ namespace RequestService.AzureFunction
             _mediator = mediator;
         }
 
-        [FunctionName("GetQuestionsByActivity")]        
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(GetQuestionsByActivtiesResponse))]
+        [FunctionName("GetQuestionsByActivity")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
-            [RequestBodyType(typeof(GetQuestionsByActivitiesRequest), "log request")] GetQuestionsByActivitiesRequest req,
+            GetQuestionsByActivitiesRequest req,
             ILogger log)
         {
             try

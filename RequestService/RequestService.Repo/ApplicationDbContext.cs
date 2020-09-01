@@ -1,19 +1,12 @@
 ﻿using RequestService.Repo.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.Data.SqlClient;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.EntityFrameworkCore.Internal;
-using System.Linq;
 using HelpMyStreet.PostcodeCoordinates.EF.Extensions;
 using HelpMyStreet.PostcodeCoordinates.EF.Entities;
-using HelpMyStreet.Utils.Models;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 using Question = RequestService.Repo.EntityFramework.Entities.Question;
 using Job = RequestService.Repo.EntityFramework.Entities.Job;
 using RequestService.Repo.Helpers;
-using HelpMyStreet.Utils.Extensions;
+using Microsoft.Data.SqlClient;
+using RequestService.Repo.Extensions;
 
 namespace RequestService.Repo
 {
@@ -56,7 +49,7 @@ namespace RequestService.Repo
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Query<DailyReport>().ToQuery(() => DailyReport.FromSql("TwoHourlyReport"));
+            //modelBuilder.Query<DailyReport>().ToQuery(() => DailyReport.FromSql("TwoHourlyReport"));
 
             modelBuilder.Entity<EnumSupportActivities>(entity =>
             {

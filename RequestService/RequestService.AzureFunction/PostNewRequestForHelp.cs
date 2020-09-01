@@ -5,8 +5,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using MediatR;
 using System;
-using System.Net;
-using AzureFunctions.Extensions.Swashbuckle.Attribute;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
@@ -23,11 +21,10 @@ namespace RequestService.AzureFunction
             _mediator = mediator;
         }
 
-        [FunctionName("PostNewRequestForHelp")]        
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(PostNewRequestForHelpResponse))]
+        [FunctionName("PostNewRequestForHelp")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
-            [RequestBodyType(typeof(PostNewRequestForHelpRequest), "log request")] PostNewRequestForHelpRequest req,
+            PostNewRequestForHelpRequest req,
             ILogger log)
         {
             try

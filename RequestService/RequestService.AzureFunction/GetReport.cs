@@ -5,10 +5,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using MediatR;
 using System;
-using System.Net;
-using AzureFunctions.Extensions.Swashbuckle.Attribute;
 using HelpMyStreet.Contracts.RequestService.Response;
-using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
 using HelpMyStreet.Contracts.ReportService.Response;
@@ -25,11 +22,10 @@ namespace RequestService.AzureFunction
             _mediator = mediator;
         }
 
-        [FunctionName("GetReport")]        
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(GetReportResponse))]
+        [FunctionName("GetReport")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)]
-            [RequestBodyType(typeof(GetReportRequest), "log request")] GetReportRequest req,
+            GetReportRequest req,
             ILogger log)
         {
             try
