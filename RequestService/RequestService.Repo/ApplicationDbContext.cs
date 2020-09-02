@@ -1,19 +1,12 @@
 ﻿using RequestService.Repo.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.Data.SqlClient;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.EntityFrameworkCore.Internal;
-using System.Linq;
 using HelpMyStreet.PostcodeCoordinates.EF.Extensions;
 using HelpMyStreet.PostcodeCoordinates.EF.Entities;
-using HelpMyStreet.Utils.Models;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 using Question = RequestService.Repo.EntityFramework.Entities.Question;
 using Job = RequestService.Repo.EntityFramework.Entities.Job;
 using RequestService.Repo.Helpers;
-using HelpMyStreet.Utils.Extensions;
+using Microsoft.Data.SqlClient;
+using RequestService.Repo.Extensions;
 
 namespace RequestService.Repo
 {
@@ -36,7 +29,7 @@ namespace RequestService.Repo
         public virtual DbSet<Request> Request { get; set; }
         public virtual DbSet<RequestJobStatus> RequestJobStatus { get; set; }
         public virtual DbSet<SupportActivities> SupportActivities { get; set; }
-        public virtual DbQuery<DailyReport> DailyReport { get; set; }
+        public virtual DbSet<DailyReport> DailyReport { get; set; }
         public virtual DbSet<PostcodeEntity> Postcode { get; set; }
         public virtual DbSet<ActivityQuestions> ActivityQuestions { get; set; }
         public virtual DbSet<Question> Question { get; set; }
@@ -56,7 +49,7 @@ namespace RequestService.Repo
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Query<DailyReport>().ToQuery(() => DailyReport.FromSql("TwoHourlyReport"));
+            modelBuilder.Entity<DailyReport>().HasNoKey().ToQuery(() => DailyReport.FromSqlRaw("TwoHourlyReport"));
 
             modelBuilder.Entity<EnumSupportActivities>(entity =>
             {

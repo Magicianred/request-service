@@ -5,8 +5,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using MediatR;
 using System;
-using System.Net;
-using AzureFunctions.Extensions.Swashbuckle.Attribute;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
@@ -23,11 +21,10 @@ namespace RequestService.AzureFunction
             _mediator = mediator;
         }
 
-        [FunctionName("PutUpdateJobStatusToOpen")]        
-        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(PostAllocateJobResponse))]
+        [FunctionName("PutUpdateJobStatusToOpen")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "put", Route = null)]
-            [RequestBodyType(typeof(PutUpdateJobStatusToOpenRequest), "log request")] PutUpdateJobStatusToOpenRequest req,
+            PutUpdateJobStatusToOpenRequest req,
             ILogger log)
         {
             try
