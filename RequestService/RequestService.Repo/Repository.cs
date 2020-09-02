@@ -621,9 +621,6 @@ namespace RequestService.Repo
                         .Include(i => i.JobQuestions)
                         .ThenInclude(rq => rq.Question)
                         .Include(i => i.NewRequest)
-                        .ThenInclude(i => i.PersonIdRecipientNavigation)
-                        .Include(i => i.NewRequest)
-                        .ThenInclude(i => i.PersonIdRequesterNavigation)
                         .Where(w => w.Id == jobID).FirstOrDefault();
 
             response = new GetJobSummaryResponse()
