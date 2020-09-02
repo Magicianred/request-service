@@ -612,5 +612,23 @@ namespace RequestService.Repo
             }
             _context.SaveChanges();
         }
+
+        public GetJobSummaryResponse GetJobSummary(int jobID)
+        {
+            GetJobSummaryResponse response = new GetJobSummaryResponse();
+            var efJob = _context.Job
+                        .Include(i => i.RequestJobStatus)
+                        .Include(i => i.JobQuestions)
+                        .ThenInclude(rq => rq.Question)
+                        .Include(i => i.NewRequest)
+                        .Where(w => w.Id == jobID).FirstOrDefault();
+
+            response = new GetJobSummaryResponse()
+            {
+                JobSummary = MapEFJobToSummary(efJob)
+            };
+
+            return response;
+        }
     }
 }
