@@ -29,7 +29,7 @@ namespace RequestService.Repo
         public virtual DbSet<Request> Request { get; set; }
         public virtual DbSet<RequestJobStatus> RequestJobStatus { get; set; }
         public virtual DbSet<SupportActivities> SupportActivities { get; set; }
-        public virtual DbQuery<DailyReport> DailyReport { get; set; }
+        public virtual DbSet<DailyReport> DailyReport { get; set; }
         public virtual DbSet<PostcodeEntity> Postcode { get; set; }
         public virtual DbSet<ActivityQuestions> ActivityQuestions { get; set; }
         public virtual DbSet<Question> Question { get; set; }
@@ -49,7 +49,7 @@ namespace RequestService.Repo
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Query<DailyReport>().ToQuery(() => DailyReport.FromSql("TwoHourlyReport"));
+            modelBuilder.Entity<DailyReport>().HasNoKey().ToQuery(() => DailyReport.FromSqlRaw("TwoHourlyReport"));
 
             modelBuilder.Entity<EnumSupportActivities>(entity =>
             {
