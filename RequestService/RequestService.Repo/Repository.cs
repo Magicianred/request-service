@@ -451,7 +451,8 @@ namespace RequestService.Repo
                 DateStatusLastChanged = job.RequestJobStatus.Max(x => x.DateCreated),
                 DueDays = Convert.ToInt32((job.DueDate.Date - DateTime.Now.Date).TotalDays),
                 DateRequested = job.NewRequest.DateRequested,
-                RequestorType = (RequestorType)job.NewRequest.RequestorType
+                RequestorType = (RequestorType)job.NewRequest.RequestorType,
+                Archive = job.NewRequest.Archive
             };
         }
 
@@ -527,6 +528,7 @@ namespace RequestService.Repo
                 JobSummary = MapEFJobToSummary(efJob),
                 Recipient = isArchived ? null:  GetPerson(efJob.NewRequest.PersonIdRecipientNavigation),
                 Requestor = isArchived ? null : GetPerson(efJob.NewRequest.PersonIdRequesterNavigation),
+                History = GetJobStatusHistory(efJob.RequestJobStatus.ToList())
             };
 
             return response;
@@ -562,7 +564,21 @@ namespace RequestService.Repo
                 .Select(x => new StatusHistory
                 {
                     JobStatus = (JobStatuses) x.JobStatusId,
-                    StatusDate = x.DateCreated
+                    StatusDate = x.DateCreated,
+                    VolunteerUserID = x.VolunteerUserId,
+                    CreatedByUserID = x.CreatedByUserId
+                }).ToList();
+        }
+
+        public List<StatusHistory> GetJobStatusHistory(List<RequestJobStatus> requestJobStatus)
+        {
+            return requestJobStatus
+                .Select(x => new StatusHistory
+                {
+                    JobStatus = (JobStatuses)x.JobStatusId,
+                    StatusDate = x.DateCreated,
+                    VolunteerUserID = x.VolunteerUserId,
+                    CreatedByUserID = x.CreatedByUserId
                 }).ToList();
         }
 
@@ -594,7 +610,9 @@ namespace RequestService.Repo
             var requests =_context.Request
                 .Include(x=> x.Job)
                 .ThenInclude(x=> x.RequestJobStatus)
-                .Where(x => (x.PersonIdRecipient.HasValue || x.PersonIdRequester.HasValue) && x.DateRequested < dtExpire)
+                .Where(x => (x.Archive ?? false == false) 
+                && ((x.PersonIdRecipient.HasValue || x.PersonIdRequester.HasValue)) 
+                && x.DateRequested < dtExpire)
                 .ToList();
 
             foreach(Request r in requests)
@@ -603,7 +621,7 @@ namespace RequestService.Repo
                 {
                     bool inactive = j.RequestJobStatus.Min(x => (DateTime.Now.Date - x.DateCreated.Date).TotalDays > daysSinceJobStatusChanged);
 
-                    if(inactive)
+                    if(inactive && (r.Archive ?? false) == false)
                     {
                         r.Archive = true;
                         _context.Request.Update(r);
