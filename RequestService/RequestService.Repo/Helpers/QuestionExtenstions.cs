@@ -205,9 +205,14 @@ namespace RequestService.Repo.Helpers
                     else
                     {
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.SupportRequesting, Location = "pos1", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you" });
-                        
-                        string placeholderText = activity == SupportActivities.CommunityConnector ? "Is there a specific issue you would like to discuss with the Community Connector, e.g. dealing with a bereavement (please don’t include personal details here)" : "For example, if it’s a request for some shopping and you know what you want, you could give us the list.";
-                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = placeholderText });
+
+                        string anythingElseToTellUs_placeholderText = form switch
+                        {
+                            RequestHelpFormVariant.HLP_CommunityConnector => "Is there a specific issue you would like to discuss with the Community Connector, e.g. dealing with a bereavement (please don’t include personal details here)",
+                            RequestHelpFormVariant.Ruddington => "For example, let us know if you’re struggling to find help elsewhere.",
+                            _ => "For example, if it’s a request for some shopping and you know what you want, you could give us the list."
+                        };
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = anythingElseToTellUs_placeholderText });
                     }
 
                     if (form == RequestHelpFormVariant.VitalsForVeterans)
@@ -249,6 +254,11 @@ namespace RequestService.Repo.Helpers
                 case RequestHelpFormVariant.VitalsForVeterans:
                     activites = new List<SupportActivities>(genericSupportActivities);
                     ((List<SupportActivities>)activites).Add(SupportActivities.WellbeingPackage);
+                    break;
+
+                case RequestHelpFormVariant.Ruddington:
+                    activites = new List<SupportActivities>(genericSupportActivities);
+                    ((List<SupportActivities>)activites).Remove(SupportActivities.HomeworkSupport);
                     break;
 
                 default: 
