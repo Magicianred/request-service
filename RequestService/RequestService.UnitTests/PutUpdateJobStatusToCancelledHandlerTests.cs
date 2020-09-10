@@ -16,6 +16,7 @@ namespace RequestService.UnitTests
     {
         private Mock<IRepository> _repository;
         private Mock<IJobService> _jobService;
+        private Mock<ICommunicationService> _communicationService;
         private PutUpdateJobStatusToCancelledHandler _classUnderTest;
         private PutUpdateJobStatusToCancelledRequest _request;
         private bool _success;
@@ -26,7 +27,8 @@ namespace RequestService.UnitTests
         {
             SetupRepository();
             SetupJobService();
-            _classUnderTest = new PutUpdateJobStatusToCancelledHandler(_repository.Object, _jobService.Object);
+            SetupCommunicationService();
+            _classUnderTest = new PutUpdateJobStatusToCancelledHandler(_repository.Object, _jobService.Object, _communicationService.Object);
         }
 
         private void SetupJobService()
@@ -45,6 +47,12 @@ namespace RequestService.UnitTests
                 It.IsAny<CancellationToken>()))
                 .ReturnsAsync(()=> _success);
 
+        }
+
+        private void SetupCommunicationService()
+        {
+            _communicationService = new Mock<ICommunicationService>();
+            _communicationService.Setup(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
         }
 
         [Test]
