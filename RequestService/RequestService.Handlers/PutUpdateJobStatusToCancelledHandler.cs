@@ -21,10 +21,12 @@ namespace RequestService.Handlers
     {
         private readonly IRepository _repository;
         private readonly IJobService _jobService;
-        public PutUpdateJobStatusToCancelledHandler(IRepository repository, IJobService jobService)
+        private readonly ICommunicationService _communicationService;
+        public PutUpdateJobStatusToCancelledHandler(IRepository repository, IJobService jobService, ICommunicationService communicationService)
         {
             _repository = repository;
             _jobService = jobService;
+            _communicationService = communicationService;
         }
 
         public async Task<PutUpdateJobStatusToCancelledResponse> Handle(PutUpdateJobStatusToCancelledRequest request, CancellationToken cancellationToken)
@@ -43,6 +45,14 @@ namespace RequestService.Handlers
                 if (result)
                 {
                     response.Outcome = UpdateJobStatusOutcome.Success;
+
+                    await _communicationService.RequestCommunication(
+                    new RequestCommunicationRequest()
+                    {
+                        CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate },
+                        JobID = request.JobID
+                    },
+                    cancellationToken);
                 }
                 else
                 {
