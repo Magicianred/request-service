@@ -108,8 +108,7 @@ namespace RequestService.AzureFunction
         {
             options
                 .UseSqlServer(connectionString)
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll)
-                .EnableSensitiveDataLogging();
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
         }
     }
 }
