@@ -67,7 +67,6 @@ namespace RequestService.UnitTests
                 .ReturnsAsync(() => _getUserRolesResponse);
         }
 
-
         [TearDown]
         public void VerifyAndTearDown()
         {
@@ -130,6 +129,30 @@ namespace RequestService.UnitTests
         }
 
         [Test]
+        public async Task WhenVolunteerPasscodesIsNotKnownToAddressService_ReturnNull2()
+        {
+            _distance = 50d;
+            List<LatitudeAndLongitudeDTO> postcodeCoordinates = new List<LatitudeAndLongitudeDTO>();
+            postcodeCoordinates.Add(new LatitudeAndLongitudeDTO()
+            {
+                Latitude = 1d,
+                Longitude = 2,
+                Postcode = "PostCode"
+            });
+            _getPostcodeCoordinatesResponse = postcodeCoordinates;
+
+            string postCode = "PostCode2";
+            List<JobHeader> jobHeaders = new List<JobHeader>();
+            jobHeaders.Add(new JobHeader()
+            {
+                JobID = 1,
+                PostCode = "PostCode"
+            });
+            var response = await _classUnderTest.AttachedDistanceToJobSummaries(postCode, jobHeaders, CancellationToken.None);
+            _mockDistanceCalculator.Verify(v => v.GetDistanceInMiles(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>()), Times.Never);
+        }
+
+        [Test]
         public async Task WhenVolunteerIsDiffentToCreatedByButUserIsTaskAdmin_ReturnsTrue()
         {
             int jobId = 1;
@@ -141,7 +164,7 @@ namespace RequestService.UnitTests
             };
 
             Dictionary<int, List<int>> roles = new Dictionary<int, List<int>>();
-            roles.Add(1, new List<int>() { (int) GroupRoles.TaskAdmin });
+            roles.Add(1, new List<int>() { (int)GroupRoles.TaskAdmin });
 
             _getUserRolesResponse = new GetUserRolesResponse()
             {
@@ -177,7 +200,7 @@ namespace RequestService.UnitTests
             var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, CancellationToken.None);
             _repository.Verify(x => x.GetJobDetails(It.IsAny<int>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
-            _groupService.Verify(x=> x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+            _groupService.Verify(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
 
             Assert.AreEqual(true, response);
         }

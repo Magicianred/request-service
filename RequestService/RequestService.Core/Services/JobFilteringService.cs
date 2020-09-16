@@ -20,16 +20,11 @@ namespace RequestService.Core.Services
             _jobService = jobService;
         }
 
-        public async Task<List<JobSummary>> FilterJobSummaries(
-            List<JobSummary> jobs, 
-            int? UserID,
-            List<SupportActivities> supportActivities, 
-            string postcode, 
+        public async Task<List<JobHeader>> FilterJobSummaries(
+            List<JobHeader> jobs,            
+            string postcode,
             double? distanceInMiles, 
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles,
-            int? referringGroupID,
-            List<int> groups,
-            List<JobStatuses> statuses,
+            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles,            
             CancellationToken cancellationToken)
         {
             bool applyDistanceFilter = false;
@@ -40,40 +35,10 @@ namespace RequestService.Core.Services
                 applyDistanceFilter = true;
             }
 
-            if (jobs == null)
-            {
-                // For now, return no jobs to avoid breaking things downstream
-                return new List<JobSummary>();
-            }
-
-            if(UserID.HasValue)
-            {
-                jobs = jobs.Where(w => w.VolunteerUserID == UserID.Value)
-                    .ToList();
-            }
-
-            jobs = jobs.Where(w => supportActivities == null || supportActivities.Contains(w.SupportActivity))
-                       .ToList();
-
             if(applyDistanceFilter)
             {
                 jobs = jobs.Where(w => w.DistanceInMiles <= GetSupportDistanceForActivity(w.SupportActivity, distanceInMiles, activitySpecificSupportDistancesInMiles))
                         .ToList();
-            }
-
-            if(referringGroupID.HasValue)
-            {
-                jobs = jobs.Where(w => w.ReferringGroupID == referringGroupID.Value).ToList();
-            }
-
-            if (groups!=null)
-            {
-                jobs = jobs.Where(t2 => groups.Any(t1 => t2.Groups.Contains(t1))).ToList();
-            }
-
-            if (statuses != null)
-            {
-                jobs = jobs.Where(t2 => statuses.Contains(t2.JobStatus)).ToList();
             }
 
             return jobs;

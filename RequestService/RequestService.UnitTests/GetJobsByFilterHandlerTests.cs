@@ -23,10 +23,10 @@ namespace RequestService.UnitTests
         private GetJobsByFilterHandler _classUnderTest;
         private GetJobsByFilterRequest _request;
         private GetJobsByFilterResponse _response;
-        private List<JobSummary> _jobSummaries;
+        private List<JobHeader> _jobHeaders;
         private MockRepository _mockRepository;
 
-       [SetUp]
+        [SetUp]
         public void Setup()
         {
             _mockRepository = new MockRepository(MockBehavior.Loose);
@@ -34,32 +34,32 @@ namespace RequestService.UnitTests
             SetUpJobFilteringService();
             SetupAddressService();
 
-            _jobSummaries = new List<JobSummary>();
-            _jobSummaries.Add(new JobSummary
+            _jobHeaders = new List<JobHeader>();
+            _jobHeaders.Add(new JobHeader
             {
                 JobID = 1,
                 DistanceInMiles = 25d,
                 SupportActivity = SupportActivities.CheckingIn
             });
-            _jobSummaries.Add(new JobSummary
+            _jobHeaders.Add(new JobHeader
             {
                 JobID = 1,
                 DistanceInMiles = 15d,
                 SupportActivity = SupportActivities.CollectingPrescriptions
             });
-            _jobSummaries.Add(new JobSummary
+            _jobHeaders.Add(new JobHeader
             {
                 JobID = 1,
                 DistanceInMiles = 20d,
                 SupportActivity = SupportActivities.FaceMask
             });
-            _jobSummaries.Add(new JobSummary
+            _jobHeaders.Add(new JobHeader
             {
                 JobID = 1,
                 DistanceInMiles = 0d,
                 SupportActivity = SupportActivities.Errands
             });
-            _jobSummaries.Add(new JobSummary
+            _jobHeaders.Add(new JobHeader
             {
                 JobID = 1,
                 DistanceInMiles = 30d,
@@ -68,7 +68,7 @@ namespace RequestService.UnitTests
 
             _response = new GetJobsByFilterResponse()
             {
-                JobSummaries = _jobSummaries
+                JobHeaders = _jobHeaders
             };
 
             _classUnderTest = new GetJobsByFilterHandler(_repository.Object, _addressService.Object, _jobFilteringService.Object);
@@ -77,15 +77,15 @@ namespace RequestService.UnitTests
         private void SetUpJobFilteringService()
         {
             _jobFilteringService = _mockRepository.Create<IJobFilteringService>();
-            _jobFilteringService.Setup(x => x.FilterJobSummaries(It.IsAny<List<JobSummary>>(), It.IsAny<int?>(), It.IsAny<List<SupportActivities>>(), It.IsAny<string>(), It.IsAny<double?>(), It.IsAny<Dictionary<SupportActivities,double?>>(), null,null,null,It.IsAny<CancellationToken>()))
-                .ReturnsAsync(()=>_jobSummaries);
+            //_jobFilteringService.Setup(x => x.FilterJobSummaries(It.IsAny<List<JobSummary>>(), It.IsAny<int?>(), It.IsAny<List<SupportActivities>>(), It.IsAny<string>(), It.IsAny<double?>(), It.IsAny<Dictionary<SupportActivities, double?>>(), null, null, null, It.IsAny<CancellationToken>()))
+            //    .ReturnsAsync(() => _jobHeaders);
         }
 
         private void SetupRepository()
         {
             _repository = _mockRepository.Create<IRepository>();
-            _repository.Setup(x => x.GetOpenJobsSummaries())
-                .Returns(()=>_jobSummaries);
+            //_repository.Setup(x => x.GetOpenJobsSummaries())
+            //    .Returns(() => _jobHeaders);
         }
 
         private void SetupAddressService()

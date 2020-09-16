@@ -35,7 +35,7 @@ namespace RequestService.Core.Services
             {
                 return null;
             }
-              
+
             volunteerPostCode = PostcodeFormatter.FormatPostcode(volunteerPostCode);
 
             List<string> distinctPostCodes = jobSummaries.Select(d => d.PostCode).Distinct().Select(x => PostcodeFormatter.FormatPostcode(x)).ToList();
@@ -67,6 +67,46 @@ namespace RequestService.Core.Services
                 }
             }
             return jobSummaries;
+        }
+
+        public async Task<List<JobHeader>> AttachedDistanceToJobSummaries(string volunteerPostCode, List<JobHeader> jobHeaders, CancellationToken cancellationToken)
+        {
+            if (jobHeaders.Count == 0)
+            {
+                return null;
+            }
+              
+            volunteerPostCode = PostcodeFormatter.FormatPostcode(volunteerPostCode);
+
+            List<string> distinctPostCodes = jobHeaders.Select(d => d.PostCode).Distinct().Select(x => PostcodeFormatter.FormatPostcode(x)).ToList();
+
+            if (!distinctPostCodes.Contains(volunteerPostCode))
+            {
+                distinctPostCodes.Add(volunteerPostCode);
+            }
+
+            var postcodeCoordinatesResponse = await _repository.GetLatitudeAndLongitudes(distinctPostCodes, cancellationToken);
+
+            if (postcodeCoordinatesResponse == null)
+            {
+                return null;
+            }
+
+            var volunteerPostcodeCoordinates = postcodeCoordinatesResponse.Where(w => w.Postcode == volunteerPostCode).FirstOrDefault();
+            if (volunteerPostcodeCoordinates == null)
+            {
+                return null;
+            }
+
+            foreach (JobHeader jobHeader in jobHeaders)
+            {
+                var jobPostcodeCoordinates = postcodeCoordinatesResponse.Where(w => w.Postcode == jobHeader.PostCode).FirstOrDefault();
+                if (jobPostcodeCoordinates != null)
+                {
+                    jobHeader.DistanceInMiles = _distanceCalculator.GetDistanceInMiles(volunteerPostcodeCoordinates.Latitude, volunteerPostcodeCoordinates.Longitude, jobPostcodeCoordinates.Latitude, jobPostcodeCoordinates.Longitude);
+                }
+            }
+            return jobHeaders;
         }
 
         public async Task<bool> HasPermissionToChangeStatusAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)

@@ -16,7 +16,7 @@ namespace RequestService.UnitTests
     class JobFilteringServiceTests
     {
         private Mock<IJobService> _jobService;
-        private List<JobSummary> _jobSummaries;
+        private List<JobHeader> _jobHeaders;
         private MockRepository _mockRepository;
         private JobFilteringService _classUnderTest;
 
@@ -27,57 +27,44 @@ namespace RequestService.UnitTests
 
             SetUpJobService();
 
-            _jobSummaries = new List<JobSummary>();
-            _jobSummaries.Add(new JobSummary()
+            _jobHeaders = new List<JobHeader>();
+            _jobHeaders.Add(new JobHeader()
             {
-                VolunteerUserID = 1,
                 DistanceInMiles = 2d,
                 SupportActivity = SupportActivities.CheckingIn,
-                Groups = new List<int>()
-                { 1,2},
                 JobStatus = JobStatuses.Open,
                 ReferringGroupID = 3
             });
-            _jobSummaries.Add(new JobSummary()
+            _jobHeaders.Add(new JobHeader()
             {
-                VolunteerUserID = 2,
                 DistanceInMiles = 4d,
                 SupportActivity = SupportActivities.Shopping,
-                Groups = new List<int>()
-                { 2,3},
                 JobStatus = JobStatuses.InProgress
             });
-            _jobSummaries.Add(new JobSummary()
+            _jobHeaders.Add(new JobHeader()
             {
-                VolunteerUserID = 3,
                 DistanceInMiles = 6d,
                 SupportActivity = SupportActivities.HomeworkSupport,
-                Groups = new List<int>()
             });
-            _jobSummaries.Add(new JobSummary()
+            _jobHeaders.Add(new JobHeader()
             {
-                VolunteerUserID = 4,
                 DistanceInMiles = 8d,
                 SupportActivity = SupportActivities.MealPreparation,
-                Groups = new List<int>()
             });
-            _jobSummaries.Add(new JobSummary()
+            _jobHeaders.Add(new JobHeader()
             {
                 DistanceInMiles = 10d,
                 SupportActivity = SupportActivities.FaceMask,
-                Groups = new List<int>()
             });
-            _jobSummaries.Add(new JobSummary()
+            _jobHeaders.Add(new JobHeader()
             {
                 DistanceInMiles = 100d,
                 SupportActivity = SupportActivities.FaceMask,
-                Groups = new List<int>()
             });
-            _jobSummaries.Add(new JobSummary()
+            _jobHeaders.Add(new JobHeader()
             {
                 DistanceInMiles = 100d,
                 SupportActivity = SupportActivities.MealPreparation,
-                Groups = new List<int>()
             });
 
             _classUnderTest = new JobFilteringService(_jobService.Object);
@@ -86,188 +73,69 @@ namespace RequestService.UnitTests
         private void SetUpJobService()
         {
             _jobService = _mockRepository.Create<IJobService>();
-            _jobService.Setup(x => x.AttachedDistanceToJobSummaries(It.IsAny<string>(), It.IsAny<List<JobSummary>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((string volunteerPostCode, List<JobSummary> jobSummaries, CancellationToken cancellationToken) => jobSummaries);
+            _jobService.Setup(x => x.AttachedDistanceToJobSummaries(It.IsAny<string>(), It.IsAny<List<JobHeader>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((string volunteerPostCode, List<JobHeader> jobSummaries, CancellationToken cancellationToken) => _jobHeaders);
         }
 
         [Test]
         public async Task WhenPassesInGoodRequest_ReturnsNoJobsDueToDistance()
         {
-            List<SupportActivities> supportActivities = null;
             string postcode = "POSTCODE";
             double? distanceInMiles = 0d;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, supportActivities, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles,null,null,null, CancellationToken.None);;
+            var response = await _classUnderTest.FilterJobSummaries(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None); ;
             Assert.AreEqual(0, response.Count);
         }
 
         [Test]
         public async Task WhenPassesInGoodRequest_ReturnsJobs()
         {
-            List<SupportActivities> supportActivities = null;
             string postcode = "POSTCODE";
             double? distanceInMiles = 20d;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, supportActivities, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles,null,null,null, CancellationToken.None);
-            Assert.AreEqual(_jobSummaries.Count(w => w.DistanceInMiles <= distanceInMiles), response.Count);
+            var response = await _classUnderTest.FilterJobSummaries(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
+            Assert.AreEqual(_jobHeaders.Count(w => w.DistanceInMiles <= distanceInMiles), response.Count);
         }
 
         [Test]
         public async Task WhenPassesInGoodRequestWithNullDistance_ReturnsJobs()
         {
-            List<SupportActivities> supportActivities = null;
             string postcode = "";
             double? distanceInMiles = null;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, supportActivities, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles,null,null,null, CancellationToken.None);
-            Assert.AreEqual(_jobSummaries.Count(), response.Count);
+            var response = await _classUnderTest.FilterJobSummaries(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
+            Assert.AreEqual(_jobHeaders.Count(), response.Count);
         }
 
         [Test]
         public async Task WhenPassesInGoodRequestWithActivitySpecificSupportDistance_ReturnsJobs()
         {
-            List<SupportActivities> supportActivities = null;
             string postcode = "POSTCODE";
             double? distanceInMiles = null;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = new Dictionary<SupportActivities, double?>() { { SupportActivities.Errands, 10d } };
 
-            _jobSummaries.Add(new JobSummary() { DistanceInMiles = 8d, SupportActivity = SupportActivities.Errands });
-            _jobSummaries.Add(new JobSummary() { DistanceInMiles = 12d, SupportActivity = SupportActivities.Errands });
+            _jobHeaders.Add(new JobHeader() { DistanceInMiles = 8d, SupportActivity = SupportActivities.Errands });
+            _jobHeaders.Add(new JobHeader() { DistanceInMiles = 12d, SupportActivity = SupportActivities.Errands });
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, supportActivities, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles,null,null,null, CancellationToken.None);
-            Assert.AreEqual(_jobSummaries.Where(w => w.SupportActivity != SupportActivities.Errands || w.DistanceInMiles < 10d).Count(), response.Count);
+            var response = await _classUnderTest.FilterJobSummaries(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
+            Assert.AreEqual(_jobHeaders.Where(w => w.SupportActivity != SupportActivities.Errands || w.DistanceInMiles < 10d).Count(), response.Count);
         }
 
         [Test]
         public async Task WhenPassesInGoodRequestWithNullActivitySpecificSupportDistance_ReturnsJobs()
         {
-            List<SupportActivities> supportActivities = null;
             string postcode = "POSTCODE";
             double? distanceInMiles = 0d;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = new Dictionary<SupportActivities, double?>() { { SupportActivities.Errands, 100d } };
 
-            _jobSummaries.Add(new JobSummary() { DistanceInMiles = 8d, SupportActivity = SupportActivities.Errands });
-            _jobSummaries.Add(new JobSummary() { DistanceInMiles = 12d, SupportActivity = SupportActivities.Errands });
+            _jobHeaders.Add(new JobHeader() { DistanceInMiles = 8d, SupportActivity = SupportActivities.Errands });
+            _jobHeaders.Add(new JobHeader() { DistanceInMiles = 12d, SupportActivity = SupportActivities.Errands });
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, supportActivities, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, null,null,null, CancellationToken.None);
-            Assert.AreEqual(_jobSummaries.Where(w => w.SupportActivity == SupportActivities.Errands || w.DistanceInMiles == 0d).Count(), response.Count);
-        }
-
-        [Test]
-        public async Task WhenPassesInGoodRequestWithSupportActivityFilter_ReturnsJobs()
-        {
-            List<SupportActivities> supportActivities = new List<SupportActivities>() { SupportActivities.Errands, SupportActivities.DogWalking };
-            string postcode = "POSTCODE";
-            double? distanceInMiles = null;
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
-
-            _jobSummaries.Add(new JobSummary() { DistanceInMiles = 8d, SupportActivity = SupportActivities.Errands });
-            _jobSummaries.Add(new JobSummary() { DistanceInMiles = 12d, SupportActivity = SupportActivities.Errands });
-            _jobSummaries.Add(new JobSummary() { DistanceInMiles = 12d, SupportActivity = SupportActivities.DogWalking });
-
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, supportActivities, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles,null,null,null,CancellationToken.None);
-            Assert.AreEqual(_jobSummaries.Count(w => w.SupportActivity == SupportActivities.Errands || w.SupportActivity == SupportActivities.DogWalking), response.Count);
-        }
-
-        [Test]
-        public async Task WhenPassesInGoodRequestWithEmptyJobStatusFilter_ReturnsNoJobs()
-        {
-            List<JobStatuses> statuses = new List<JobStatuses>();
-            string postcode = "";
-            double? distanceInMiles = null;
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
-
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, null, null, statuses, CancellationToken.None);
-            Assert.AreEqual(0, response.Count);
-        }
-
-        [Test]
-        [TestCase(null)]
-        [TestCase(new[] { 1 })]
-        [TestCase(new int[0])]
-        public async Task WhenPassesInGoodRequestWithGroupFilter_ReturnsJobs(int[] pGroups)
-        {
-            List<int> groups = null;
-
-            if (pGroups != null)
-                groups = pGroups.ToList();
-
-            string postcode = "POSTCODE";
-            double? distanceInMiles = null;
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
-            int count = _jobSummaries.Count;
-
-            if(groups!=null)
-            {
-                count = _jobSummaries.Count(t2 => groups.Any(t1 => t2.Groups.Contains(t1)));
-            }
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, null, groups, null, CancellationToken.None);
-
-            Assert.AreEqual(count, response.Count);
-        }
-
-        [Test]
-        [TestCase(null)]
-        [TestCase(new[] { JobStatuses.InProgress, JobStatuses.Open })]
-        [TestCase(new JobStatuses[0])]
-        public async Task WhenPassesInGoodRequestWithJobStatusFilter_ReturnsJobs(JobStatuses[] jobStatuses)
-        {
-            List<JobStatuses> statuses = null;
-            
-            if(jobStatuses!=null)
-               statuses  = jobStatuses.ToList();
-            
-            string postcode = "POSTCODE";
-            double? distanceInMiles = null;
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
-            int count = _jobSummaries.Count;
-
-            if (statuses!=null)
-                count = _jobSummaries.Count(t2 => statuses.Contains(t2.JobStatus));
-     
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, null, null, statuses, CancellationToken.None);
-
-            Assert.AreEqual(count, response.Count);
-        }
-
-        [Test]
-        [TestCase(3)]
-        [TestCase(null)]
-        public async Task TestRefferingGroupFilter_ReturnsCorrectJobs(int? pReferringGroupId)
-        {
-            int? referringGroupId = pReferringGroupId;
-            string postcode = "POSTCODE";
-            double? distanceInMiles = null;
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
-
-            int count = _jobSummaries.Count;
-
-            if (pReferringGroupId.HasValue)
-                count = _jobSummaries.Count(t2 => t2.ReferringGroupID == referringGroupId);
-
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, null, null, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, referringGroupId, null, null, CancellationToken.None);
-
-            Assert.AreEqual(count, response.Count);
-        }
-
-        [Test]
-        [TestCase(1)]
-        [TestCase(null)]
-        public async Task TestUserIDFilter_ReturnsCorrectJobs(int? userId)
-        {
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
-
-            int count = _jobSummaries.Count;
-
-            if (userId.HasValue)
-                count = _jobSummaries.Count(t2 => t2.VolunteerUserID == userId.Value);
-
-            var response = await _classUnderTest.FilterJobSummaries(_jobSummaries, userId, null, null, null, activitySpecificSupportDistancesInMiles, null, null, null, CancellationToken.None);
-
-            Assert.AreEqual(count, response.Count);
+            var response = await _classUnderTest.FilterJobSummaries(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
+            Assert.AreEqual(_jobHeaders.Where(w => w.SupportActivity == SupportActivities.Errands || w.DistanceInMiles == 0d).Count(), response.Count);
         }
     }
 }

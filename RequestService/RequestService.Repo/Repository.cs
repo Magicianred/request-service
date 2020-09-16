@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using HelpMyStreet.Contracts.ReportService.Response;
+﻿using HelpMyStreet.Contracts.ReportService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Enums;
+using HelpMyStreet.Utils.Extensions;
 using HelpMyStreet.Utils.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -12,7 +12,6 @@ using RequestService.Repo.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using SupportActivities = RequestService.Repo.EntityFramework.Entities.SupportActivities;
@@ -419,17 +418,90 @@ namespace RequestService.Repo
             return GetJobSummaries(jobSummaries);
         }
 
-        public List<JobSummary> GetJobSummaries()
+        private List<byte> ConvertSupportActivities(List<HelpMyStreet.Utils.Enums.SupportActivities> supportActivities)
         {
-            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
-                                    .Include(i => i.RequestJobStatus)
-                                    .Include(i => i.JobAvailableToGroup)
-                                    .Include(i => i.NewRequest)
-                                    .Include(i => i.JobQuestions)
-                                    .ThenInclude(rq => rq.Question)
-                                    .ToList();
-            return GetJobSummaries(jobSummaries);
+            List<byte> activities = new List<byte>();
 
+            foreach (HelpMyStreet.Utils.Enums.SupportActivities sa in supportActivities)
+            {
+                activities.Add((byte)sa);
+            }
+            return activities;
+        }
+
+        private List<byte> ConvertJobStatuses(List<JobStatuses> jobStatuses)
+        {
+            List<byte> statuses = new List<byte>();
+
+            foreach (JobStatuses sa in jobStatuses)
+            {
+                statuses.Add((byte)sa);
+            }
+            return statuses;
+        }
+
+        public List<JobHeader> GetJobHeaders(GetJobsByFilterRequest request)
+        {
+            var jobHeaders = _context.Job
+                                    .Include(i => i.RequestJobStatus)
+                                    .If(request.Groups!=null, q => q.Include(e => e.JobAvailableToGroup))                                     
+                                    .Include(i => i.NewRequest);
+
+            IQueryable<EntityFramework.Entities.Job> filtered = jobHeaders;
+
+            if (request.UserID.HasValue)
+            {
+                filtered = jobHeaders.Where(w => w.VolunteerUserId == request.UserID.Value);
+            }
+
+            if (request.SupportActivities?.SupportActivities.Count > 0)
+            {
+                filtered = filtered.Where(w => ConvertSupportActivities(request.SupportActivities.SupportActivities).Contains(w.SupportActivityId));
+            }
+
+            if (request.ReferringGroupID.HasValue)
+            {
+                filtered = filtered.Where(w => w.NewRequest.ReferringGroupId == request.ReferringGroupID.Value);
+            }
+
+            if (request.Groups != null)
+            {
+                filtered = filtered.Where(t2 => request.Groups.Groups.Any(t1 => t2.JobAvailableToGroup.Select(x => x.GroupId).Contains(t1)));
+            }
+
+            if (request.JobStatuses != null)
+            {
+                filtered = filtered.Where(t2 => ConvertJobStatuses(request.JobStatuses.JobStatuses).Contains(t2.JobStatusId.Value));
+            }
+
+            return GetJobHeaders(filtered);
+        }
+
+        public List<JobHeader> GetJobHeaders(IQueryable<EntityFramework.Entities.Job> jobs)
+        {
+            List<JobHeader> response = new List<JobHeader>();
+            foreach (EntityFramework.Entities.Job j in jobs)
+            {
+                response.Add(MapEFJobToJobHeader(j));
+            }
+            return response;
+        }
+
+        private JobHeader MapEFJobToJobHeader(EntityFramework.Entities.Job job)
+        {
+            return new JobHeader()
+            {
+                IsHealthCritical = job.IsHealthCritical,
+                DueDate = job.DueDate,
+                JobID = job.Id,
+                JobStatus = (JobStatuses)job.JobStatusId,
+                SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)job.SupportActivityId,
+                PostCode = job.NewRequest.PostCode,
+                ReferringGroupID = job.NewRequest.ReferringGroupId,
+                DateStatusLastChanged = job.RequestJobStatus.Max(x => x.DateCreated),
+                DateRequested = job.NewRequest.DateRequested,
+                Archive = job.NewRequest.Archive
+            };
         }
 
         private JobSummary MapEFJobToSummary(EntityFramework.Entities.Job job)
