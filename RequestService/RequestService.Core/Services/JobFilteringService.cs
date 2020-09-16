@@ -35,7 +35,13 @@ namespace RequestService.Core.Services
                 applyDistanceFilter = true;
             }
 
-            if(applyDistanceFilter)
+            if (jobs == null)
+            {
+                // For now, return no jobs to avoid breaking things downstream
+                return new List<JobHeader>();
+            }
+
+            if (applyDistanceFilter)
             {
                 jobs = jobs.Where(w => w.DistanceInMiles <= GetSupportDistanceForActivity(w.SupportActivity, distanceInMiles, activitySpecificSupportDistancesInMiles))
                         .ToList();
