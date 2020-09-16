@@ -10,7 +10,7 @@ namespace RequestService.Core.Services
 {
     public interface IJobFilteringService
     {
-        Task<List<JobHeader>> FilterJobSummaries(
+        Task<List<JobHeader>> FilterJobHeaders(
             List<JobHeader> jobs,
             string postcode, 
             double? distanceInMiles, 

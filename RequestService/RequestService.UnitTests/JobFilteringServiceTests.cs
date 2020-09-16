@@ -73,7 +73,7 @@ namespace RequestService.UnitTests
         private void SetUpJobService()
         {
             _jobService = _mockRepository.Create<IJobService>();
-            _jobService.Setup(x => x.AttachedDistanceToJobSummaries(It.IsAny<string>(), It.IsAny<List<JobHeader>>(), It.IsAny<CancellationToken>()))
+            _jobService.Setup(x => x.AttachedDistanceToJobHeaders(It.IsAny<string>(), It.IsAny<List<JobHeader>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((string volunteerPostCode, List<JobHeader> jobSummaries, CancellationToken cancellationToken) => _jobHeaders);
         }
 
@@ -84,7 +84,7 @@ namespace RequestService.UnitTests
             double? distanceInMiles = 0d;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None); ;
+            var response = await _classUnderTest.FilterJobHeaders(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None); ;
             Assert.AreEqual(0, response.Count);
         }
 
@@ -95,7 +95,7 @@ namespace RequestService.UnitTests
             double? distanceInMiles = 20d;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
+            var response = await _classUnderTest.FilterJobHeaders(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
             Assert.AreEqual(_jobHeaders.Count(w => w.DistanceInMiles <= distanceInMiles), response.Count);
         }
 
@@ -106,7 +106,7 @@ namespace RequestService.UnitTests
             double? distanceInMiles = null;
             Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles = null;
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
+            var response = await _classUnderTest.FilterJobHeaders(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
             Assert.AreEqual(_jobHeaders.Count(), response.Count);
         }
 
@@ -120,7 +120,7 @@ namespace RequestService.UnitTests
             _jobHeaders.Add(new JobHeader() { DistanceInMiles = 8d, SupportActivity = SupportActivities.Errands });
             _jobHeaders.Add(new JobHeader() { DistanceInMiles = 12d, SupportActivity = SupportActivities.Errands });
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
+            var response = await _classUnderTest.FilterJobHeaders(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
             Assert.AreEqual(_jobHeaders.Where(w => w.SupportActivity != SupportActivities.Errands || w.DistanceInMiles < 10d).Count(), response.Count);
         }
 
@@ -134,7 +134,7 @@ namespace RequestService.UnitTests
             _jobHeaders.Add(new JobHeader() { DistanceInMiles = 8d, SupportActivity = SupportActivities.Errands });
             _jobHeaders.Add(new JobHeader() { DistanceInMiles = 12d, SupportActivity = SupportActivities.Errands });
 
-            var response = await _classUnderTest.FilterJobSummaries(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
+            var response = await _classUnderTest.FilterJobHeaders(_jobHeaders, postcode, distanceInMiles, activitySpecificSupportDistancesInMiles, CancellationToken.None);
             Assert.AreEqual(_jobHeaders.Where(w => w.SupportActivity == SupportActivities.Errands || w.DistanceInMiles == 0d).Count(), response.Count);
         }
     }

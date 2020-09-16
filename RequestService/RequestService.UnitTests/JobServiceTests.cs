@@ -148,7 +148,7 @@ namespace RequestService.UnitTests
                 JobID = 1,
                 PostCode = "PostCode"
             });
-            var response = await _classUnderTest.AttachedDistanceToJobSummaries(postCode, jobHeaders, CancellationToken.None);
+            var response = await _classUnderTest.AttachedDistanceToJobHeaders(postCode, jobHeaders, CancellationToken.None);
             _mockDistanceCalculator.Verify(v => v.GetDistanceInMiles(It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>()), Times.Never);
         }
 

@@ -49,7 +49,7 @@ namespace RequestService.Handlers
             if (jobHeaders.Count == 0)
                 return result;
 
-            jobHeaders = await _jobFilteringService.FilterJobSummaries(
+            jobHeaders = await _jobFilteringService.FilterJobHeaders(
                 jobHeaders,
                 request.Postcode, 
                 request.DistanceInMiles, 

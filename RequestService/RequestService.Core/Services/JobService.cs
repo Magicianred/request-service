@@ -69,7 +69,7 @@ namespace RequestService.Core.Services
             return jobSummaries;
         }
 
-        public async Task<List<JobHeader>> AttachedDistanceToJobSummaries(string volunteerPostCode, List<JobHeader> jobHeaders, CancellationToken cancellationToken)
+        public async Task<List<JobHeader>> AttachedDistanceToJobHeaders(string volunteerPostCode, List<JobHeader> jobHeaders, CancellationToken cancellationToken)
         {
             if (jobHeaders.Count == 0)
             {

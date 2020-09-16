@@ -20,7 +20,7 @@ namespace RequestService.Core.Services
             _jobService = jobService;
         }
 
-        public async Task<List<JobHeader>> FilterJobSummaries(
+        public async Task<List<JobHeader>> FilterJobHeaders(
             List<JobHeader> jobs,            
             string postcode,
             double? distanceInMiles, 
@@ -31,7 +31,7 @@ namespace RequestService.Core.Services
             //if postcode has been pased calculate distance between volunteer postcode and jobs
             if (!string.IsNullOrEmpty(postcode))
             {
-                jobs = await _jobService.AttachedDistanceToJobSummaries(postcode, jobs, cancellationToken);
+                jobs = await _jobService.AttachedDistanceToJobHeaders(postcode, jobs, cancellationToken);
                 applyDistanceFilter = true;
             }
 
