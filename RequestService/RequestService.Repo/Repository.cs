@@ -1,18 +1,19 @@
-﻿using AutoMapper;
-using HelpMyStreet.Contracts.ReportService.Response;
+﻿using HelpMyStreet.Contracts.ReportService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Enums;
+using HelpMyStreet.Utils.Extensions;
 using HelpMyStreet.Utils.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
 using RequestService.Repo.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using SupportActivities = RequestService.Repo.EntityFramework.Entities.SupportActivities;
@@ -419,19 +420,116 @@ namespace RequestService.Repo
             return GetJobSummaries(jobSummaries);
         }
 
-        public List<JobSummary> GetJobSummaries()
+        private List<byte> ConvertSupportActivities(List<HelpMyStreet.Utils.Enums.SupportActivities> supportActivities)
         {
-            List<EntityFramework.Entities.Job> jobSummaries = _context.Job
-                                    .Include(i => i.RequestJobStatus)
-                                    .Include(i => i.JobAvailableToGroup)
-                                    .Include(i => i.NewRequest)
-                                    .Include(i => i.JobQuestions)
-                                    .ThenInclude(rq => rq.Question)
-                                    .ToList();
-            return GetJobSummaries(jobSummaries);
+            List<byte> activities = new List<byte>();
 
+            foreach (HelpMyStreet.Utils.Enums.SupportActivities sa in supportActivities)
+            {
+                activities.Add((byte)sa);
+            }
+            return activities;
         }
 
+        private List<byte> ConvertJobStatuses(List<JobStatuses> jobStatuses)
+        {
+            List<byte> statuses = new List<byte>();
+
+            foreach (JobStatuses sa in jobStatuses)
+            {
+                statuses.Add((byte)sa);
+            }
+            return statuses;
+        }
+
+        private SqlParameter GetParameter(string parameterName, int? Id)
+        {
+            return new SqlParameter()
+            {
+                ParameterName = parameterName,
+                SqlDbType = System.Data.SqlDbType.Int,
+                SqlValue = Id ?? 0
+            };
+        }
+
+        private SqlParameter GetSupportActivitiesAsSqlParameter(List<HelpMyStreet.Utils.Enums.SupportActivities> supportActivities)
+        {
+            string sqlValue = string.Empty;
+            if(supportActivities?.Count>0)
+            {
+                sqlValue = string.Join(",", supportActivities.Cast<int>().ToArray());
+            }
+            return new SqlParameter()
+            {
+                ParameterName = "@SupportActivities",
+                SqlDbType = System.Data.SqlDbType.VarChar,
+                SqlValue = sqlValue
+            };
+        }
+
+        private SqlParameter GetJobStatusesAsSqlParameter(List<JobStatuses> jobStatuses)
+        {
+            string sqlValue = string.Empty;
+            if (jobStatuses?.Count > 0)
+            {
+                sqlValue = string.Join(",", jobStatuses.Cast<int>().ToArray());
+            }
+            return new SqlParameter()
+            {
+                ParameterName = "@JobStatuses",
+                SqlDbType = System.Data.SqlDbType.VarChar,
+                SqlValue = sqlValue
+            };
+        }
+
+        private SqlParameter GetGroupsAsSqlParameter(List<int> groups)
+        {
+            string sqlValue = string.Empty;
+            if (groups?.Count > 0)
+            {
+                sqlValue = string.Join(",", groups);
+            }
+
+            return new SqlParameter()
+            {
+                ParameterName = "@Groups",
+                SqlDbType = System.Data.SqlDbType.VarChar,
+                SqlValue = sqlValue
+            };
+        }
+
+        public List<JobHeader> GetJobHeaders(GetJobsByFilterRequest request)
+        {
+            SqlParameter[] parameters = new SqlParameter[5];
+            parameters[0] = GetParameter("@UserID", request.UserID);
+            parameters[1] = GetSupportActivitiesAsSqlParameter(request.SupportActivities?.SupportActivities);
+            parameters[2] = GetParameter("@RefferingGroupID", request.ReferringGroupID);
+            parameters[3] = GetJobStatusesAsSqlParameter(request.JobStatuses?.JobStatuses);
+            parameters[4] = GetGroupsAsSqlParameter(request.Groups?.Groups);
+            
+            IQueryable<QueryJobHeader> jobHeaders = _context.JobHeader
+                                .FromSql("EXECUTE [Request].[GetJobsByFilter] @UserID=@UserID,@SupportActivities=@SupportActivities,@RefferingGroupID=@RefferingGroupID,@JobStatuses=@JobStatuses,@Groups=@Groups", parameters);
+
+            List<JobHeader> response = new List<JobHeader>();
+            foreach (QueryJobHeader j in jobHeaders)
+            {
+                response.Add(new JobHeader()
+                {
+                    JobID = j.JobID,
+                    Archive = j.Archive,
+                    DateRequested = j.DateRequested,
+                    DateStatusLastChanged = j.DateStatusLastChanged,
+                    DistanceInMiles = j.DistanceInMiles,
+                    DueDate = j.DueDate,
+                    IsHealthCritical = j.IsHealthCritical,
+                    JobStatus = (JobStatuses) j.JobStatusID,
+                    PostCode = j.PostCode,
+                    ReferringGroupID = j.ReferringGroupID,
+                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities) j.SupportActivityID
+                });
+            }
+            return response;                      
+        }
         private JobSummary MapEFJobToSummary(EntityFramework.Entities.Job job)
         {
             return new JobSummary()

@@ -21,7 +21,6 @@ namespace RequestService.Core.Interfaces.Repositories
         GetJobDetailsResponse GetJobDetails(int jobID);
         GetJobSummaryResponse GetJobSummary(int jobID);
         List<StatusHistory> GetJobStatusHistory(int jobID);
-        List<JobSummary> GetJobSummaries();
         List<JobSummary> GetOpenJobsSummaries();
         List<JobSummary> GetJobsInProgressSummaries();
         List<JobSummary> GetJobsAllocatedToUser(int volunteerUserID);
@@ -40,7 +39,7 @@ namespace RequestService.Core.Interfaces.Repositories
         Task<List<LatitudeAndLongitudeDTO>> GetLatitudeAndLongitudes(List<string> postCodes, CancellationToken cancellationToken);
         Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<SupportActivities> activity, RequestHelpFormVariant requestHelpFormVariant, RequestHelpFormStage requestHelpFormStage, CancellationToken cancellationToken);
         List<JobSummary> GetJobsByStatusesSummaries(List<JobStatuses> jobStatuses);
-
+        List<JobHeader> GetJobHeaders(GetJobsByFilterRequest request);
         void ArchiveOldRequests(int daysSinceJobRequested, int daysSinceJobStatusChanged);
     }
 }
