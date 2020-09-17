@@ -50,6 +50,8 @@ namespace RequestService.Repo
         public virtual DbSet<EnumRequestFormStages> EnumRequestFormStages { get; set; }
         public virtual DbSet<EnumQuestions> EnumQuestions { get; set; }
 
+        public virtual DbQuery<EntityFramework.Entities.QueryJobHeader> JobHeader { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
         }

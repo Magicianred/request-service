@@ -5,12 +5,14 @@ using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Extensions;
 using HelpMyStreet.Utils.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
 using RequestService.Repo.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -440,70 +442,94 @@ namespace RequestService.Repo
             return statuses;
         }
 
-        public List<JobHeader> GetJobHeaders(GetJobsByFilterRequest request)
+        private SqlParameter GetParameter(string parameterName, int? Id)
         {
-            var jobHeaders = _context.Job
-                                    .Include(i => i.RequestJobStatus)
-                                    .If(request.Groups!=null, q => q.Include(e => e.JobAvailableToGroup))                                     
-                                    .Include(i => i.NewRequest);
-
-            IQueryable<EntityFramework.Entities.Job> filtered = jobHeaders;
-
-            if (request.UserID.HasValue)
+            return new SqlParameter()
             {
-                filtered = jobHeaders.Where(w => w.VolunteerUserId == request.UserID.Value);
-            }
-
-            if (request.SupportActivities?.SupportActivities.Count > 0)
-            {
-                filtered = filtered.Where(w => ConvertSupportActivities(request.SupportActivities.SupportActivities).Contains(w.SupportActivityId));
-            }
-
-            if (request.ReferringGroupID.HasValue)
-            {
-                filtered = filtered.Where(w => w.NewRequest.ReferringGroupId == request.ReferringGroupID.Value);
-            }
-
-            if (request.Groups != null)
-            {
-                filtered = filtered.Where(t2 => request.Groups.Groups.Any(t1 => t2.JobAvailableToGroup.Select(x => x.GroupId).Contains(t1)));
-            }
-
-            if (request.JobStatuses != null)
-            {
-                filtered = filtered.Where(t2 => ConvertJobStatuses(request.JobStatuses.JobStatuses).Contains(t2.JobStatusId.Value));
-            }
-
-            return GetJobHeaders(filtered);
-        }
-
-        public List<JobHeader> GetJobHeaders(IQueryable<EntityFramework.Entities.Job> jobs)
-        {
-            List<JobHeader> response = new List<JobHeader>();
-            foreach (EntityFramework.Entities.Job j in jobs)
-            {
-                response.Add(MapEFJobToJobHeader(j));
-            }
-            return response;
-        }
-
-        private JobHeader MapEFJobToJobHeader(EntityFramework.Entities.Job job)
-        {
-            return new JobHeader()
-            {
-                IsHealthCritical = job.IsHealthCritical,
-                DueDate = job.DueDate,
-                JobID = job.Id,
-                JobStatus = (JobStatuses)job.JobStatusId,
-                SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities)job.SupportActivityId,
-                PostCode = job.NewRequest.PostCode,
-                ReferringGroupID = job.NewRequest.ReferringGroupId,
-                DateStatusLastChanged = job.RequestJobStatus.Max(x => x.DateCreated),
-                DateRequested = job.NewRequest.DateRequested,
-                Archive = job.NewRequest.Archive
+                ParameterName = parameterName,
+                SqlDbType = System.Data.SqlDbType.Int,
+                SqlValue = Id ?? 0
             };
         }
 
+        private SqlParameter GetSupportActivitiesAsSqlParameter(List<HelpMyStreet.Utils.Enums.SupportActivities> supportActivities)
+        {
+            string sqlValue = string.Empty;
+            if(supportActivities?.Count>0)
+            {
+                sqlValue = string.Join(",", supportActivities.Cast<int>().ToArray());
+            }
+            return new SqlParameter()
+            {
+                ParameterName = "@SupportActivities",
+                SqlDbType = System.Data.SqlDbType.VarChar,
+                SqlValue = sqlValue
+            };
+        }
+
+        private SqlParameter GetJobStatusesAsSqlParameter(List<JobStatuses> jobStatuses)
+        {
+            string sqlValue = string.Empty;
+            if (jobStatuses?.Count > 0)
+            {
+                sqlValue = string.Join(",", jobStatuses.Cast<int>().ToArray());
+            }
+            return new SqlParameter()
+            {
+                ParameterName = "@JobStatuses",
+                SqlDbType = System.Data.SqlDbType.VarChar,
+                SqlValue = sqlValue
+            };
+        }
+
+        private SqlParameter GetGroupsAsSqlParameter(List<int> groups)
+        {
+            string sqlValue = string.Empty;
+            if (groups?.Count > 0)
+            {
+                sqlValue = string.Join(",", groups);
+            }
+
+            return new SqlParameter()
+            {
+                ParameterName = "@Groups",
+                SqlDbType = System.Data.SqlDbType.VarChar,
+                SqlValue = sqlValue
+            };
+        }
+
+        public List<JobHeader> GetJobHeaders(GetJobsByFilterRequest request)
+        {
+            SqlParameter[] parameters = new SqlParameter[5];
+            parameters[0] = GetParameter("@UserID", request.UserID);
+            parameters[1] = GetSupportActivitiesAsSqlParameter(request.SupportActivities?.SupportActivities);
+            parameters[2] = GetParameter("@RefferingGroupID", request.ReferringGroupID);
+            parameters[3] = GetJobStatusesAsSqlParameter(request.JobStatuses?.JobStatuses);
+            parameters[4] = GetGroupsAsSqlParameter(request.Groups?.Groups);
+            
+            IQueryable<QueryJobHeader> jobHeaders = _context.JobHeader
+                                .FromSql("EXECUTE [Request].[GetJobsByFilter] @UserID=@UserID,@SupportActivities=@SupportActivities,@RefferingGroupID=@RefferingGroupID,@JobStatuses=@JobStatuses,@Groups=@Groups", parameters);
+
+            List<JobHeader> response = new List<JobHeader>();
+            foreach (QueryJobHeader j in jobHeaders)
+            {
+                response.Add(new JobHeader()
+                {
+                    JobID = j.JobID,
+                    Archive = j.Archive,
+                    DateRequested = j.DateRequested,
+                    DateStatusLastChanged = j.DateStatusLastChanged,
+                    DistanceInMiles = j.DistanceInMiles,
+                    DueDate = j.DueDate,
+                    IsHealthCritical = j.IsHealthCritical,
+                    JobStatus = (JobStatuses) j.JobStatusID,
+                    PostCode = j.PostCode,
+                    ReferringGroupID = j.ReferringGroupID,
+                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities) j.SupportActivityID
+                });
+            }
+            return response;                      
+        }
         private JobSummary MapEFJobToSummary(EntityFramework.Entities.Job job)
         {
             return new JobSummary()
