@@ -4,6 +4,7 @@ namespace RequestService.Repo.EntityFramework.Entities
 {
     public class QueryJobHeader
     {
+        public int? VolunteerUserID { get; set; }
         public DateTime DateRequested { get; set; }
         public DateTime DateStatusLastChanged { get; set; }
         public int? ReferringGroupID { get; set; }
