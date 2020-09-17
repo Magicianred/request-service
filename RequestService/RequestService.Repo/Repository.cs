@@ -515,6 +515,7 @@ namespace RequestService.Repo
             {
                 response.Add(new JobHeader()
                 {
+                    VolunteerUserID = j.VolunteerUserID,
                     JobID = j.JobID,
                     Archive = j.Archive,
                     DateRequested = j.DateRequested,
