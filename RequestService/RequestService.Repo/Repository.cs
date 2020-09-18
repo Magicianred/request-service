@@ -718,14 +718,17 @@ namespace RequestService.Repo
 
             foreach(Request r in requests)
             {
-                foreach(EntityFramework.Entities.Job j in r.Job)
+                foreach (EntityFramework.Entities.Job j in r.Job)
                 {
-                    bool inactive = j.RequestJobStatus.Min(x => (DateTime.Now.Date - x.DateCreated.Date).TotalDays > daysSinceJobStatusChanged);
-
-                    if(inactive && (r.Archive ?? false) == false)
+                    if ((JobStatuses)j.JobStatusId.Value == JobStatuses.Done || (JobStatuses)j.JobStatusId.Value == JobStatuses.Cancelled)
                     {
-                        r.Archive = true;
-                        _context.Request.Update(r);
+                        bool inactive = j.RequestJobStatus.Min(x => (DateTime.Now.Date - x.DateCreated.Date).TotalDays > daysSinceJobStatusChanged);
+
+                        if (inactive && (r.Archive ?? false) == false)
+                        {
+                            r.Archive = true;
+                            _context.Request.Update(r);
+                        }
                     }
                 }
             }
