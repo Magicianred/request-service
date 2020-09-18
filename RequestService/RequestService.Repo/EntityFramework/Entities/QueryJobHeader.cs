@@ -16,5 +16,6 @@ namespace RequestService.Repo.EntityFramework.Entities
         public byte? JobStatusID { get; set; }
         public int JobID { get; set; }
         public bool? Archive { get; set; }
+        public string Reference { get; set; }
     }
 }

@@ -194,7 +194,8 @@ namespace RequestService.Repo
                             IsHealthCritical = job.HealthCritical,
                             SupportActivityId = (byte)job.SupportActivity,
                             DueDate = DateTime.Now.AddDays(job.DueDays),
-                            JobStatusId = (byte) JobStatuses.Open
+                            JobStatusId = (byte) JobStatuses.Open,
+                            Reference = job.Questions.Where(x => x.Id == (int)Questions.AgeUKReference).FirstOrDefault()?.Answer
                         };
                         _context.Job.Add(EFcoreJob);
                         await _context.SaveChangesAsync();
@@ -526,10 +527,11 @@ namespace RequestService.Repo
                     JobStatus = (JobStatuses) j.JobStatusID,
                     PostCode = j.PostCode,
                     ReferringGroupID = j.ReferringGroupID,
-                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities) j.SupportActivityID
+                    SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities) j.SupportActivityID,
+                    Reference = j.Reference
                 });
             }
-            return response;                      
+            return response;
         }
         private JobSummary MapEFJobToSummary(EntityFramework.Entities.Job job)
         {
