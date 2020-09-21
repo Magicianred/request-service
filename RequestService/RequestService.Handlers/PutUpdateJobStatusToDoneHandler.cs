@@ -34,8 +34,9 @@ namespace RequestService.Handlers
             if (hasPermission)
             {
                 var result = await _repository.UpdateJobStatusDoneAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+                response.Outcome = result;
 
-                if (result)
+                if (result == UpdateJobStatusOutcome.Success)
                 {
                     response.Outcome = UpdateJobStatusOutcome.Success;
                     await _communicationService.RequestCommunication(
@@ -46,14 +47,6 @@ namespace RequestService.Handlers
                     },
                     cancellationToken);
                 }
-                else
-                {
-                    response.Outcome = UpdateJobStatusOutcome.BadRequest;
-                }
-            }
-            else
-            {
-                response.Outcome = UpdateJobStatusOutcome.Unauthorized;
             }
             return response;
         }

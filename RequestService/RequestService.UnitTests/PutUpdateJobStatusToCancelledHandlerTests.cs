@@ -19,7 +19,7 @@ namespace RequestService.UnitTests
         private Mock<ICommunicationService> _communicationService;
         private PutUpdateJobStatusToCancelledHandler _classUnderTest;
         private PutUpdateJobStatusToCancelledRequest _request;
-        private bool _success;
+        private UpdateJobStatusOutcome _updateJobStatusOutcome;
         private bool _hasPermission = true;
 
         [SetUp]
@@ -45,7 +45,7 @@ namespace RequestService.UnitTests
                 It.IsAny<int>(), 
                 It.IsAny<int>(), 
                 It.IsAny<CancellationToken>()))
-                .ReturnsAsync(()=> _success);
+                .ReturnsAsync(()=> _updateJobStatusOutcome);
 
         }
 
@@ -58,7 +58,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenSuccessfullyChangingJobStatusToCancelled_ReturnsTrue()
         {
-            _success = true;
+            _updateJobStatusOutcome = UpdateJobStatusOutcome.Success;
             _request = new PutUpdateJobStatusToCancelledRequest
             {
                 CreatedByUserID = 1,
@@ -73,7 +73,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenUnSuccessfullyChangingJobStatusToCancelled_ReturnsFalse()
         {
-            _success = false;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.BadRequest;
             _request = new PutUpdateJobStatusToCancelledRequest
             {
                 CreatedByUserID = 1,
@@ -87,7 +87,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenVolunteerDoesNotHavePermission_ReturnsUnauthorised()
         {
-            _success = false;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.Unauthorized;
             _hasPermission = false;
             _request = new PutUpdateJobStatusToCancelledRequest
             {
@@ -102,7 +102,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenJobStatusIsAlreadyCancelled_ReturnsBadRequest()
         {
-            _success = false;
+            _updateJobStatusOutcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
             _hasPermission = true;
             _request = new PutUpdateJobStatusToCancelledRequest
             {
@@ -111,7 +111,7 @@ namespace RequestService.UnitTests
             };
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
             _repository.Verify(x => x.UpdateJobStatusCancelledAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
-            Assert.AreEqual(UpdateJobStatusOutcome.BadRequest, response.Outcome);
+            Assert.AreEqual(UpdateJobStatusOutcome.AlreadyInThisStatus, response.Outcome);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace RequestService.UnitTests
 
         private PutUpdateJobStatusToInProgressHandler _classUnderTest;
         private PutUpdateJobStatusToInProgressRequest _request;
-        private bool _success;
+        private UpdateJobStatusOutcome _updateJobStatusOutcome;
         private GetUserGroupsResponse _getUserGroupsReponse;
         private GetUserRolesResponse _getUserRolesResponse;
         private List<int> _getGroupsForJobResponse;
@@ -59,7 +59,7 @@ namespace RequestService.UnitTests
                 It.IsAny<int>(),
                 It.IsAny<int>(),
                 It.IsAny<CancellationToken>()))
-                .ReturnsAsync(()=> _success);
+                .ReturnsAsync(()=> _updateJobStatusOutcome);
 
             _repository.Setup(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(()=> _getGroupsForJobResponse);
@@ -173,7 +173,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenUserIsNotVerified_ReturnsBadRequest()
         {
-            _success = false;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.BadRequest;
             _request = new PutUpdateJobStatusToInProgressRequest
             {
                 CreatedByUserID = 1,
@@ -201,7 +201,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenjobGroupDoesNotContainsVolunteerGroups_ReturnsBadRequest()
         {
-            _success = false;
+            _updateJobStatusOutcome = UpdateJobStatusOutcome.BadRequest;
             _request = new PutUpdateJobStatusToInProgressRequest
             {
                 CreatedByUserID = 1,
@@ -247,7 +247,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenCreatedByUserIsDifferentToVolunteerUserIDAndNotTaskAdmin_ReturnsUnauthorized()
         {
-            _success = false;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.Unauthorized;
             _request = new PutUpdateJobStatusToInProgressRequest
             {
                 CreatedByUserID = 1,
@@ -300,7 +300,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenCreatedByUserIsDifferentToVolunteerUserIDAndTaskAdmin_ReturnsSuccess()
         {
-            _success = true;
+            _updateJobStatusOutcome = UpdateJobStatusOutcome.Success;
             _request = new PutUpdateJobStatusToInProgressRequest
             {
                 CreatedByUserID = 1,
@@ -358,7 +358,7 @@ namespace RequestService.UnitTests
         [TestCase(GroupRoles.UserAdmin)]
         public async Task WhenCreatedByUserIsSameAsVolunteerUserID_ReturnsSuccess(GroupRoles role)
         {
-            _success = true;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.Success;
             _request = new PutUpdateJobStatusToInProgressRequest
             {
                 CreatedByUserID = 1,

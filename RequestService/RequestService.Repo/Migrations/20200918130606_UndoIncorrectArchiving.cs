@@ -10,7 +10,7 @@ namespace RequestService.Repo.Migrations
                             update Request.Request Set Archive=null
                             from Request.Request r
                             inner join Request.Job j on r.ID = j.RequestId
-                            where Archive = 1 and j.StatusID in (1,2)
+                            where Archive = 1 and j.JobStatusID in (1,2)
                         ");
 
             //check if all jobs can be archived before archiving a request - TODO
