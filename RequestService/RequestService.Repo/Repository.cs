@@ -750,6 +750,12 @@ namespace RequestService.Repo
                     {
                         inactive = j.RequestJobStatus.Min(x => (DateTime.Now.Date - x.DateCreated.Date).TotalDays > daysSinceJobStatusChanged);
                     }
+                    else
+                    {
+                        //stop searching through all the jobs as at least one job is active. Therefore do not archive.
+                        inactive = false;
+                        break;
+                    }
                 }
                 if (inactive && (r.Archive ?? false) == false)
                 {
