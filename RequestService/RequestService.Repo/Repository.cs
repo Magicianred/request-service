@@ -12,6 +12,7 @@ using RequestService.Core.Interfaces.Repositories;
 using RequestService.Repo.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
@@ -741,23 +742,22 @@ namespace RequestService.Repo
                 && x.DateRequested < dtExpire)
                 .ToList();
 
-            foreach(Request r in requests)
+            foreach (Request r in requests)
             {
-                bool inactive = false;
+                int inActiveCount = 0;
+                
                 foreach (EntityFramework.Entities.Job j in r.Job)
                 {
                     if ((JobStatuses)j.JobStatusId.Value == JobStatuses.Done || (JobStatuses)j.JobStatusId.Value == JobStatuses.Cancelled)
                     {
-                        inactive = j.RequestJobStatus.Min(x => (DateTime.Now.Date - x.DateCreated.Date).TotalDays > daysSinceJobStatusChanged);
-                    }
-                    else
-                    {
-                        //stop searching through all the jobs as at least one job is active. Therefore do not archive.
-                        inactive = false;
-                        break;
+                        if (j.RequestJobStatus.Min(x => (DateTime.Now.Date - x.DateCreated.Date).TotalDays > daysSinceJobStatusChanged))
+                        {
+                            inActiveCount++;
+                        }
                     }
                 }
-                if (inactive && (r.Archive ?? false) == false)
+                
+                if (inActiveCount == r.Job.Count)
                 {
                     r.Archive = true;
                     _context.Request.Update(r);
