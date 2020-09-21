@@ -12,6 +12,7 @@ using RequestService.Core.Interfaces.Repositories;
 using RequestService.Repo.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
@@ -265,9 +266,9 @@ namespace RequestService.Repo
             
         }
 
-        public async Task<bool> UpdateJobStatusOpenAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
+        public async Task<UpdateJobStatusOutcome> UpdateJobStatusOpenAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
         {
-            bool response = false;
+            UpdateJobStatusOutcome response = UpdateJobStatusOutcome.BadRequest;
             byte openJobStatus = (byte)JobStatuses.Open;
             var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
             if (job != null)
@@ -280,40 +281,50 @@ namespace RequestService.Repo
                     int result = await _context.SaveChangesAsync(cancellationToken);
                     if (result == 2)
                     {
-                        response = true;
+                        response = UpdateJobStatusOutcome.Success;
                     }
+                }
+                else
+                {
+                    response = UpdateJobStatusOutcome.AlreadyInThisStatus;
                 }
             }
             return response;
         }
 
-        public async Task<bool> UpdateJobStatusCancelledAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
+        public async Task<UpdateJobStatusOutcome> UpdateJobStatusCancelledAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
         {
-            bool response = false;
-            byte openJobStatus = (byte)JobStatuses.Cancelled;
+            UpdateJobStatusOutcome response =  UpdateJobStatusOutcome.BadRequest;
+            byte cancelledJobStatus = (byte)JobStatuses.Cancelled;
             var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+
             if (job != null)
             {
-                if (job.JobStatusId != openJobStatus)
+                if (job.JobStatusId != cancelledJobStatus)
                 {
-                    job.JobStatusId = openJobStatus;
+                    job.JobStatusId = cancelledJobStatus;
                     job.VolunteerUserId = null;
-                    AddJobStatus(jobID, createdByUserID, null, openJobStatus);
+                    AddJobStatus(jobID, createdByUserID, null, cancelledJobStatus);
                     int result = await _context.SaveChangesAsync(cancellationToken);
                     if (result == 2)
                     {
-                        response = true;
+                        response =  UpdateJobStatusOutcome.Success;
                     }
+                }
+                else
+                {
+                    response = UpdateJobStatusOutcome.AlreadyInThisStatus;
                 }
             }
             return response;
         }
 
-        public async Task<bool> UpdateJobStatusInProgressAsync(int jobID, int createdByUserID, int volunteerUserID, CancellationToken cancellationToken)
+        public async Task<UpdateJobStatusOutcome> UpdateJobStatusInProgressAsync(int jobID, int createdByUserID, int volunteerUserID, CancellationToken cancellationToken)
         {
-            bool response = false;
+            UpdateJobStatusOutcome response = UpdateJobStatusOutcome.BadRequest;
             byte inProgressJobStatus = (byte)JobStatuses.InProgress;
             var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+
             if (job != null)
             {
                 if (job.JobStatusId != inProgressJobStatus)
@@ -324,16 +335,23 @@ namespace RequestService.Repo
                     int result = await _context.SaveChangesAsync(cancellationToken);
                     if (result == 2)
                     {
-                        response = true;
+                        response = UpdateJobStatusOutcome.Success;
+                    }
+                }
+                else
+                {
+                    if (job.VolunteerUserId == volunteerUserID)
+                    {
+                        response = UpdateJobStatusOutcome.AlreadyInThisStatus;
                     }
                 }
             }
             return response;
         }
 
-        public async Task<bool> UpdateJobStatusDoneAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
+        public async Task<UpdateJobStatusOutcome> UpdateJobStatusDoneAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
         {
-            bool response = false;
+            UpdateJobStatusOutcome response = UpdateJobStatusOutcome.BadRequest;
             byte doneJobStatus = (byte)JobStatuses.Done;
             var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
             if (job != null)
@@ -345,8 +363,16 @@ namespace RequestService.Repo
                     int result = await _context.SaveChangesAsync(cancellationToken);
                     if (result == 2)
                     {
-                        response = true;
+                        response = UpdateJobStatusOutcome.Success;
                     }
+                    else
+                    {
+                        response = UpdateJobStatusOutcome.BadRequest;
+                    }
+                }
+                else
+                {
+                    response = UpdateJobStatusOutcome.AlreadyInThisStatus;
                 }
             }
             return response;
@@ -716,20 +742,25 @@ namespace RequestService.Repo
                 && x.DateRequested < dtExpire)
                 .ToList();
 
-            foreach(Request r in requests)
+            foreach (Request r in requests)
             {
+                int inActiveCount = 0;
+                
                 foreach (EntityFramework.Entities.Job j in r.Job)
                 {
                     if ((JobStatuses)j.JobStatusId.Value == JobStatuses.Done || (JobStatuses)j.JobStatusId.Value == JobStatuses.Cancelled)
                     {
-                        bool inactive = j.RequestJobStatus.Min(x => (DateTime.Now.Date - x.DateCreated.Date).TotalDays > daysSinceJobStatusChanged);
-
-                        if (inactive && (r.Archive ?? false) == false)
+                        if (j.RequestJobStatus.Min(x => (DateTime.Now.Date - x.DateCreated.Date).TotalDays > daysSinceJobStatusChanged))
                         {
-                            r.Archive = true;
-                            _context.Request.Update(r);
+                            inActiveCount++;
                         }
                     }
+                }
+                
+                if (inActiveCount == r.Job.Count)
+                {
+                    r.Archive = true;
+                    _context.Request.Update(r);
                 }
             }
             _context.SaveChanges();

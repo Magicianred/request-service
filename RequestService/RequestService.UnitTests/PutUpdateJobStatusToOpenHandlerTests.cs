@@ -19,7 +19,7 @@ namespace RequestService.UnitTests
         private Mock<IJobService> _jobService;
         private PutUpdateJobStatusToOpenHandler _classUnderTest;
         private PutUpdateJobStatusToOpenRequest _request;
-        private bool _success;
+        private UpdateJobStatusOutcome _updateJobStatusOutcome;
         private bool _hasPermission = true;
 
         [SetUp]
@@ -53,14 +53,14 @@ namespace RequestService.UnitTests
                 It.IsAny<int>(), 
                 It.IsAny<int>(), 
                 It.IsAny<CancellationToken>()))
-                .ReturnsAsync(()=> _success);
+                .ReturnsAsync(()=> _updateJobStatusOutcome);
 
         }
 
         [Test]
         public async Task WhenSuccessfullyChangingJobStatusToDone_ReturnsTrue()
         {
-            _success = true;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.Success;
             _request = new PutUpdateJobStatusToOpenRequest
             {
                 CreatedByUserID = 1,
@@ -76,7 +76,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenUnSuccessfullyChangingJobStatusToDone_ReturnsFalse()
         {
-            _success = false;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.BadRequest;
             _request = new PutUpdateJobStatusToOpenRequest
             {
                 CreatedByUserID = 1,
@@ -91,7 +91,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenVolunteerDoesNotHavePermission_ReturnsUnauthorised()
         {
-            _success = false;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.Unauthorized;
             _hasPermission = false;
             _request = new PutUpdateJobStatusToOpenRequest
             {
@@ -107,7 +107,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenJobStatusIsAlreadyOpen_ReturnsBadRequest()
         {
-            _success = false;
+            _updateJobStatusOutcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
             _hasPermission = true;
             _request = new PutUpdateJobStatusToOpenRequest
             {
@@ -117,7 +117,7 @@ namespace RequestService.UnitTests
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
             _repository.Verify(x => x.UpdateJobStatusOpenAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
-            Assert.AreEqual(UpdateJobStatusOutcome.BadRequest, response.Outcome);
+            Assert.AreEqual(UpdateJobStatusOutcome.AlreadyInThisStatus, response.Outcome);
         }
     }
 }

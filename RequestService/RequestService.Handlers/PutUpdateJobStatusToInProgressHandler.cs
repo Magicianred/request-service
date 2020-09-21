@@ -72,8 +72,9 @@ namespace RequestService.Handlers
             if (request.CreatedByUserID == request.VolunteerUserID || userRoles.UserGroupRoles[referringGroupId.Value].Contains((int)GroupRoles.TaskAdmin))
             {
                 var result = await _repository.UpdateJobStatusInProgressAsync(request.JobID, request.CreatedByUserID, request.VolunteerUserID, cancellationToken);
+                response.Outcome = result;
 
-                if (result)
+                if (result == UpdateJobStatusOutcome.Success)
                 {
                     await _groupService.PostAssignRole(new HelpMyStreet.Contracts.GroupService.Request.PostAssignRoleRequest()
                     {
@@ -83,8 +84,6 @@ namespace RequestService.Handlers
                         AuthorisedByUserID = ADMIN_USERID
                     },cancellationToken);
 
-                    response.Outcome = UpdateJobStatusOutcome.Success;
-
                     await _communicationService.RequestCommunication(
                         new RequestCommunicationRequest()
                         {
@@ -92,10 +91,6 @@ namespace RequestService.Handlers
                             JobID = request.JobID
                         },
                         cancellationToken);
-                }
-                else
-                {
-                    response.Outcome = UpdateJobStatusOutcome.BadRequest;
                 }
             }
             else
