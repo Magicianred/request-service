@@ -783,5 +783,20 @@ namespace RequestService.Repo
 
             return response;
         }
+
+        public bool JobHasSameStatusAsProposedStatus(int jobID, JobStatuses newJobStatus)
+        {
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job.JobStatusId == (byte)newJobStatus)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+            throw new NotImplementedException();
+        }
     }
 }

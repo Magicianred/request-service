@@ -1,6 +1,5 @@
 using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.RequestService.Request;
-using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Enums;
 using Moq;
 using NUnit.Framework;
@@ -21,6 +20,7 @@ namespace RequestService.UnitTests
         private PutUpdateJobStatusToOpenRequest _request;
         private UpdateJobStatusOutcome _updateJobStatusOutcome;
         private bool _hasPermission = true;
+        private bool _isSameAsProposed = false;
 
         [SetUp]
         public void Setup()
@@ -55,6 +55,10 @@ namespace RequestService.UnitTests
                 It.IsAny<CancellationToken>()))
                 .ReturnsAsync(()=> _updateJobStatusOutcome);
 
+            _repository.Setup(x => x.JobHasSameStatusAsProposedStatus(
+               It.IsAny<int>(),
+               It.IsAny<JobStatuses>())).Returns(() => _isSameAsProposed);
+
         }
 
         [Test]
@@ -66,7 +70,9 @@ namespace RequestService.UnitTests
                 CreatedByUserID = 1,
                 JobID = 1
             };
+            _isSameAsProposed = false;
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _repository.Verify(x => x.UpdateJobStatusOpenAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Once);
 
@@ -82,7 +88,9 @@ namespace RequestService.UnitTests
                 CreatedByUserID = 1,
                 JobID = 1
             };
+            _isSameAsProposed = false;
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _repository.Verify(x => x.UpdateJobStatusOpenAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
             Assert.AreEqual(UpdateJobStatusOutcome.BadRequest, response.Outcome);
@@ -93,29 +101,33 @@ namespace RequestService.UnitTests
         {
             _updateJobStatusOutcome =  UpdateJobStatusOutcome.Unauthorized;
             _hasPermission = false;
+            _isSameAsProposed = false;
             _request = new PutUpdateJobStatusToOpenRequest
             {
                 CreatedByUserID = 1,
                 JobID = 1
             };
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _repository.Verify(x => x.UpdateJobStatusOpenAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
             _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
             Assert.AreEqual(UpdateJobStatusOutcome.Unauthorized, response.Outcome);
         }
 
         [Test]
-        public async Task WhenJobStatusIsAlreadyOpen_ReturnsBadRequest()
+        public async Task WhenJobStatusIsAlreadyOpen_ReturnsAlreadyInThisStatus()
         {
             _updateJobStatusOutcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
             _hasPermission = true;
+            _isSameAsProposed = true;
             _request = new PutUpdateJobStatusToOpenRequest
             {
                 CreatedByUserID = 1,
                 JobID = 1
             };
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
-            _repository.Verify(x => x.UpdateJobStatusOpenAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
+            _repository.Verify(x => x.UpdateJobStatusOpenAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
             _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
             Assert.AreEqual(UpdateJobStatusOutcome.AlreadyInThisStatus, response.Outcome);
         }

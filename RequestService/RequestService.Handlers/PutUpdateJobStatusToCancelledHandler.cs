@@ -36,22 +36,29 @@ namespace RequestService.Handlers
                 Outcome = UpdateJobStatusOutcome.Unauthorized
             };
 
-            bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID,cancellationToken);
-
-            if(hasPermission)
+            if (_repository.JobHasSameStatusAsProposedStatus(request.JobID, JobStatuses.Cancelled))
             {
-                var result = await _repository.UpdateJobStatusCancelledAsync(request.JobID, request.CreatedByUserID, cancellationToken);
-                response.Outcome = result;
+                response.Outcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
+            }
+            else
+            {
+                bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID, cancellationToken);
 
-                if (result == UpdateJobStatusOutcome.Success)
+                if (hasPermission)
                 {
-                    await _communicationService.RequestCommunication(
-                    new RequestCommunicationRequest()
+                    var result = await _repository.UpdateJobStatusCancelledAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+                    response.Outcome = result;
+
+                    if (result == UpdateJobStatusOutcome.Success)
                     {
-                        CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate },
-                        JobID = request.JobID
-                    },
-                    cancellationToken);
+                        await _communicationService.RequestCommunication(
+                        new RequestCommunicationRequest()
+                        {
+                            CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate },
+                            JobID = request.JobID
+                        },
+                        cancellationToken);
+                    }
                 }
             }
             return response;

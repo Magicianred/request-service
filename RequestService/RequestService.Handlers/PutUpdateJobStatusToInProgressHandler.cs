@@ -36,67 +36,74 @@ namespace RequestService.Handlers
                 Outcome = UpdateJobStatusOutcome.Unauthorized
             };
 
-            var user = await _userService.GetUser(request.VolunteerUserID, cancellationToken);
-
-            if(!user.User.IsVerified ?? false || user==null)
+            if (_repository.JobHasSameStatusAsProposedStatus(request.JobID, JobStatuses.InProgress))
             {
-                response.Outcome = UpdateJobStatusOutcome.BadRequest;
-                return response;
-            }
-
-
-            var volunteerGroups = await _groupService.GetUserGroups(request.VolunteerUserID, cancellationToken);
-            var jobGroups = await _repository.GetGroupsForJobAsync(request.JobID, cancellationToken);
-            int? referringGroupId = await _repository.GetReferringGroupIDForJobAsync(request.JobID, cancellationToken);
-
-            if (volunteerGroups == null || jobGroups == null)
-            {
-                throw new System.Exception("volunteerGroups or jobGroup is null");
-            }
-
-            if (!referringGroupId.HasValue)
-            {
-                throw new Exception($"Unable to retrieve referring groupId for jobID:{request.JobID}");
-            }
-
-            bool jobGroupContainsVolunteerGroups = jobGroups.Any(volunteerGroups.Groups.Contains);
-
-            if (!jobGroupContainsVolunteerGroups)
-            {
-                response.Outcome = UpdateJobStatusOutcome.BadRequest;
-                return response;
-            }
-
-            var userRoles = await _groupService.GetUserRoles(request.CreatedByUserID, cancellationToken);
-
-            if (request.CreatedByUserID == request.VolunteerUserID || userRoles.UserGroupRoles[referringGroupId.Value].Contains((int)GroupRoles.TaskAdmin))
-            {
-                var result = await _repository.UpdateJobStatusInProgressAsync(request.JobID, request.CreatedByUserID, request.VolunteerUserID, cancellationToken);
-                response.Outcome = result;
-
-                if (result == UpdateJobStatusOutcome.Success)
-                {
-                    await _groupService.PostAssignRole(new HelpMyStreet.Contracts.GroupService.Request.PostAssignRoleRequest()
-                    {
-                        Role = new HelpMyStreet.Contracts.GroupService.Request.RoleRequest() { GroupRole = GroupRoles.Volunteer },
-                        UserID = request.VolunteerUserID,
-                        GroupID = referringGroupId.Value,
-                        AuthorisedByUserID = ADMIN_USERID
-                    },cancellationToken);
-
-                    await _communicationService.RequestCommunication(
-                        new RequestCommunicationRequest()
-                        {
-                            CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate },
-                            JobID = request.JobID
-                        },
-                        cancellationToken);
-                }
+                response.Outcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
             }
             else
             {
-                response.Outcome = UpdateJobStatusOutcome.Unauthorized;
-                return response;
+                var user = await _userService.GetUser(request.VolunteerUserID, cancellationToken);
+
+                if (!user.User.IsVerified ?? false || user == null)
+                {
+                    response.Outcome = UpdateJobStatusOutcome.BadRequest;
+                    return response;
+                }
+
+
+                var volunteerGroups = await _groupService.GetUserGroups(request.VolunteerUserID, cancellationToken);
+                var jobGroups = await _repository.GetGroupsForJobAsync(request.JobID, cancellationToken);
+                int? referringGroupId = await _repository.GetReferringGroupIDForJobAsync(request.JobID, cancellationToken);
+
+                if (volunteerGroups == null || jobGroups == null)
+                {
+                    throw new System.Exception("volunteerGroups or jobGroup is null");
+                }
+
+                if (!referringGroupId.HasValue)
+                {
+                    throw new Exception($"Unable to retrieve referring groupId for jobID:{request.JobID}");
+                }
+
+                bool jobGroupContainsVolunteerGroups = jobGroups.Any(volunteerGroups.Groups.Contains);
+
+                if (!jobGroupContainsVolunteerGroups)
+                {
+                    response.Outcome = UpdateJobStatusOutcome.BadRequest;
+                    return response;
+                }
+
+                var userRoles = await _groupService.GetUserRoles(request.CreatedByUserID, cancellationToken);
+
+                if (request.CreatedByUserID == request.VolunteerUserID || userRoles.UserGroupRoles[referringGroupId.Value].Contains((int)GroupRoles.TaskAdmin))
+                {
+                    var result = await _repository.UpdateJobStatusInProgressAsync(request.JobID, request.CreatedByUserID, request.VolunteerUserID, cancellationToken);
+                    response.Outcome = result;
+
+                    if (result == UpdateJobStatusOutcome.Success)
+                    {
+                        await _groupService.PostAssignRole(new HelpMyStreet.Contracts.GroupService.Request.PostAssignRoleRequest()
+                        {
+                            Role = new HelpMyStreet.Contracts.GroupService.Request.RoleRequest() { GroupRole = GroupRoles.Volunteer },
+                            UserID = request.VolunteerUserID,
+                            GroupID = referringGroupId.Value,
+                            AuthorisedByUserID = ADMIN_USERID
+                        }, cancellationToken);
+
+                        await _communicationService.RequestCommunication(
+                            new RequestCommunicationRequest()
+                            {
+                                CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate },
+                                JobID = request.JobID
+                            },
+                            cancellationToken);
+                    }
+                }
+                else
+                {
+                    response.Outcome = UpdateJobStatusOutcome.Unauthorized;
+                    return response;
+                }
             }
             return response;
         }
