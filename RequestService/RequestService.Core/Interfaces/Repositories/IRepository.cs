@@ -40,6 +40,7 @@ namespace RequestService.Core.Interfaces.Repositories
         Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<SupportActivities> activity, RequestHelpFormVariant requestHelpFormVariant, RequestHelpFormStage requestHelpFormStage, CancellationToken cancellationToken);
         List<JobSummary> GetJobsByStatusesSummaries(List<JobStatuses> jobStatuses);
         List<JobHeader> GetJobHeaders(GetJobsByFilterRequest request);
-        void ArchiveOldRequests(int daysSinceJobRequested, int daysSinceJobStatusChanged);
+        void ArchiveOldRequests(int daysSinceJobRequested, int daysSinceJobStatusChanged);        
+        bool JobHasSameStatusAsProposedStatus(int jobID, JobStatuses newJobStatus);
     }
 }
