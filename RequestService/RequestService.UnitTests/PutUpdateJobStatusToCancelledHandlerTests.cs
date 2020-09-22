@@ -63,6 +63,7 @@ namespace RequestService.UnitTests
         public async Task WhenSuccessfullyChangingJobStatusToCancelled_ReturnsTrue()
         {
             _updateJobStatusOutcome = UpdateJobStatusOutcome.Success;
+            _isSameAsProposed = false;
             _request = new PutUpdateJobStatusToCancelledRequest
             {
                 CreatedByUserID = 1,
@@ -79,6 +80,7 @@ namespace RequestService.UnitTests
         public async Task WhenUnSuccessfullyChangingJobStatusToCancelled_ReturnsFalse()
         {
             _updateJobStatusOutcome =  UpdateJobStatusOutcome.BadRequest;
+            _isSameAsProposed = false;
             _request = new PutUpdateJobStatusToCancelledRequest
             {
                 CreatedByUserID = 1,
@@ -95,6 +97,7 @@ namespace RequestService.UnitTests
         {
             _updateJobStatusOutcome =  UpdateJobStatusOutcome.Unauthorized;
             _hasPermission = false;
+            _isSameAsProposed = false;
             _request = new PutUpdateJobStatusToCancelledRequest
             {
                 CreatedByUserID = 1,

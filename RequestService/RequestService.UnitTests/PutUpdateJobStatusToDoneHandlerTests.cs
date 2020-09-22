@@ -69,6 +69,7 @@ namespace RequestService.UnitTests
                 CreatedByUserID = 1,
                 JobID = 1
             };
+            _isSameAsProposed = false;
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
             _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _repository.Verify(x => x.UpdateJobStatusDoneAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -86,6 +87,7 @@ namespace RequestService.UnitTests
                 CreatedByUserID = 1,
                 JobID = 1
             };
+            _isSameAsProposed = false;
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
             _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _repository.Verify(x => x.UpdateJobStatusDoneAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -99,6 +101,7 @@ namespace RequestService.UnitTests
             _updateJobStatusOutcome = UpdateJobStatusOutcome.Unauthorized;
 
             _hasPermission = false;
+            _isSameAsProposed = false;
             _request = new PutUpdateJobStatusToDoneRequest
             {
                 CreatedByUserID = 1,
