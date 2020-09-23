@@ -7,9 +7,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="10.0.0" />
-		<PackageReference Include="HelpMyStreet.CoreV3.PostcodeCoordinates.EF" Version="1.1.375" />
-		<PackageReference Include="HelpMyStreet.CoreV3.Contracts" Version="1.1.375" />
-		<PackageReference Include="HelpMyStreet.CoreV3.Utils" Version="1.1.375" />
+		<PackageReference Include="HelpMyStreet.CoreV3.PostcodeCoordinates.EF" Version="1.1.378" />
+		<PackageReference Include="HelpMyStreet.CoreV3.Contracts" Version="1.1.378" />
+		<PackageReference Include="HelpMyStreet.CoreV3.Utils" Version="1.1.378" />
 		<PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.5.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.7" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
