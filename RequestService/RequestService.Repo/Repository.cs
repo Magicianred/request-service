@@ -2,7 +2,6 @@
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Enums;
-using HelpMyStreet.Utils.Extensions;
 using HelpMyStreet.Utils.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -12,12 +11,11 @@ using RequestService.Core.Interfaces.Repositories;
 using RequestService.Repo.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SupportActivities = RequestService.Repo.EntityFramework.Entities.SupportActivities;
+using Microsoft.Data.SqlClient;
 
 namespace RequestService.Repo
 {
@@ -535,7 +533,7 @@ namespace RequestService.Repo
             parameters[4] = GetGroupsAsSqlParameter(request.Groups?.Groups);
             
             IQueryable<QueryJobHeader> jobHeaders = _context.JobHeader
-                                .FromSql("EXECUTE [Request].[GetJobsByFilter] @UserID=@UserID,@SupportActivities=@SupportActivities,@RefferingGroupID=@RefferingGroupID,@JobStatuses=@JobStatuses,@Groups=@Groups", parameters);
+                                .FromSqlRaw("EXECUTE [Request].[GetJobsByFilter] @UserID=@UserID,@SupportActivities=@SupportActivities,@RefferingGroupID=@RefferingGroupID,@JobStatuses=@JobStatuses,@Groups=@Groups", parameters);
 
             List<JobHeader> response = new List<JobHeader>();
             foreach (QueryJobHeader j in jobHeaders)
