@@ -29,31 +29,31 @@ namespace RequestService.Handlers
                 Outcome = UpdateJobStatusOutcome.Unauthorized
             };
 
-            bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID, cancellationToken);
-
-            if (hasPermission)
+            if (_repository.JobHasSameStatusAsProposedStatus(request.JobID, JobStatuses.Done))
             {
-                var result = await _repository.UpdateJobStatusDoneAsync(request.JobID, request.CreatedByUserID, cancellationToken);
-
-                if (result)
-                {
-                    response.Outcome = UpdateJobStatusOutcome.Success;
-                    await _communicationService.RequestCommunication(
-                    new RequestCommunicationRequest()
-                    {
-                        CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate},
-                       JobID = request.JobID
-                    },
-                    cancellationToken);
-                }
-                else
-                {
-                    response.Outcome = UpdateJobStatusOutcome.BadRequest;
-                }
+                response.Outcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
             }
             else
             {
-                response.Outcome = UpdateJobStatusOutcome.Unauthorized;
+                bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+
+                if (hasPermission)
+                {
+                    var result = await _repository.UpdateJobStatusDoneAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+                    response.Outcome = result;
+
+                    if (result == UpdateJobStatusOutcome.Success)
+                    {
+                        response.Outcome = UpdateJobStatusOutcome.Success;
+                        await _communicationService.RequestCommunication(
+                        new RequestCommunicationRequest()
+                        {
+                            CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate },
+                            JobID = request.JobID
+                        },
+                        cancellationToken);
+                    }
+                }
             }
             return response;
         }

@@ -2,13 +2,11 @@ using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.GroupService.Request;
 using HelpMyStreet.Contracts.GroupService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
-using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.UserService.Response;
 using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Models;
 using Moq;
 using NUnit.Framework;
-using RequestService.Core.Dto;
 using RequestService.Core.Interfaces.Repositories;
 using RequestService.Core.Services;
 using RequestService.Handlers;
@@ -27,13 +25,14 @@ namespace RequestService.UnitTests
 
         private PutUpdateJobStatusToInProgressHandler _classUnderTest;
         private PutUpdateJobStatusToInProgressRequest _request;
-        private bool _success;
+        private UpdateJobStatusOutcome _updateJobStatusOutcome;
         private GetUserGroupsResponse _getUserGroupsReponse;
         private GetUserRolesResponse _getUserRolesResponse;
         private List<int> _getGroupsForJobResponse;
         private int? _referringGroupId;
         private GetUserByIDResponse _getUserbyIdResponse;
         private PostAssignRoleResponse _postAssignRoleResponse;
+        private bool _isSameAsProposed = false;
 
         [SetUp]
         public void Setup()
@@ -59,13 +58,17 @@ namespace RequestService.UnitTests
                 It.IsAny<int>(),
                 It.IsAny<int>(),
                 It.IsAny<CancellationToken>()))
-                .ReturnsAsync(()=> _success);
+                .ReturnsAsync(()=> _updateJobStatusOutcome);
 
             _repository.Setup(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(()=> _getGroupsForJobResponse);
 
             _repository.Setup(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => _referringGroupId);
+
+            _repository.Setup(x => x.JobHasSameStatusAsProposedStatus(
+              It.IsAny<int>(),
+              It.IsAny<JobStatuses>())).Returns(() => _isSameAsProposed);
 
         }
 
@@ -173,7 +176,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenUserIsNotVerified_ReturnsBadRequest()
         {
-            _success = false;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.BadRequest;
             _request = new PutUpdateJobStatusToInProgressRequest
             {
                 CreatedByUserID = 1,
@@ -189,6 +192,7 @@ namespace RequestService.UnitTests
                 }
             };
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _groupService.Verify(x => x.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
             _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -201,7 +205,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenjobGroupDoesNotContainsVolunteerGroups_ReturnsBadRequest()
         {
-            _success = false;
+            _updateJobStatusOutcome = UpdateJobStatusOutcome.BadRequest;
             _request = new PutUpdateJobStatusToInProgressRequest
             {
                 CreatedByUserID = 1,
@@ -233,6 +237,7 @@ namespace RequestService.UnitTests
             _referringGroupId = 1;
 
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _groupService.Verify(x => x.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -247,7 +252,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenCreatedByUserIsDifferentToVolunteerUserIDAndNotTaskAdmin_ReturnsUnauthorized()
         {
-            _success = false;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.Unauthorized;
             _request = new PutUpdateJobStatusToInProgressRequest
             {
                 CreatedByUserID = 1,
@@ -287,6 +292,7 @@ namespace RequestService.UnitTests
             };
 
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _groupService.Verify(x => x.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -300,7 +306,7 @@ namespace RequestService.UnitTests
         [Test]
         public async Task WhenCreatedByUserIsDifferentToVolunteerUserIDAndTaskAdmin_ReturnsSuccess()
         {
-            _success = true;
+            _updateJobStatusOutcome = UpdateJobStatusOutcome.Success;
             _request = new PutUpdateJobStatusToInProgressRequest
             {
                 CreatedByUserID = 1,
@@ -341,6 +347,7 @@ namespace RequestService.UnitTests
             };
 
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _groupService.Verify(x => x.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -358,7 +365,7 @@ namespace RequestService.UnitTests
         [TestCase(GroupRoles.UserAdmin)]
         public async Task WhenCreatedByUserIsSameAsVolunteerUserID_ReturnsSuccess(GroupRoles role)
         {
-            _success = true;
+            _updateJobStatusOutcome =  UpdateJobStatusOutcome.Success;
             _request = new PutUpdateJobStatusToInProgressRequest
             {
                 CreatedByUserID = 1,
@@ -398,6 +405,7 @@ namespace RequestService.UnitTests
             };
 
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
+            _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _groupService.Verify(x => x.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);

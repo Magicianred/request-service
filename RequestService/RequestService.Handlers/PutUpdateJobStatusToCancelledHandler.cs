@@ -21,10 +21,12 @@ namespace RequestService.Handlers
     {
         private readonly IRepository _repository;
         private readonly IJobService _jobService;
-        public PutUpdateJobStatusToCancelledHandler(IRepository repository, IJobService jobService)
+        private readonly ICommunicationService _communicationService;
+        public PutUpdateJobStatusToCancelledHandler(IRepository repository, IJobService jobService, ICommunicationService communicationService)
         {
             _repository = repository;
             _jobService = jobService;
+            _communicationService = communicationService;
         }
 
         public async Task<PutUpdateJobStatusToCancelledResponse> Handle(PutUpdateJobStatusToCancelledRequest request, CancellationToken cancellationToken)
@@ -34,24 +36,30 @@ namespace RequestService.Handlers
                 Outcome = UpdateJobStatusOutcome.Unauthorized
             };
 
-            bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID,cancellationToken);
-
-            if(hasPermission)
+            if (_repository.JobHasSameStatusAsProposedStatus(request.JobID, JobStatuses.Cancelled))
             {
-                var result = await _repository.UpdateJobStatusCancelledAsync(request.JobID, request.CreatedByUserID, cancellationToken);
-
-                if (result)
-                {
-                    response.Outcome = UpdateJobStatusOutcome.Success;
-                }
-                else
-                {
-                    response.Outcome = UpdateJobStatusOutcome.BadRequest;
-                }
+                response.Outcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
             }
             else
             {
-                response.Outcome = UpdateJobStatusOutcome.Unauthorized;
+                bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+
+                if (hasPermission)
+                {
+                    var result = await _repository.UpdateJobStatusCancelledAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+                    response.Outcome = result;
+
+                    if (result == UpdateJobStatusOutcome.Success)
+                    {
+                        await _communicationService.RequestCommunication(
+                        new RequestCommunicationRequest()
+                        {
+                            CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate },
+                            JobID = request.JobID
+                        },
+                        cancellationToken);
+                    }
+                }
             }
             return response;
         }

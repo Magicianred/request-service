@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200909161618_AddRuddington")]
+    partial class AddRuddington
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2720,9 +2722,19 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 1,
+                            QuestionId = 6,
+                            RequestFormVariantId = 7,
+                            Location = "pos3",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = true
                         },
                         new
                         {
@@ -2753,9 +2765,19 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 2,
+                            QuestionId = 6,
+                            RequestFormVariantId = 7,
+                            Location = "pos3",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = true
                         },
                         new
                         {
@@ -2786,9 +2808,19 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 3,
+                            QuestionId = 6,
+                            RequestFormVariantId = 7,
+                            Location = "pos3",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = true
                         },
                         new
                         {
@@ -2819,9 +2851,19 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 4,
+                            QuestionId = 6,
+                            RequestFormVariantId = 7,
+                            Location = "pos3",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = true
                         },
                         new
                         {
@@ -2852,9 +2894,19 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 5,
+                            QuestionId = 6,
+                            RequestFormVariantId = 7,
+                            Location = "pos3",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = true
                         },
                         new
                         {
@@ -2885,9 +2937,19 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 6,
+                            QuestionId = 6,
+                            RequestFormVariantId = 7,
+                            Location = "pos3",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = true
                         },
                         new
                         {
@@ -2918,9 +2980,19 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 7,
+                            QuestionId = 6,
+                            RequestFormVariantId = 7,
+                            Location = "pos3",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = true
                         },
                         new
                         {
@@ -2951,9 +3023,19 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 8,
+                            QuestionId = 6,
+                            RequestFormVariantId = 7,
+                            Location = "pos3",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = true
                         },
                         new
                         {
@@ -2984,9 +3066,19 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 10,
+                            QuestionId = 6,
+                            RequestFormVariantId = 7,
+                            Location = "pos3",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = true
                         },
                         new
                         {
@@ -3017,9 +3109,19 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 11,
+                            QuestionId = 6,
+                            RequestFormVariantId = 7,
+                            Location = "pos3",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = true
                         },
                         new
                         {
@@ -3422,8 +3524,6 @@ namespace RequestService.Repo.Migrations
 
                     b.Property<byte?>("JobStatusId")
                         .HasColumnName("JobStatusID");
-
-                    b.Property<string>("Reference");
 
                     b.Property<int>("RequestId");
 

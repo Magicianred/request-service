@@ -10,16 +10,11 @@ namespace RequestService.Core.Services
 {
     public interface IJobFilteringService
     {
-        Task<List<JobSummary>> FilterJobSummaries(
-            List<JobSummary> jobs, 
-            int? UserID,
-            List<SupportActivities> supportActivities, 
+        Task<List<JobHeader>> FilterJobHeaders(
+            List<JobHeader> jobs,
             string postcode, 
             double? distanceInMiles, 
-            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles,
-            int? referringGroupID,
-            List<int> groups,
-            List<JobStatuses> statuses,
+            Dictionary<SupportActivities, double?> activitySpecificSupportDistancesInMiles,            
             CancellationToken cancellationToken);
     }
 }

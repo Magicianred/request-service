@@ -43,26 +43,22 @@ namespace RequestService.Handlers
                 }
             }
         
-            GetJobsByFilterResponse result = new GetJobsByFilterResponse() { JobSummaries = new List<JobSummary>() };
-            List<JobSummary> jobSummaries = _repository.GetJobSummaries();
+            GetJobsByFilterResponse result = new GetJobsByFilterResponse() { JobHeaders = new List<JobHeader>() };
+            List<JobHeader> jobHeaders = _repository.GetJobHeaders(request);
 
-            if (jobSummaries.Count == 0)
+            if (jobHeaders.Count == 0)
                 return result;
 
-            jobSummaries = await _jobFilteringService.FilterJobSummaries(jobSummaries, 
-                request.UserID,
-                request.SupportActivities?.SupportActivities, 
+            jobHeaders = await _jobFilteringService.FilterJobHeaders(
+                jobHeaders,
                 request.Postcode, 
                 request.DistanceInMiles, 
-                request.ActivitySpecificSupportDistancesInMiles, 
-                request.ReferringGroupID,
-                request.Groups?.Groups,
-                request.JobStatuses?.JobStatuses, 
+                request.ActivitySpecificSupportDistancesInMiles,
                 cancellationToken);
 
             result = new GetJobsByFilterResponse()
             {
-                JobSummaries = jobSummaries
+                JobHeaders = jobHeaders
             };
             return result;
         }
