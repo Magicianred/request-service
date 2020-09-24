@@ -70,7 +70,7 @@ namespace RequestService.Handlers
 
                 var userRoles = await _groupService.GetUserRoles(request.CreatedByUserID, cancellationToken);
 
-                if (request.CreatedByUserID == request.VolunteerUserID || userRoles.UserGroupRoles[referringGroupId.Value].Contains((int)GroupRoles.TaskAdmin))
+                if (request.CreatedByUserID == request.VolunteerUserID || userRoles.UserGroupRoles[referringGroupId].Contains((int)GroupRoles.TaskAdmin))
                 {
                     var result = await _repository.UpdateJobStatusInProgressAsync(request.JobID, request.CreatedByUserID, request.VolunteerUserID, cancellationToken);
                     response.Outcome = result;
@@ -81,7 +81,7 @@ namespace RequestService.Handlers
                         {
                             Role = new HelpMyStreet.Contracts.GroupService.Request.RoleRequest() { GroupRole = GroupRoles.Volunteer },
                             UserID = request.VolunteerUserID,
-                            GroupID = referringGroupId.Value,
+                            GroupID = referringGroupId,
                             AuthorisedByUserID = ADMIN_USERID
                         }, cancellationToken);
 
