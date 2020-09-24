@@ -9,6 +9,8 @@ using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
+using System.Net;
+using AzureFunctions.Extensions.Swashbuckle.Attribute;
 
 namespace RequestService.AzureFunction
 {
@@ -22,8 +24,10 @@ namespace RequestService.AzureFunction
         }
 
         [FunctionName("PutUpdateJobStatusToDone")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(PutUpdateJobStatusToDoneResponse))]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "put", Route = null)]PutUpdateJobStatusToDoneRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "put", Route = null)]
+            [RequestBodyType(typeof(PutUpdateJobStatusToDoneRequest), "put update job status to done request")] PutUpdateJobStatusToDoneRequest req,
             ILogger log)
         {
             try

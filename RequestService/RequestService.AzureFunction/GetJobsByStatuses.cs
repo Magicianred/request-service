@@ -9,6 +9,8 @@ using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
+using System.Net;
+using AzureFunctions.Extensions.Swashbuckle.Attribute;
 
 namespace RequestService.AzureFunction
 {
@@ -22,9 +24,10 @@ namespace RequestService.AzureFunction
         }
 
         [FunctionName("GetJobsByStatuses")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(GetJobsByStatusesResponse))]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)]
-            GetJobsByStatusesRequest req,
+            [RequestBodyType(typeof(GetJobsByStatusesRequest), "jobs by statuses request")] GetJobsByStatusesRequest req,
             ILogger log)
         {
             try
