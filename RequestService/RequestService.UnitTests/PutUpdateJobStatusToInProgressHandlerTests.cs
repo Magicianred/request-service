@@ -29,7 +29,7 @@ namespace RequestService.UnitTests
         private GetUserGroupsResponse _getUserGroupsReponse;
         private GetUserRolesResponse _getUserRolesResponse;
         private List<int> _getGroupsForJobResponse;
-        private int? _referringGroupId;
+        private int _referringGroupId;
         private GetUserByIDResponse _getUserbyIdResponse;
         private PostAssignRoleResponse _postAssignRoleResponse;
         private bool _isSameAsProposed = false;

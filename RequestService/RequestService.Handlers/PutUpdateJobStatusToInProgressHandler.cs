@@ -53,16 +53,11 @@ namespace RequestService.Handlers
 
                 var volunteerGroups = await _groupService.GetUserGroups(request.VolunteerUserID, cancellationToken);
                 var jobGroups = await _repository.GetGroupsForJobAsync(request.JobID, cancellationToken);
-                int? referringGroupId = await _repository.GetReferringGroupIDForJobAsync(request.JobID, cancellationToken);
+                int referringGroupId = await _repository.GetReferringGroupIDForJobAsync(request.JobID, cancellationToken);
 
                 if (volunteerGroups == null || jobGroups == null)
                 {
                     throw new System.Exception("volunteerGroups or jobGroup is null");
-                }
-
-                if (!referringGroupId.HasValue)
-                {
-                    throw new Exception($"Unable to retrieve referring groupId for jobID:{request.JobID}");
                 }
 
                 bool jobGroupContainsVolunteerGroups = jobGroups.Any(volunteerGroups.Groups.Contains);
