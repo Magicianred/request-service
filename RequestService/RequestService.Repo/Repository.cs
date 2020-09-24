@@ -715,20 +715,20 @@ namespace RequestService.Repo
                 .Select(x => x.GroupId).ToList();
         }
 
-        public async Task<int?> GetReferringGroupIDForJobAsync(int jobID, CancellationToken cancellationToken)
+        public async Task<int> GetReferringGroupIDForJobAsync(int jobID, CancellationToken cancellationToken)
         {
-            int? referringGroupId = null;
             var job = await _context.Job
                 .Include(x => x.NewRequest)
                 .FirstAsync(x => x.Id == jobID);
 
             if(job!=null)
             {
-                referringGroupId = job.NewRequest.ReferringGroupId;
+                return job.NewRequest.ReferringGroupId;
             }
-
-            return referringGroupId;
-
+            else
+            {
+                throw new Exception($"Unable to get Referring GroupID for Job {jobID}");
+            }
         }
 
         public void ArchiveOldRequests(int daysSinceJobRequested, int daysSinceJobStatusChanged)

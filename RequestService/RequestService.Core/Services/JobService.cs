@@ -123,16 +123,11 @@ namespace RequestService.Core.Services
                 return true;
             }
 
-            int? referringGroupId = await _repository.GetReferringGroupIDForJobAsync(jobID, cancellationToken);
-
-            if (!referringGroupId.HasValue)
-            {
-                throw new Exception($"Unable to retrieve referring groupId for jobID:{jobID}");
-            }
+            int referringGroupId = await _repository.GetReferringGroupIDForJobAsync(jobID, cancellationToken);
 
             var userRoles = await _groupService.GetUserRoles(createdByUserID, cancellationToken);
 
-            if (userRoles.UserGroupRoles[referringGroupId.Value].Contains((int)GroupRoles.TaskAdmin))
+            if (userRoles.UserGroupRoles[referringGroupId].Contains((int)GroupRoles.TaskAdmin))
             {
                 return true;
             }
