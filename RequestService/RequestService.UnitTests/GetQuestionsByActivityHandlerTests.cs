@@ -1,5 +1,6 @@
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
+using HelpMyStreet.Utils.Models;
 using Moq;
 using NUnit.Framework;
 using RequestService.Core.Dto;
@@ -19,6 +20,7 @@ namespace RequestService.UnitTests
         private GetQuestionsByActivityHandler _classUnderTest;
         private GetQuestionsByActivitiesRequest _request;
         private List<ActivityQuestionDTO> _response;
+        private List<Question> _questions;
 
         [SetUp]
         public void Setup()
@@ -32,10 +34,7 @@ namespace RequestService.UnitTests
                 {
                     Activities = new List<HelpMyStreet.Utils.Enums.SupportActivities>
                     {
-                        HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn,
-                        HelpMyStreet.Utils.Enums.SupportActivities.CollectingPrescriptions,
-                        HelpMyStreet.Utils.Enums.SupportActivities.FaceMask,
-                        HelpMyStreet.Utils.Enums.SupportActivities.MealPreparation
+                        HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn
                     }
                 },
                 RequestHelpFormVariantRequest = new RequestHelpFormVariantRequest()
@@ -47,28 +46,29 @@ namespace RequestService.UnitTests
                     RequestHelpFormStage = HelpMyStreet.Utils.Enums.RequestHelpFormStage.Request
                 }
             };
+            _questions = new List<Question>();
 
             _response = new List<ActivityQuestionDTO>
             {
                 new ActivityQuestionDTO
                 {
                     Activity = HelpMyStreet.Utils.Enums.SupportActivities.CheckingIn,
-                    Questions = new List<HelpMyStreet.Utils.Models.Question>{ new HelpMyStreet.Utils.Models.Question { Id = 1 } }
+                    Questions = new List<Question>{ new Question { Id = 1 } }
                 },
                 new ActivityQuestionDTO
                 {
                     Activity = HelpMyStreet.Utils.Enums.SupportActivities.CollectingPrescriptions,
-                    Questions = new List<HelpMyStreet.Utils.Models.Question> { new HelpMyStreet.Utils.Models.Question { Id = 2 } }
+                    Questions = new List<Question> { new Question { Id = 2 } }
                 },
                 new ActivityQuestionDTO
                 {
                     Activity = HelpMyStreet.Utils.Enums.SupportActivities.FaceMask,
-                    Questions = new List<HelpMyStreet.Utils.Models.Question>{ new HelpMyStreet.Utils.Models.Question { Id = 1 } }
+                    Questions = new List<Question>{ new Question { Id = 1 } }
                 },
                 new ActivityQuestionDTO
                 {
                     Activity = HelpMyStreet.Utils.Enums.SupportActivities.MealPreparation,
-                    Questions = new List<HelpMyStreet.Utils.Models.Question> { new HelpMyStreet.Utils.Models.Question { Id = 2 } }
+                    Questions = new List<Question> { new Question { Id = 2 } }
                 },
             };
         }
@@ -76,7 +76,8 @@ namespace RequestService.UnitTests
         private void SetupRepository()
         {
             _repository = new Mock<IRepository>();
-            _repository.Setup(x => x.GetActivityQuestions(It.IsAny<List<HelpMyStreet.Utils.Enums.SupportActivities>>(), It.IsAny<HelpMyStreet.Utils.Enums.RequestHelpFormVariant>(), It.IsAny<HelpMyStreet.Utils.Enums.RequestHelpFormStage>(), It.IsAny<CancellationToken>())).ReturnsAsync(()=> _response);
+            _repository.Setup(x => x.GetQuestionsForActivity(It.IsAny<HelpMyStreet.Utils.Enums.SupportActivities>(), It.IsAny<HelpMyStreet.Utils.Enums.RequestHelpFormVariant>(), It.IsAny<HelpMyStreet.Utils.Enums.RequestHelpFormStage>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(()=> _questions);
         }
 
         [Test]
@@ -91,14 +92,15 @@ namespace RequestService.UnitTests
                 Assert.IsTrue(response.SupportActivityQuestions.Where(x => x.Key == activity).Count() == 1);
             }
 
-            _repository.Verify(X => X.GetActivityQuestions(_request.ActivitesRequest.Activities, _request.RequestHelpFormVariantRequest.RequestHelpFormVariant, _request.RequestHelpFormStageRequest.RequestHelpFormStage, It.IsAny<CancellationToken>()), Times.Once);
+            _repository.Verify(X => X.GetQuestionsForActivity(_request.ActivitesRequest.Activities.First(), _request.RequestHelpFormVariantRequest.RequestHelpFormVariant, _request.RequestHelpFormStageRequest.RequestHelpFormStage, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
         public async Task WhenIGetActivites_ThatAreNotSetupInDB_IGetNoQuestionsBack()
         {
-
+            _request.ActivitesRequest.Activities = new List<HelpMyStreet.Utils.Enums.SupportActivities>();
             _response.Add(new ActivityQuestionDTO { Activity = HelpMyStreet.Utils.Enums.SupportActivities.Other, Questions = new List<HelpMyStreet.Utils.Models.Question>() });
+            
             _request.ActivitesRequest.Activities.Add(HelpMyStreet.Utils.Enums.SupportActivities.Other);
             var response = await _classUnderTest.Handle(_request, new CancellationToken());
             
