@@ -9,6 +9,8 @@ using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
+using System.Net;
+using AzureFunctions.Extensions.Swashbuckle.Attribute;
 
 namespace RequestService.AzureFunction
 {
@@ -22,9 +24,10 @@ namespace RequestService.AzureFunction
         }
 
         [FunctionName("PostNewRequestForHelp")]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(PostNewRequestForHelpResponse))]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
-            PostNewRequestForHelpRequest req,
+            [RequestBodyType(typeof(PostNewRequestForHelpRequest), "post new request for help request")] PostNewRequestForHelpRequest req,
             ILogger log)
         {
             try

@@ -9,6 +9,7 @@ using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
+using AzureFunctions.Extensions.Swashbuckle.Attribute;
 
 namespace RequestService.AzureFunction
 {
@@ -24,7 +25,7 @@ namespace RequestService.AzureFunction
         [FunctionName("GetQuestionsByActivity")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]
-            GetQuestionsByActivitiesRequest req,
+            [RequestBodyType(typeof(GetQuestionsByActivitiesRequest), "get questions by activities request")] GetQuestionsByActivitiesRequest req,
             ILogger log)
         {
             try
