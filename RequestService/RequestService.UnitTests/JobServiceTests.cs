@@ -28,7 +28,7 @@ namespace RequestService.UnitTests
         private List<LatitudeAndLongitudeDTO> _getPostcodeCoordinatesResponse;
         private GetJobDetailsResponse _jobDetails;
         private GetUserRolesResponse _getUserRolesResponse;
-        private int? _refferingGroupID;
+        private int _refferingGroupID;
         private GetJobDetailsResponse _getjobdetailsResponse;
 
         [SetUp]
