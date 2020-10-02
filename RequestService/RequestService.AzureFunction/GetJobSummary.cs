@@ -23,11 +23,11 @@ namespace RequestService.AzureFunction
             _mediator = mediator;
         }
 
-        [FunctionName("GetJobSummary")]        
+        [FunctionName("GetJobSummary")]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(GetJobSummaryResponse))]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)]
-            [RequestBodyType(typeof(GetJobDetailsRequest), "log request")] GetJobSummaryRequest req,
+            [RequestBodyType(typeof(GetJobSummaryRequest), "get job summary request")] GetJobSummaryRequest req,
             ILogger log)
         {
             try

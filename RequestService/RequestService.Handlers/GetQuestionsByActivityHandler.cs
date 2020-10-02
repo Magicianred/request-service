@@ -22,23 +22,24 @@ namespace RequestService.Handlers
         }
 
         public async Task<GetQuestionsByActivtiesResponse> Handle(GetQuestionsByActivitiesRequest request, CancellationToken cancellationToken)
-        {            
-            var questions = await _repository.GetActivityQuestions(request.ActivitesRequest.Activities, request.RequestHelpFormVariantRequest.RequestHelpFormVariant, request.RequestHelpFormStageRequest.RequestHelpFormStage, cancellationToken);
+        {
+            if(request.ActivitesRequest.Activities.Count!=1)
+            {
+                throw new System.Exception("Expecting only one activity");
+            }
+            
+            var selectedActivity = request.ActivitesRequest.Activities.First();
+
+            List<Question> questions = await _repository.GetQuestionsForActivity(selectedActivity, request.RequestHelpFormVariantRequest.RequestHelpFormVariant, request.RequestHelpFormStageRequest.RequestHelpFormStage, cancellationToken);
 
             GetQuestionsByActivtiesResponse response = new GetQuestionsByActivtiesResponse();
-            response.SupportActivityQuestions = new Dictionary<HelpMyStreet.Utils.Enums.SupportActivities, List<Question>>();
 
-            questions.ForEach(x =>
+            Dictionary<HelpMyStreet.Utils.Enums.SupportActivities, List<Question>> dict = new Dictionary<HelpMyStreet.Utils.Enums.SupportActivities, List<Question>>
             {
-                if (x.Questions.Count() == 0)
-                {
-                    response.SupportActivityQuestions.Add(x.Activity, new List<Question>());
-                }
-                else
-                {
-                    response.SupportActivityQuestions.Add(x.Activity, x.Questions);
-                }
-            });
+                { selectedActivity, questions }
+            };
+
+            response.SupportActivityQuestions = dict;
 
             return response;
         }

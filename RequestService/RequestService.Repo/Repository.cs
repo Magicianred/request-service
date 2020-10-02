@@ -2,7 +2,6 @@
 using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Enums;
-using HelpMyStreet.Utils.Extensions;
 using HelpMyStreet.Utils.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -12,12 +11,11 @@ using RequestService.Core.Interfaces.Repositories;
 using RequestService.Repo.EntityFramework.Entities;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SupportActivities = RequestService.Repo.EntityFramework.Entities.SupportActivities;
+using Microsoft.Data.SqlClient;
 
 namespace RequestService.Repo
 {
@@ -242,28 +240,6 @@ namespace RequestService.Repo
                 JobId = jobID,
                 JobStatusId = jobStatus
             });
-        }
-
-        public async Task<List<ActivityQuestionDTO>> GetActivityQuestions(List<HelpMyStreet.Utils.Enums.SupportActivities> activity, RequestHelpFormVariant requestHelpFormVariant, RequestHelpFormStage requestHelpFormStage, CancellationToken cancellationToken)
-        {
-            return await _context.ActivityQuestions
-                                    .Where(x => activity.Any(a => (int)a == x.ActivityId) && x.RequestFormVariantId == (int)requestHelpFormVariant && x.RequestFormStageId == (int)requestHelpFormStage)
-                                    .GroupBy(x => x.ActivityId).Select(g => new ActivityQuestionDTO
-            {
-                Activity = (HelpMyStreet.Utils.Enums.SupportActivities)g.Key,
-                Questions = g.OrderBy(x => x.Order).Select(x => new HelpMyStreet.Utils.Models.Question
-                {
-                    Id = x.Question.Id,
-                    Name = x.Question.Name,
-                    Required = x.Required,
-                    SubText = x.Subtext,
-                    Location = x.Location,
-                    PlaceholderText = x.PlaceholderText,
-                    Type = (QuestionType)x.Question.QuestionType,
-                    AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>()
-                }).ToList()
-            }).ToListAsync(cancellationToken);
-            
         }
 
         public async Task<UpdateJobStatusOutcome> UpdateJobStatusOpenAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
@@ -535,7 +511,7 @@ namespace RequestService.Repo
             parameters[4] = GetGroupsAsSqlParameter(request.Groups?.Groups);
             
             IQueryable<QueryJobHeader> jobHeaders = _context.JobHeader
-                                .FromSql("EXECUTE [Request].[GetJobsByFilter] @UserID=@UserID,@SupportActivities=@SupportActivities,@RefferingGroupID=@RefferingGroupID,@JobStatuses=@JobStatuses,@Groups=@Groups", parameters);
+                                .FromSqlRaw("EXECUTE [Request].[GetJobsByFilter] @UserID=@UserID,@SupportActivities=@SupportActivities,@RefferingGroupID=@RefferingGroupID,@JobStatuses=@JobStatuses,@Groups=@Groups", parameters);
 
             List<JobHeader> response = new List<JobHeader>();
             foreach (QueryJobHeader j in jobHeaders)
@@ -794,9 +770,25 @@ namespace RequestService.Repo
             else
             {
                 return false;
-            }
+            }            
+        }
 
-            throw new NotImplementedException();
+        public async Task<List<HelpMyStreet.Utils.Models.Question>> GetQuestionsForActivity(HelpMyStreet.Utils.Enums.SupportActivities activity, RequestHelpFormVariant requestHelpFormVariant, RequestHelpFormStage requestHelpFormStage, CancellationToken cancellationToken)
+        {
+            return _context.ActivityQuestions
+                        .Include(x => x.Question)
+                        .Where(x => x.ActivityId == (int)activity && x.RequestFormVariantId == (int)requestHelpFormVariant && x.RequestFormStageId == (int)requestHelpFormStage)
+                        .Select(x => new HelpMyStreet.Utils.Models.Question
+                        {
+                            Id = x.Question.Id,
+                            Name = x.Question.Name,
+                            Required = x.Required,
+                            SubText = x.Subtext,
+                            Location = x.Location,
+                            PlaceholderText = x.PlaceholderText,
+                            Type = (QuestionType)x.Question.QuestionType,
+                            AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>()
+                        }).ToList();
         }
     }
 }
