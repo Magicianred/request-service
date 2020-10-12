@@ -86,7 +86,10 @@ namespace RequestService.Handlers
                             .ValidCredentials
                             .Any(a => c.Contains(a));
                     }
-                    break;
+                    else
+                    {
+                        break;
+                    }
                 }
 
                 if (!hasValidCredentials)
