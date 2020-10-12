@@ -10,6 +10,8 @@ using HelpMyStreet.Utils.Enums;
 using System.Linq;
 using HelpMyStreet.Utils.Models;
 using System;
+using HelpMyStreet.Contracts.GroupService.Request;
+using System.Collections.Generic;
 
 namespace RequestService.Handlers
 {
@@ -42,27 +44,52 @@ namespace RequestService.Handlers
             }
             else
             {
-                var user = await _userService.GetUser(request.VolunteerUserID, cancellationToken);
-
-                if (!user.User.IsVerified ?? false || user == null)
-                {
-                    response.Outcome = UpdateJobStatusOutcome.BadRequest;
-                    return response;
-                }
-
-
+                var jobDetails = _repository.GetJobDetails(request.JobID);
                 var volunteerGroups = await _groupService.GetUserGroups(request.VolunteerUserID, cancellationToken);
                 var jobGroups = await _repository.GetGroupsForJobAsync(request.JobID, cancellationToken);
                 int referringGroupId = await _repository.GetReferringGroupIDForJobAsync(request.JobID, cancellationToken);
 
                 if (volunteerGroups == null || jobGroups == null)
                 {
-                    throw new System.Exception("volunteerGroups or jobGroup is null");
+                    throw new Exception("volunteerGroups or jobGroup is null");
                 }
 
                 bool jobGroupContainsVolunteerGroups = jobGroups.Any(volunteerGroups.Groups.Contains);
 
                 if (!jobGroupContainsVolunteerGroups)
+                {
+                    response.Outcome = UpdateJobStatusOutcome.BadRequest;
+                    return response;
+                }
+
+                var groupMember = await _groupService.GetGroupMember(new GetGroupMemberRequest()
+                {
+                    AuthorisingUserId = request.CreatedByUserID,
+                    UserId = request.VolunteerUserID,
+                    GroupId = referringGroupId
+                });
+
+                var groupActivityCredentials = await _groupService.GetGroupActivityCredentials(new GetGroupActivityCredentialsRequest()
+                {
+                    GroupId = referringGroupId,
+                    SupportActivityType = new SupportActivityType() { SupportActivity = jobDetails.JobSummary.SupportActivity}
+                });
+
+                bool hasValidCredentials = true;
+
+                foreach(List<int> c in groupActivityCredentials.CredentialSets)
+                {
+                    if(hasValidCredentials)
+                    {
+                        hasValidCredentials = groupMember
+                            .UserInGroup
+                            .ValidCredentials
+                            .Any(a => c.Contains(a));
+                    }
+                    break;
+                }
+
+                if (!hasValidCredentials)
                 {
                     response.Outcome = UpdateJobStatusOutcome.BadRequest;
                     return response;
@@ -77,9 +104,9 @@ namespace RequestService.Handlers
 
                     if (result == UpdateJobStatusOutcome.Success)
                     {
-                        await _groupService.PostAssignRole(new HelpMyStreet.Contracts.GroupService.Request.PostAssignRoleRequest()
+                        await _groupService.PostAssignRole(new PostAssignRoleRequest()
                         {
-                            Role = new HelpMyStreet.Contracts.GroupService.Request.RoleRequest() { GroupRole = GroupRoles.Volunteer },
+                            Role = new RoleRequest() { GroupRole = GroupRoles.Volunteer },
                             UserID = request.VolunteerUserID,
                             GroupID = referringGroupId,
                             AuthorisedByUserID = ADMIN_USERID
