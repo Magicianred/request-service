@@ -2,6 +2,7 @@ using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.GroupService.Request;
 using HelpMyStreet.Contracts.GroupService.Response;
 using HelpMyStreet.Contracts.RequestService.Request;
+using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.UserService.Response;
 using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Models;
@@ -30,9 +31,11 @@ namespace RequestService.UnitTests
         private GetUserRolesResponse _getUserRolesResponse;
         private List<int> _getGroupsForJobResponse;
         private int _referringGroupId;
-        private GetUserByIDResponse _getUserbyIdResponse;
         private PostAssignRoleResponse _postAssignRoleResponse;
         private bool _isSameAsProposed = false;
+        private GetGroupMemberResponse _getGroupMemberResponse;
+        private GetGroupActivityCredentialsResponse _getGroupActivityCredentialsResponse;
+        private GetJobDetailsResponse _getJobDetailsResponse;
 
         [SetUp]
         public void Setup()
@@ -40,8 +43,7 @@ namespace RequestService.UnitTests
             SetupRepository();
             SetupCommunicationService();
             SetupGroupService();
-            SetupUserService();
-            _classUnderTest = new PutUpdateJobStatusToInProgressHandler(_repository.Object, _communicationService.Object,_groupService.Object, _userService.Object);
+            _classUnderTest = new PutUpdateJobStatusToInProgressHandler(_repository.Object, _communicationService.Object,_groupService.Object);
         }
 
         private void SetupCommunicationService()
@@ -70,6 +72,9 @@ namespace RequestService.UnitTests
               It.IsAny<int>(),
               It.IsAny<JobStatuses>())).Returns(() => _isSameAsProposed);
 
+            _repository.Setup(x => x.GetJobDetails(It.IsAny<int>()))
+                .Returns(() => _getJobDetailsResponse);
+
         }
 
         private void SetupGroupService()
@@ -86,23 +91,11 @@ namespace RequestService.UnitTests
             _groupService.Setup(x => x.PostAssignRole(It.IsAny<PostAssignRoleRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => _postAssignRoleResponse);
 
-        }
+            _groupService.Setup(x => x.GetGroupMember(It.IsAny<GetGroupMemberRequest>()))
+                .ReturnsAsync(() => _getGroupMemberResponse);
 
-        private void SetupUserService()
-        {
-            _userService = new Mock<IUserService>();
-
-            _getUserbyIdResponse = new GetUserByIDResponse()
-            {
-                User = new User()
-                {
-                    ID = 1,
-                    IsVerified = true
-                }
-            };
-
-            _userService.Setup(x => x.GetUser(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => _getUserbyIdResponse);
+            _groupService.Setup(x => x.GetGroupActivityCredentials(It.IsAny<GetGroupActivityCredentialsRequest>()))
+                .ReturnsAsync(() => _getGroupActivityCredentialsResponse);
         }
 
         //[Test]
@@ -183,20 +176,54 @@ namespace RequestService.UnitTests
                 JobID = 1,
                 VolunteerUserID = 1
             };
-            _getUserbyIdResponse = new GetUserByIDResponse()
+
+            _getJobDetailsResponse = new GetJobDetailsResponse()
             {
-                User = new User()
+                JobSummary = new JobSummary()
                 {
-                    ID = 1,
-                    IsVerified = false
+                    JobID = 1,
+                    SupportActivity = SupportActivities.Shopping
                 }
             };
+
+            _getGroupMemberResponse = new GetGroupMemberResponse()
+            {
+                UserInGroup = new UserInGroup()
+                {
+                    GroupId = 1,
+                    UserId = 1,
+                    GroupRoles = new List<GroupRoles>() { GroupRoles.Member },
+                    ValidCredentials = new List<int>()
+                }
+            };
+
+            _getGroupActivityCredentialsResponse = new GetGroupActivityCredentialsResponse()
+            {
+                CredentialSets = new List<List<int>> { new List<int>() { -1 } }
+            };
+
+            _getUserGroupsReponse = new GetUserGroupsResponse()
+            {
+                Groups = new List<int>()
+                {
+                    1
+                }
+            };
+
+            _getGroupsForJobResponse = new List<int>()
+            {
+                1
+            };
+
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
             _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
-            _groupService.Verify(x => x.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
-            _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
-            _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+            _groupService.Verify(x => x.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _groupService.Verify(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
+            _groupService.Verify(x => x.GetGroupMember(It.IsAny<GetGroupMemberRequest>()), Times.Once);
+            _groupService.Verify(x => x.GetGroupActivityCredentials(It.IsAny<GetGroupActivityCredentialsRequest>()), Times.Once);
+
             _repository.Verify(x => x.UpdateJobStatusInProgressAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(),It.IsAny<CancellationToken>()), Times.Never);
             _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
             Assert.AreEqual(UpdateJobStatusOutcome.BadRequest, response.Outcome);
@@ -211,14 +238,6 @@ namespace RequestService.UnitTests
                 CreatedByUserID = 1,
                 JobID = 1,
                 VolunteerUserID = 1
-            };
-            _getUserbyIdResponse = new GetUserByIDResponse()
-            {
-                User = new User()
-                {
-                    ID = 1,
-                    IsVerified = true
-                }
             };
 
             _getUserGroupsReponse = new GetUserGroupsResponse()
@@ -241,7 +260,8 @@ namespace RequestService.UnitTests
             _groupService.Verify(x => x.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
-
+            _groupService.Verify(x => x.GetGroupMember(It.IsAny<GetGroupMemberRequest>()), Times.Never);
+            _groupService.Verify(x => x.GetGroupActivityCredentials(It.IsAny<GetGroupActivityCredentialsRequest>()), Times.Never);
             _groupService.Verify(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
             _repository.Verify(x => x.UpdateJobStatusInProgressAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
             _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -259,15 +279,6 @@ namespace RequestService.UnitTests
                 JobID = 1,
                 VolunteerUserID = 2
             };
-            _getUserbyIdResponse = new GetUserByIDResponse()
-            {
-                User = new User()
-                {
-                    ID = 1,
-                    IsVerified = true
-                }
-            };
-
             _getUserGroupsReponse = new GetUserGroupsResponse()
             {
                 Groups = new List<int>()
@@ -282,6 +293,31 @@ namespace RequestService.UnitTests
             };
 
             _referringGroupId = 1;
+
+            _getJobDetailsResponse = new GetJobDetailsResponse()
+            {
+                JobSummary = new JobSummary()
+                {
+                    JobID = 1,
+                    SupportActivity = SupportActivities.Shopping
+                }
+            };
+
+            _getGroupMemberResponse = new GetGroupMemberResponse()
+            {
+                UserInGroup = new UserInGroup()
+                {
+                    GroupId = 1,
+                    UserId = 1,
+                    GroupRoles = new List<GroupRoles>() { GroupRoles.Member },
+                    ValidCredentials = new List<int>() { -1 }
+                }
+            };
+
+            _getGroupActivityCredentialsResponse = new GetGroupActivityCredentialsResponse()
+            {
+                CredentialSets = new List<List<int>> { new List<int>() { -1 }}
+            };
 
             Dictionary<int, List<int>> roles = new Dictionary<int, List<int>>();
             roles.Add(1, new List<int>() { (int) GroupRoles.Member });
@@ -297,7 +333,8 @@ namespace RequestService.UnitTests
             _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _groupService.Verify(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
-
+            _groupService.Verify(x => x.GetGroupMember(It.IsAny<GetGroupMemberRequest>()), Times.Once);
+            _groupService.Verify(x => x.GetGroupActivityCredentials(It.IsAny<GetGroupActivityCredentialsRequest>()), Times.Once);
             _repository.Verify(x => x.UpdateJobStatusInProgressAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
             _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Never);
             Assert.AreEqual(UpdateJobStatusOutcome.Unauthorized, response.Outcome);
@@ -313,15 +350,6 @@ namespace RequestService.UnitTests
                 JobID = 1,
                 VolunteerUserID = 2
             };
-            _getUserbyIdResponse = new GetUserByIDResponse()
-            {
-                User = new User()
-                {
-                    ID = 1,
-                    IsVerified = true
-                }
-            };
-
             _getUserGroupsReponse = new GetUserGroupsResponse()
             {
                 Groups = new List<int>()
@@ -336,7 +364,32 @@ namespace RequestService.UnitTests
             };
 
             _referringGroupId = 1;
-            
+
+            _getJobDetailsResponse = new GetJobDetailsResponse()
+            {
+                JobSummary = new JobSummary()
+                {
+                    JobID = 1,
+                    SupportActivity = SupportActivities.Shopping
+                }
+            };
+
+            _getGroupMemberResponse = new GetGroupMemberResponse()
+            {
+                UserInGroup = new UserInGroup()
+                {
+                    GroupId = 1,
+                    UserId = 1,
+                    GroupRoles = new List<GroupRoles>() { GroupRoles.Member },
+                    ValidCredentials = new List<int>() { -1 }
+                }
+            };
+
+            _getGroupActivityCredentialsResponse = new GetGroupActivityCredentialsResponse()
+            {
+                CredentialSets = new List<List<int>> { new List<int>() { -1 } }
+            };
+
 
             Dictionary<int, List<int>> roles = new Dictionary<int, List<int>>();
             roles.Add(1, new List<int>() { (int)GroupRoles.TaskAdmin });
@@ -352,7 +405,8 @@ namespace RequestService.UnitTests
             _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _groupService.Verify(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
-
+            _groupService.Verify(x => x.GetGroupMember(It.IsAny<GetGroupMemberRequest>()), Times.Once);
+            _groupService.Verify(x => x.GetGroupActivityCredentials(It.IsAny<GetGroupActivityCredentialsRequest>()), Times.Once);
             _repository.Verify(x => x.UpdateJobStatusInProgressAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Once);
             Assert.AreEqual(UpdateJobStatusOutcome.Success, response.Outcome);
@@ -372,15 +426,6 @@ namespace RequestService.UnitTests
                 JobID = 1,
                 VolunteerUserID = 1
             };
-            _getUserbyIdResponse = new GetUserByIDResponse()
-            {
-                User = new User()
-                {
-                    ID = 1,
-                    IsVerified = true
-                }
-            };
-
             _getUserGroupsReponse = new GetUserGroupsResponse()
             {
                 Groups = new List<int>()
@@ -404,13 +449,41 @@ namespace RequestService.UnitTests
                 UserGroupRoles = roles
             };
 
+            _getJobDetailsResponse = new GetJobDetailsResponse()
+            {
+                JobSummary = new JobSummary()
+                {
+                    JobID = 1,
+                    SupportActivity = SupportActivities.Shopping
+                }
+            };
+
+            _getGroupMemberResponse = new GetGroupMemberResponse()
+            {
+                UserInGroup = new UserInGroup()
+                {
+                    GroupId = 1,
+                    UserId = 1,
+                    GroupRoles = new List<GroupRoles>() { GroupRoles.Member },
+                    ValidCredentials = new List<int>() { -1 }
+                }
+            };
+
+            _getGroupActivityCredentialsResponse = new GetGroupActivityCredentialsResponse()
+            {
+                CredentialSets = new List<List<int>> { new List<int>() { -1 } }
+            };
+
             var response = await _classUnderTest.Handle(_request, CancellationToken.None);
             _repository.Verify(x => x.JobHasSameStatusAsProposedStatus(It.IsAny<int>(), It.IsAny<JobStatuses>()), Times.Once);
             _groupService.Verify(x => x.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            _groupService.Verify(x => x.GetGroupMember(It.IsAny<GetGroupMemberRequest>()), Times.Once);
+            _groupService.Verify(x => x.GetGroupActivityCredentials(It.IsAny<GetGroupActivityCredentialsRequest>()), Times.Once);
             _repository.Verify(x => x.GetGroupsForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _groupService.Verify(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
-
+            _groupService.Verify(x => x.GetGroupMember(It.IsAny<GetGroupMemberRequest>()), Times.Once);
+            _groupService.Verify(x => x.GetGroupActivityCredentials(It.IsAny<GetGroupActivityCredentialsRequest>()), Times.Once);
             _repository.Verify(x => x.UpdateJobStatusInProgressAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
             _communicationService.Verify(x => x.RequestCommunication(It.IsAny<RequestCommunicationRequest>(), It.IsAny<CancellationToken>()), Times.Once);
             Assert.AreEqual(UpdateJobStatusOutcome.Success, response.Outcome);

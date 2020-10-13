@@ -21,6 +21,56 @@ namespace RequestService.Core.Services
             _httpClientWrapper = httpClientWrapper;
         }
 
+        public async Task<GetGroupActivityCredentialsResponse> GetGroupActivityCredentials(GetGroupActivityCredentialsRequest request)
+        {
+            string path = $"/api/GetGroupActivityCredentials";
+            string absolutePath = $"{path}";
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            
+            using (HttpResponseMessage response = await _httpClientWrapper.PostAsync(HttpClientConfigName.GroupService, absolutePath, jsonContent, CancellationToken.None).ConfigureAwait(false))
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var getJobsResponse = JsonConvert.DeserializeObject<ResponseWrapper<GetGroupActivityCredentialsResponse, GroupServiceErrorCode>>(jsonResponse);
+                if (getJobsResponse.HasContent && getJobsResponse.IsSuccessful)
+                {
+                    return getJobsResponse.Content;
+                }
+                return null;
+            }
+        }
+
+        public async Task<GetGroupMemberResponse> GetGroupMember(GetGroupMemberRequest request)
+        {
+            string path = $"/api/GetGroupMember?groupID={request.GroupId}&userId={request.UserId}&authorisingUserId={request.AuthorisingUserId}";
+            string absolutePath = $"{path}";
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.GroupService, absolutePath, CancellationToken.None).ConfigureAwait(false))
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var getJobsResponse = JsonConvert.DeserializeObject<ResponseWrapper<GetGroupMemberResponse, GroupServiceErrorCode>>(jsonResponse);
+                if (getJobsResponse.HasContent && getJobsResponse.IsSuccessful)
+                {
+                    return getJobsResponse.Content;
+                }
+                return null;
+            }
+        }
+
+        public async Task<GetGroupMemberDetailsResponse> GetGroupMemberDetails(GetGroupMemberDetailsRequest request)
+        {
+            string path = $"/api/GetGroupMemberDetails?groupID={request.GroupId}&userId={request.UserId}&authorisingUserId={request.AuthorisingUserId}";
+            string absolutePath = $"{path}";
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.GroupService, absolutePath, CancellationToken.None).ConfigureAwait(false))
+            {
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+                var getJobsResponse = JsonConvert.DeserializeObject<ResponseWrapper<GetGroupMemberDetailsResponse, GroupServiceErrorCode>>(jsonResponse);
+                if (getJobsResponse.HasContent && getJobsResponse.IsSuccessful)
+                {
+                    return getJobsResponse.Content;
+                }
+                return null;
+            }
+        }
+
         public async Task<GetGroupMembersResponse> GetGroupMembers(int groupID)
         {
             string path = $"/api/GetGroupMembers?groupID=" + groupID;

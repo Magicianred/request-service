@@ -12,6 +12,9 @@ namespace RequestService.Core.Services
         Task<GetGroupMembersResponse> GetGroupMembers(int groupID);
         Task<GetUserRolesResponse> GetUserRoles(int userId, CancellationToken cancellationToken);
         Task<PostAssignRoleResponse> PostAssignRole(PostAssignRoleRequest postAssignRoleRequest, CancellationToken cancellationToken);
+        Task<GetGroupMemberDetailsResponse> GetGroupMemberDetails(GetGroupMemberDetailsRequest request);
+        Task<GetGroupMemberResponse> GetGroupMember(GetGroupMemberRequest request);
+        Task<GetGroupActivityCredentialsResponse> GetGroupActivityCredentials(GetGroupActivityCredentialsRequest request);
     }
 
 }
