@@ -38,6 +38,7 @@ namespace RequestService.Core.Interfaces.Repositories
         List<JobHeader> GetJobHeaders(GetJobsByFilterRequest request);
         void ArchiveOldRequests(int daysSinceJobRequested, int daysSinceJobStatusChanged);        
         bool JobHasSameStatusAsProposedStatus(int jobID, JobStatuses newJobStatus);
+        bool JobIsInProgressWithSameVolunteerUserId(int jobID, int? volunteerUserID);
         Task<List<Question>> GetQuestionsForActivity(SupportActivities activity, RequestHelpFormVariant requestHelpFormVariant, RequestHelpFormStage requestHelpFormStage, CancellationToken cancellationToken);
     }
 }

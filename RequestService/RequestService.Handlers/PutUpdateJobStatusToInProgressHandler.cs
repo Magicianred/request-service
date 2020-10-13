@@ -8,7 +8,6 @@ using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Enums;
 using System.Linq;
-using HelpMyStreet.Utils.Models;
 using System;
 using HelpMyStreet.Contracts.GroupService.Request;
 using System.Collections.Generic;
@@ -36,7 +35,7 @@ namespace RequestService.Handlers
                 Outcome = UpdateJobStatusOutcome.Unauthorized
             };
 
-            if (_repository.JobHasSameStatusAsProposedStatus(request.JobID, JobStatuses.InProgress))
+            if (_repository.JobIsInProgressWithSameVolunteerUserId(request.JobID, request.VolunteerUserID))
             {
                 response.Outcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
             }
