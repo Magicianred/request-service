@@ -790,5 +790,18 @@ namespace RequestService.Repo
                             AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>()
                         }).ToList();
         }
+
+        public bool JobIsInProgressWithSameVolunteerUserId(int jobID, int? volunteerUserID)
+        {
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job.JobStatusId == (byte)JobStatuses.InProgress && job.VolunteerUserId == volunteerUserID)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
