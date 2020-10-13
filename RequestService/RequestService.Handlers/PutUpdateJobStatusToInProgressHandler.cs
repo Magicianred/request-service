@@ -20,15 +20,13 @@ namespace RequestService.Handlers
         private readonly IRepository _repository;
         private readonly ICommunicationService _communicationService;
         private readonly IGroupService _groupService;
-        private readonly IUserService _userService;
         private const int ADMIN_USERID = -1;
 
-        public PutUpdateJobStatusToInProgressHandler(IRepository repository, ICommunicationService communicationService, IGroupService groupService, IUserService userService)
+        public PutUpdateJobStatusToInProgressHandler(IRepository repository, ICommunicationService communicationService, IGroupService groupService)
         {
             _repository = repository;
             _communicationService = communicationService;
             _groupService = groupService;
-            _userService = userService;
         }
 
         public async Task<PutUpdateJobStatusToInProgressResponse> Handle(PutUpdateJobStatusToInProgressRequest request, CancellationToken cancellationToken)
