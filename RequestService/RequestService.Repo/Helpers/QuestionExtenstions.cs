@@ -202,6 +202,10 @@ namespace RequestService.Repo.Helpers
                             entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.FtlosDonationInformation, Location = "pos3", Order = 4, RequestFormVariantId = (int)form, Required = false });
                         }
                     }
+                    else if (activity == SupportActivities.ColdWeatherArmy)
+                    {
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.SupportRequesting, Location = "pos1", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Please be aware that information in this section is visible to prospective volunteers" });
+                    }
                     else
                     {
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.SupportRequesting, Location = "pos1", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you" });
@@ -239,7 +243,8 @@ namespace RequestService.Repo.Helpers
         {
             IEnumerable<SupportActivities> activites;
             IEnumerable<SupportActivities> genericSupportActivities = Enum.GetValues(typeof(SupportActivities)).Cast<SupportActivities>()
-                .Where(sa => sa != SupportActivities.WellbeingPackage && sa != SupportActivities.CommunityConnector);
+                .Where(sa => sa != SupportActivities.WellbeingPackage && sa != SupportActivities.CommunityConnector
+                 && sa != SupportActivities.ColdWeatherArmy && sa != SupportActivities.Transport);
 
             switch (form)
             {
@@ -263,6 +268,8 @@ namespace RequestService.Repo.Helpers
 
                 case RequestHelpFormVariant.AgeUKWirral:
                     activites = new List<SupportActivities>() { SupportActivities.Shopping, SupportActivities.CollectingPrescriptions, SupportActivities.Other };
+                    ((List<SupportActivities>)activites).Add(SupportActivities.Transport);
+                    ((List<SupportActivities>)activites).Add(SupportActivities.ColdWeatherArmy);
                     break;
 
                 default: 
