@@ -193,6 +193,7 @@ namespace RequestService.Repo
                             IsHealthCritical = job.HealthCritical,
                             SupportActivityId = (byte)job.SupportActivity,
                             DueDate = DateTime.Now.AddDays(job.DueDays),
+                            DueDateTypeId = (byte) job.DueDateType,
                             JobStatusId = (byte) JobStatuses.Open,
                             Reference = job.Questions.Where(x => x.Id == (int)Questions.AgeUKReference).FirstOrDefault()?.Answer
                         };
@@ -555,7 +556,8 @@ namespace RequestService.Repo
                 DueDays = Convert.ToInt32((job.DueDate.Date - DateTime.Now.Date).TotalDays),
                 DateRequested = job.NewRequest.DateRequested,
                 RequestorType = (RequestorType)job.NewRequest.RequestorType,
-                Archive = job.NewRequest.Archive
+                Archive = job.NewRequest.Archive,
+                DueDateType = (DueDateType) job.DueDateTypeId
             };
         }
 

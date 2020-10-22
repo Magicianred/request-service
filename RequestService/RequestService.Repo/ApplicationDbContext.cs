@@ -126,6 +126,8 @@ namespace RequestService.Repo
 
                 entity.Property(e => e.JobStatusId).HasColumnName("JobStatusID");
 
+                entity.Property(e => e.DueDateTypeId).HasDefaultValue(1);
+
                 entity.HasOne(d => d.NewRequest)
                     .WithMany(p => p.Job)
                     .HasForeignKey(d => d.RequestId)
