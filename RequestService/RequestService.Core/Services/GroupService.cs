@@ -104,6 +104,23 @@ namespace RequestService.Core.Services
             throw new Exception("Unable to get new request actions");
         }
 
+        public async Task<GetRequestHelpFormVariantResponse> GetRequestHelpFormVariant(int groupId, string source, CancellationToken cancellationToken)
+        {
+            string path = $"api/GetRequestHelpFormVariant?GroupID={groupId}&Source={source}";
+
+            using (HttpResponseMessage response = await _httpClientWrapper.GetAsync(HttpClientConfigName.GroupService, path, cancellationToken).ConfigureAwait(false))
+            {
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync();
+                var jsonResponse = JsonConvert.DeserializeObject<ResponseWrapper<GetRequestHelpFormVariantResponse, GroupServiceErrorCode>>(content);
+                if (jsonResponse.IsSuccessful)
+                {
+                    return jsonResponse.Content;
+                }
+            }
+            throw new Exception("Unable to get user groups");
+        }
+
         public async Task<GetUserGroupsResponse> GetUserGroups(int userId, CancellationToken cancellationToken)
         {
             string path = $"api/GetUserGroups?UserID={userId}";

@@ -60,7 +60,52 @@ namespace RequestService.Handlers
         {
             PostNewRequestForHelpResponse response = new PostNewRequestForHelpResponse();
 
-            CopyRequestorAsRecipient(request);
+            var formVariant = await _groupService.GetRequestHelpFormVariant(request.HelpRequest.ReferringGroupId, request.HelpRequest.Source, cancellationToken);
+
+            if (formVariant == null)
+            {
+                return new PostNewRequestForHelpResponse
+                {
+                    RequestID = -1,
+                    Fulfillable = Fulfillable.Rejected_ConfigurationError
+                };
+            }
+
+            if(formVariant.AccessRestrictedByRole)
+            {
+                bool failedChecks = request.HelpRequest.CreatedByUserId == 0;
+
+                if(!failedChecks)
+                {
+                    var groupMember = await _groupService.GetGroupMember(new HelpMyStreet.Contracts.GroupService.Request.GetGroupMemberRequest()
+                    {
+                        AuthorisingUserId = request.HelpRequest.CreatedByUserId,
+                        UserId = request.HelpRequest.CreatedByUserId,
+                        GroupId = request.HelpRequest.ReferringGroupId
+                    });
+
+                    failedChecks = !groupMember.UserInGroup.GroupRoles.Contains(GroupRoles.RequestSubmitter);
+                }
+
+                if (failedChecks)
+                {
+                    return new PostNewRequestForHelpResponse
+                    {
+                        RequestID = -1,
+                        Fulfillable = Fulfillable.Rejected_Unauthorised
+                    };
+                }
+
+            }
+
+            if (formVariant.RequestorDefinedByGroup && formVariant.RequestorPersonalDetails != null)
+            {
+                request.HelpRequest.Requestor = formVariant.RequestorPersonalDetails;
+            }
+            else
+            {
+                CopyRequestorAsRecipient(request);
+            }
             string postcode = request.HelpRequest.Recipient.Address.Postcode;
      
             var postcodeValid = await _addressService.IsValidPostcode(postcode, cancellationToken);
@@ -73,7 +118,7 @@ namespace RequestService.Handlers
                     Fulfillable = Fulfillable.Rejected_InvalidPostcode
                 };
             }
-
+            
             // Currently indicates standard "passed to volunteers" result
             response.Fulfillable = Fulfillable.Accepted_ManualReferral;
 

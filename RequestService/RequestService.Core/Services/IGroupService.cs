@@ -15,6 +15,7 @@ namespace RequestService.Core.Services
         Task<GetGroupMemberDetailsResponse> GetGroupMemberDetails(GetGroupMemberDetailsRequest request);
         Task<GetGroupMemberResponse> GetGroupMember(GetGroupMemberRequest request);
         Task<GetGroupActivityCredentialsResponse> GetGroupActivityCredentials(GetGroupActivityCredentialsRequest request);
+        Task<GetRequestHelpFormVariantResponse> GetRequestHelpFormVariant(int groupId, string source, CancellationToken cancellationToken);
     }
 
 }
