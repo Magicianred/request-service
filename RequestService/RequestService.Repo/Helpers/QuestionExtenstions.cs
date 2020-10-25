@@ -97,6 +97,20 @@ namespace RequestService.Repo.Helpers
                 QuestionType = (int)QuestionType.Text,
                 AdditionalData = string.Empty
             });
+            entity.HasData(new Question
+            {
+                Id = (int) Questions.Shopping,
+                Name = "Please tell us what you need from the shop (make sure to include the size, brand, and any other important details)",
+                QuestionType = (int) QuestionType.Text,
+                AdditionalData = string.Empty
+            });
+            entity.HasData(new Question
+            {
+                Id = (int)Questions.Prescription,
+                Name = "Where does the prescription need collecting from?",
+                QuestionType = (int)QuestionType.Text,
+                AdditionalData = string.Empty
+            });
         }
         private static string GetAdditionalData(Questions question)
         {
@@ -202,6 +216,58 @@ namespace RequestService.Repo.Helpers
                             entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.FtlosDonationInformation, Location = "pos3", Order = 4, RequestFormVariantId = (int)form, Required = false });
                         }
                     }
+                    else if (activity == SupportActivities.ColdWeatherArmy)
+                    {
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.SupportRequesting, Location = "pos1", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Please be aware that information in this section is visible to prospective volunteers" });
+                    }
+                    else if (activity == SupportActivities.Shopping)
+                    {
+                        entity.HasData(new ActivityQuestions
+                        {
+                            ActivityId = (int)activity,
+                            RequestFormStageId = (int)RequestHelpFormStage.Request,
+                            QuestionId = (int)Questions.Shopping,
+                            Location = "pos1",
+                            Order = 1,
+                            RequestFormVariantId = (int)form,
+                            Required = true,
+                            PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs."
+                        });
+
+                        string anythingElseToTellUs_placeholderText = form switch
+                        {
+                            RequestHelpFormVariant.HLP_CommunityConnector => "Is there a specific issue you would like to discuss with the Community Connector, e.g. dealing with a bereavement (please don’t include personal details here)",
+                            RequestHelpFormVariant.Ruddington => "For example, let us know if you’re struggling to find help elsewhere.",
+                            _ => "For example, if it’s a request for some shopping and you know what you want, you could give us the list."
+                        };
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = anythingElseToTellUs_placeholderText });
+                    }
+                    else if (activity == SupportActivities.CollectingPrescriptions)
+                    {
+                        entity.HasData(new ActivityQuestions
+                        {
+                            ActivityId = (int)activity,
+                            RequestFormStageId = (int)RequestHelpFormStage.Request,
+                            QuestionId = (int)Questions.Prescription,
+                            Location = "pos1",
+                            Order = 1,
+                            RequestFormVariantId = (int)form,
+                            Required = true,
+                            PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham."
+                        });
+
+                        entity.HasData(new ActivityQuestions 
+                        { 
+                            ActivityId = (int)activity, 
+                            RequestFormStageId = (int)RequestHelpFormStage.Detail, 
+                            QuestionId = (int)Questions.AnythingElseToTellUs, 
+                            Location = "details2",
+                            Order = 2, 
+                            RequestFormVariantId = (int)form, 
+                            Required = false, 
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for." 
+                        });
+                    }
                     else
                     {
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.SupportRequesting, Location = "pos1", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you" });
@@ -239,7 +305,8 @@ namespace RequestService.Repo.Helpers
         {
             IEnumerable<SupportActivities> activites;
             IEnumerable<SupportActivities> genericSupportActivities = Enum.GetValues(typeof(SupportActivities)).Cast<SupportActivities>()
-                .Where(sa => sa != SupportActivities.WellbeingPackage && sa != SupportActivities.CommunityConnector);
+                .Where(sa => sa != SupportActivities.WellbeingPackage && sa != SupportActivities.CommunityConnector
+                 && sa != SupportActivities.ColdWeatherArmy && sa != SupportActivities.Transport);
 
             switch (form)
             {
@@ -263,6 +330,8 @@ namespace RequestService.Repo.Helpers
 
                 case RequestHelpFormVariant.AgeUKWirral:
                     activites = new List<SupportActivities>() { SupportActivities.Shopping, SupportActivities.CollectingPrescriptions, SupportActivities.Other };
+                    ((List<SupportActivities>)activites).Add(SupportActivities.Transport);
+                    ((List<SupportActivities>)activites).Add(SupportActivities.ColdWeatherArmy);
                     break;
 
                 default: 

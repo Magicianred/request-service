@@ -5,6 +5,7 @@ using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Contracts.UserService.Response;
 using HelpMyStreet.Utils.Enums;
+using HelpMyStreet.Utils.Models;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
@@ -37,6 +38,9 @@ namespace RequestService.UnitTests
         private GetNewRequestActionsResponse _getNewRequestActionsResponse;
         private GetVolunteersByPostcodeAndActivityResponse _getVolunteersByPostcodeAndActivityResponse;
         private GetGroupMembersResponse _getGroupMembersResponse;
+        private GetRequestHelpFormVariantResponse _formVariantResponse;
+        private GetGroupMemberResponse _getGroupMemberResponse;
+
         [SetUp]
         public void Setup()
         {
@@ -114,6 +118,20 @@ namespace RequestService.UnitTests
 
             _groupService.Setup(x => x.GetGroupMembers(It.IsAny<int>()))
                 .ReturnsAsync(() => _getGroupMembersResponse);
+
+            _formVariantResponse = new GetRequestHelpFormVariantResponse()
+            {
+                AccessRestrictedByRole = false,
+                RequestorDefinedByGroup = false,
+                RequestHelpFormVariant = RequestHelpFormVariant.Default,
+                TargetGroups = TargetGroups.GenericGroup
+            };
+
+            _groupService.Setup(x => x.GetRequestHelpFormVariant(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => _formVariantResponse);
+
+            _groupService.Setup(x => x.GetGroupMember(It.IsAny<GetGroupMemberRequest>()))
+                .ReturnsAsync(() => _getGroupMemberResponse);
         }
 
         [Test]
@@ -297,8 +315,140 @@ namespace RequestService.UnitTests
             Assert.AreEqual(Fulfillable.Accepted_ManualReferral, response.Fulfillable);
         }
 
+        [Test]
+        public async Task WhenRequestorDefinedByGroup_Populate()
+        {
+            _validPostcode = true;
+            _emailSent = true;
+            var request = new PostNewRequestForHelpRequest
+            {
+                HelpRequest = new HelpRequest
+                {
+                    RequestorType = RequestorType.Myself,
+                    Recipient = new RequestPersonalDetails
+                    {
+                        Address = new Address
+                        {
+                            Postcode = "test",
+                        }
+                    },
+                    VolunteerUserId = 1,
+                },
+                NewJobsRequest = new NewJobsRequest
+                {
+                    Jobs = new List<Job>
+                    {
+                        new Job
+                        {
+                            HealthCritical = true,
+                            DueDays = 5,
+                            SupportActivity = SupportActivities.Shopping
+                        }
+                    }
+                }
+            };
 
+            _formVariantResponse = new GetRequestHelpFormVariantResponse()
+            {
+                AccessRestrictedByRole = false,
+                RequestorDefinedByGroup = true,
+                RequestHelpFormVariant = RequestHelpFormVariant.Default,
+                TargetGroups = TargetGroups.GenericGroup,
+                RequestorPersonalDetails = new RequestPersonalDetails()
+                {
+                    FirstName = "First",
+                    LastName = "Last",
+                    EmailAddress = "Email",
+                    MobileNumber = "Mobile",
+                    OtherNumber = "Other"
+                }
+            };
 
+            _getNewRequestActionsResponse = new GetNewRequestActionsResponse() { Actions = new Dictionary<int, TaskAction>() };
+            _getNewRequestActionsResponse.Actions.Add(0, new TaskAction() { TaskActions = new Dictionary<NewTaskAction, List<int>>() });
+            _getNewRequestActionsResponse.Actions[0].TaskActions.Add(NewTaskAction.AssignToVolunteer, new List<int>() { 1 });
 
+            var response = await _classUnderTest.Handle(request, new CancellationToken());
+            _groupService.Verify(x => x.GetRequestHelpFormVariant(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            Assert.AreEqual(_formVariantResponse.RequestorPersonalDetails, request.HelpRequest.Requestor);
+            Assert.AreEqual(Fulfillable.Accepted_DiyRequest, response.Fulfillable);
+        }
+
+        [Test]
+        [TestCase(1, GroupRoles.Member, Fulfillable.Rejected_Unauthorised, 1)]
+        [TestCase(1, GroupRoles.Volunteer, Fulfillable.Rejected_Unauthorised, 1)]
+        [TestCase(1, GroupRoles.Owner, Fulfillable.Rejected_Unauthorised, 1)]
+        [TestCase(1, GroupRoles.TaskAdmin, Fulfillable.Rejected_Unauthorised, 1)]
+        [TestCase(1, GroupRoles.UserAdmin, Fulfillable.Rejected_Unauthorised, 1)]
+        [TestCase(1, GroupRoles.RequestSubmitter, Fulfillable.Accepted_DiyRequest, 1)]
+        [TestCase(0, GroupRoles.Member, Fulfillable.Rejected_Unauthorised, 0)]
+        public async Task WhenAccessRestrictedByRole_ReturnsCorrectResponse(int createdByUserId, GroupRoles role, Fulfillable fulfillable, int timesGroupMemberCalled)
+        {
+            _validPostcode = true;
+            _emailSent = true;
+            var request = new PostNewRequestForHelpRequest
+            {
+                HelpRequest = new HelpRequest
+                {
+                    RequestorType = RequestorType.Myself,
+                    Recipient = new RequestPersonalDetails
+                    {
+                        Address = new Address
+                        {
+                            Postcode = "test",
+                        }
+                    },
+                    VolunteerUserId = 1,
+                    CreatedByUserId = createdByUserId
+                },
+                NewJobsRequest = new NewJobsRequest
+                {
+                    Jobs = new List<Job>
+                    {
+                        new Job
+                        {
+                            HealthCritical = true,
+                            DueDays = 5,
+                            SupportActivity = SupportActivities.Shopping
+                        }
+                    }
+                }
+            };
+
+            _formVariantResponse = new GetRequestHelpFormVariantResponse()
+            {
+                AccessRestrictedByRole = true,
+                RequestorDefinedByGroup = true,
+                RequestHelpFormVariant = RequestHelpFormVariant.Default,
+                TargetGroups = TargetGroups.GenericGroup,
+                RequestorPersonalDetails = new RequestPersonalDetails()
+                {
+                    FirstName = "First",
+                    LastName = "Last",
+                    EmailAddress = "Email",
+                    MobileNumber = "Mobile",
+                    OtherNumber = "Other"
+                }
+            };
+
+            _getGroupMemberResponse = new GetGroupMemberResponse()
+            {
+                UserInGroup = new UserInGroup()
+                {
+                    UserId = 1,
+                    GroupId = 1,
+                    GroupRoles = new List<GroupRoles>() { role }
+                }
+            };
+
+            _getNewRequestActionsResponse = new GetNewRequestActionsResponse() { Actions = new Dictionary<int, TaskAction>() };
+            _getNewRequestActionsResponse.Actions.Add(0, new TaskAction() { TaskActions = new Dictionary<NewTaskAction, List<int>>() });
+            _getNewRequestActionsResponse.Actions[0].TaskActions.Add(NewTaskAction.AssignToVolunteer, new List<int>() { 1 });
+
+            var response = await _classUnderTest.Handle(request, new CancellationToken());
+            _groupService.Verify(x => x.GetRequestHelpFormVariant(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            _groupService.Verify(x => x.GetGroupMember(It.IsAny<GetGroupMemberRequest>()), Times.Exactly(timesGroupMemberCalled));
+            Assert.AreEqual(fulfillable, response.Fulfillable);
+        }
     }
 }

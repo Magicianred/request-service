@@ -22,6 +22,8 @@ namespace RequestService.Repo.EntityFramework.Entities
         public DateTime DueDate { get; set; }
         public bool IsHealthCritical { get; set; }
         public string Reference { get; set; }
+        public byte DueDateTypeId { get; set; }
+
         public virtual Request NewRequest { get; set; }
         public virtual ICollection<JobQuestions> JobQuestions { get; set; }
         public virtual ICollection<RequestJobStatus> RequestJobStatus { get; set; }

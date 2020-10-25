@@ -28,6 +28,7 @@ namespace RequestService.Repo
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionsBuilder.UseSqlServer(connectionStrings.RequestService);
+            optionsBuilder.EnableSensitiveDataLogging();
 
             Console.WriteLine($"Using following connection string for Entity Framework: {connectionStrings.RequestService}");
             return new ApplicationDbContext(optionsBuilder.Options);

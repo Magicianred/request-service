@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201022091912_NewActivityQuestions")]
+    partial class NewActivityQuestions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,17 +247,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 1,
                             Location = "pos3",
@@ -284,17 +275,6 @@ namespace RequestService.Repo.Migrations
                             PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
                             RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 1,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -773,17 +753,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
                             QuestionId = 11,
                             RequestFormVariantId = 2,
                             Location = "pos1",
@@ -822,17 +791,6 @@ namespace RequestService.Repo.Migrations
                             PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
                             RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 2,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1470,17 +1428,6 @@ namespace RequestService.Repo.Migrations
                             PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs.",
                             RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -1523,17 +1470,6 @@ namespace RequestService.Repo.Migrations
                             PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
                             RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 3,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2176,17 +2112,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
                             QuestionId = 6,
                             RequestFormVariantId = 5,
                             Location = "pos3",
@@ -2215,17 +2140,6 @@ namespace RequestService.Repo.Migrations
                             PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
                             RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 5,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -2737,17 +2651,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 7,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
                             QuestionId = 9,
                             RequestFormVariantId = 7,
                             Location = "details2",
@@ -2766,17 +2669,6 @@ namespace RequestService.Repo.Migrations
                             PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
                             RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 7,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -3122,17 +3014,6 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
                             QuestionId = 9,
                             RequestFormVariantId = 8,
                             Location = "details2",
@@ -3151,17 +3032,6 @@ namespace RequestService.Repo.Migrations
                             PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
                             RequestFormStageId = 1,
                             Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
-                            RequestFormStageId = 2,
-                            Required = false
                         },
                         new
                         {
@@ -3636,11 +3506,6 @@ namespace RequestService.Repo.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime");
-
-                    b.Property<byte>("DueDateTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)1);
 
                     b.Property<bool>("IsHealthCritical")
                         .HasColumnType("bit");
