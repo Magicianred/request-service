@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HelpMyStreet.Utils.Enums;
+using System;
 
 namespace RequestService.Repo.EntityFramework.Entities
 {
@@ -17,5 +18,6 @@ namespace RequestService.Repo.EntityFramework.Entities
         public int JobID { get; set; }
         public bool? Archive { get; set; }
         public string Reference { get; set; }
+        public byte DueDateTypeId { get; set; }
     }
 }
