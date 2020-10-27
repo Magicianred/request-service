@@ -531,7 +531,8 @@ namespace RequestService.Repo
                     PostCode = j.PostCode,
                     ReferringGroupID = j.ReferringGroupID,
                     SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities) j.SupportActivityID,
-                    Reference = j.Reference
+                    Reference = j.Reference,
+                    DueDateType = (DueDateType) j.DueDateTypeId
                 });
             }
             return response;
