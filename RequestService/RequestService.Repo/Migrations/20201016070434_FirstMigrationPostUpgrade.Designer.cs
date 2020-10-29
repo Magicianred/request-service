@@ -3,19 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201016070434_FirstMigrationPostUpgrade")]
+    partial class FirstMigrationPostUpgrade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.9")
+                .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -234,13 +236,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 12,
+                            QuestionId = 1,
                             RequestFormVariantId = 1,
                             Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs.",
+                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             RequestFormStageId = 1,
-                            Required = true
+                            Required = false
                         },
                         new
                         {
@@ -277,13 +279,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
-                            QuestionId = 13,
+                            QuestionId = 1,
                             RequestFormVariantId = 1,
                             Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
+                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             RequestFormStageId = 1,
-                            Required = true
+                            Required = false
                         },
                         new
                         {
@@ -292,7 +294,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -762,13 +764,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 12,
+                            QuestionId = 1,
                             RequestFormVariantId = 2,
                             Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs.",
+                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             RequestFormStageId = 1,
-                            Required = true
+                            Required = false
                         },
                         new
                         {
@@ -815,13 +817,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
-                            QuestionId = 13,
+                            QuestionId = 1,
                             RequestFormVariantId = 2,
                             Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
+                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             RequestFormStageId = 1,
-                            Required = true
+                            Required = false
                         },
                         new
                         {
@@ -830,7 +832,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -1463,13 +1465,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 12,
+                            QuestionId = 1,
                             RequestFormVariantId = 3,
                             Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs.",
+                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             RequestFormStageId = 1,
-                            Required = true
+                            Required = false
                         },
                         new
                         {
@@ -1516,13 +1518,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
-                            QuestionId = 13,
+                            QuestionId = 1,
                             RequestFormVariantId = 3,
                             Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
+                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             RequestFormStageId = 1,
-                            Required = true
+                            Required = false
                         },
                         new
                         {
@@ -1531,7 +1533,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -2165,13 +2167,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 12,
+                            QuestionId = 1,
                             RequestFormVariantId = 5,
                             Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs.",
+                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             RequestFormStageId = 1,
-                            Required = true
+                            Required = false
                         },
                         new
                         {
@@ -2208,13 +2210,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
-                            QuestionId = 13,
+                            QuestionId = 1,
                             RequestFormVariantId = 5,
                             Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
+                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             RequestFormStageId = 1,
-                            Required = true
+                            Required = false
                         },
                         new
                         {
@@ -2223,7 +2225,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -2726,13 +2728,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
-                            QuestionId = 12,
+                            QuestionId = 1,
                             RequestFormVariantId = 7,
                             Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs.",
+                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             RequestFormStageId = 1,
-                            Required = true
+                            Required = false
                         },
                         new
                         {
@@ -2759,13 +2761,13 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
-                            QuestionId = 13,
+                            QuestionId = 1,
                             RequestFormVariantId = 7,
                             Location = "pos1",
                             Order = 1,
-                            PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
+                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
                             RequestFormStageId = 1,
-                            Required = true
+                            Required = false
                         },
                         new
                         {
@@ -2774,7 +2776,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
+                            PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3107,160 +3109,6 @@ namespace RequestService.Repo.Migrations
                             PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
                             RequestFormStageId = 2,
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 12,
-                            RequestFormVariantId = 8,
-                            Location = "pos1",
-                            Order = 1,
-                            PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs.",
-                            RequestFormStageId = 1,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 9,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 13,
-                            RequestFormVariantId = 8,
-                            Location = "pos1",
-                            Order = 1,
-                            PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
-                            RequestFormStageId = 1,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 9,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 1,
-                            RequestFormVariantId = 8,
-                            Location = "pos1",
-                            Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 10,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 9,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 16,
-                            QuestionId = 1,
-                            RequestFormVariantId = 8,
-                            Location = "pos1",
-                            Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 16,
-                            QuestionId = 10,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 16,
-                            QuestionId = 9,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 15,
-                            QuestionId = 1,
-                            RequestFormVariantId = 8,
-                            Location = "pos1",
-                            Order = 1,
-                            PlaceholderText = "Please be aware that information in this section is visible to prospective volunteers",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 15,
-                            QuestionId = 9,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         });
                 });
 
@@ -3415,21 +3263,6 @@ namespace RequestService.Repo.Migrations
                         {
                             Id = 11,
                             Name = "AgeUKReference"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Shopping"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Name = "Prescription"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Name = "ColdWeatherArmy"
                         });
                 });
 
@@ -3516,11 +3349,6 @@ namespace RequestService.Repo.Migrations
                         {
                             Id = 7,
                             Name = "Ruddington"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "AgeUKWirral"
                         });
                 });
 
@@ -3609,16 +3437,6 @@ namespace RequestService.Repo.Migrations
                         {
                             Id = 14,
                             Name = "CommunityConnector"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Name = "ColdWeatherArmy"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Name = "Transport"
                         });
                 });
 
@@ -3636,11 +3454,6 @@ namespace RequestService.Repo.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime");
-
-                    b.Property<byte>("DueDateTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint")
-                        .HasDefaultValue((byte)1);
 
                     b.Property<bool>("IsHealthCritical")
                         .HasColumnType("bit");
@@ -3915,20 +3728,6 @@ namespace RequestService.Repo.Migrations
                             Id = 11,
                             AdditionalData = "",
                             Name = "AgeUK Reference",
-                            QuestionType = (byte)2
-                        },
-                        new
-                        {
-                            Id = 12,
-                            AdditionalData = "",
-                            Name = "Please tell us what you need from the shop (make sure to include the size, brand, and any other important details)",
-                            QuestionType = (byte)2
-                        },
-                        new
-                        {
-                            Id = 13,
-                            AdditionalData = "",
-                            Name = "Where does the prescription need collecting from?",
                             QuestionType = (byte)2
                         });
                 });

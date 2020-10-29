@@ -193,6 +193,7 @@ namespace RequestService.Repo
                             IsHealthCritical = job.HealthCritical,
                             SupportActivityId = (byte)job.SupportActivity,
                             DueDate = DateTime.Now.AddDays(job.DueDays),
+                            DueDateTypeId = (byte) job.DueDateType,
                             JobStatusId = (byte) JobStatuses.Open,
                             Reference = job.Questions.Where(x => x.Id == (int)Questions.AgeUKReference).FirstOrDefault()?.Answer
                         };
@@ -530,7 +531,8 @@ namespace RequestService.Repo
                     PostCode = j.PostCode,
                     ReferringGroupID = j.ReferringGroupID,
                     SupportActivity = (HelpMyStreet.Utils.Enums.SupportActivities) j.SupportActivityID,
-                    Reference = j.Reference
+                    Reference = j.Reference,
+                    DueDateType = (DueDateType) j.DueDateTypeId
                 });
             }
             return response;
@@ -555,7 +557,8 @@ namespace RequestService.Repo
                 DueDays = Convert.ToInt32((job.DueDate.Date - DateTime.Now.Date).TotalDays),
                 DateRequested = job.NewRequest.DateRequested,
                 RequestorType = (RequestorType)job.NewRequest.RequestorType,
-                Archive = job.NewRequest.Archive
+                Archive = job.NewRequest.Archive,
+                DueDateType = (DueDateType) job.DueDateTypeId
             };
         }
 
@@ -789,6 +792,19 @@ namespace RequestService.Repo
                             Type = (QuestionType)x.Question.QuestionType,
                             AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>()
                         }).ToList();
+        }
+
+        public bool JobIsInProgressWithSameVolunteerUserId(int jobID, int? volunteerUserID)
+        {
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job.JobStatusId == (byte)JobStatuses.InProgress && job.VolunteerUserId == volunteerUserID)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

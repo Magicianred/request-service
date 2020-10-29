@@ -43,7 +43,7 @@ namespace RequestService.Repo
         public virtual DbSet<EnumRequestFormStages> EnumRequestFormStages { get; set; }
         public virtual DbSet<EnumQuestions> EnumQuestions { get; set; }
 
-        public virtual DbQuery<EntityFramework.Entities.QueryJobHeader> JobHeader { get; set; }
+        public virtual DbSet<QueryJobHeader> JobHeader { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {            
@@ -51,6 +51,8 @@ namespace RequestService.Repo
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<QueryJobHeader>().HasNoKey().ToView("view_that_does_not_exist");
+
             modelBuilder.Entity<DailyReport>().HasNoKey().ToQuery(() => DailyReport.FromSqlRaw("TwoHourlyReport"));
 
             modelBuilder.Entity<EnumSupportActivities>(entity =>
@@ -123,6 +125,8 @@ namespace RequestService.Repo
                 entity.Property(e => e.VolunteerUserId).HasColumnName("VolunteerUserID");
 
                 entity.Property(e => e.JobStatusId).HasColumnName("JobStatusID");
+
+                entity.Property(e => e.DueDateTypeId).HasDefaultValue(1);
 
                 entity.HasOne(d => d.NewRequest)
                     .WithMany(p => p.Job)
