@@ -99,14 +99,14 @@ namespace RequestService.Repo.Helpers
             });
             entity.HasData(new Question
             {
-                Id = (int) Questions.Shopping,
+                Id = (int) Questions.Shopping_List,
                 Name = "Please tell us what you need from the shop (make sure to include the size, brand, and any other important details)",
                 QuestionType = (int) QuestionType.Text,
                 AdditionalData = string.Empty
             });
             entity.HasData(new Question
             {
-                Id = (int)Questions.Prescription,
+                Id = (int)Questions.Prescription_PharmacyAddress,
                 Name = "Where does the prescription need collecting from?",
                 QuestionType = (int)QuestionType.Text,
                 AdditionalData = string.Empty
@@ -226,7 +226,7 @@ namespace RequestService.Repo.Helpers
                         {
                             ActivityId = (int)activity,
                             RequestFormStageId = (int)RequestHelpFormStage.Request,
-                            QuestionId = (int)Questions.Shopping,
+                            QuestionId = (int)Questions.Shopping_List,
                             Location = "pos1",
                             Order = 1,
                             RequestFormVariantId = (int)form,
@@ -248,7 +248,7 @@ namespace RequestService.Repo.Helpers
                         {
                             ActivityId = (int)activity,
                             RequestFormStageId = (int)RequestHelpFormStage.Request,
-                            QuestionId = (int)Questions.Prescription,
+                            QuestionId = (int)Questions.Prescription_PharmacyAddress,
                             Location = "pos1",
                             Order = 1,
                             RequestFormVariantId = (int)form,
