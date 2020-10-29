@@ -276,7 +276,7 @@ namespace RequestService.Repo.Helpers
                         {
                             RequestHelpFormVariant.HLP_CommunityConnector => "Is there a specific issue you would like to discuss with the Community Connector, e.g. dealing with a bereavement (please don’t include personal details here)",
                             RequestHelpFormVariant.Ruddington => "For example, let us know if you’re struggling to find help elsewhere.",
-                            _ => "For example, if it’s a request for some shopping and you know what you want, you could give us the list."
+                            _ => "For example, any special instructions for the volunteer."
                         };
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = anythingElseToTellUs_placeholderText });
                     }
