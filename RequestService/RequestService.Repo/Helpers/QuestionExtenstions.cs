@@ -99,14 +99,14 @@ namespace RequestService.Repo.Helpers
             });
             entity.HasData(new Question
             {
-                Id = (int) Questions.Shopping,
+                Id = (int) Questions.Shopping_List,
                 Name = "Please tell us what you need from the shop (make sure to include the size, brand, and any other important details)",
                 QuestionType = (int) QuestionType.Text,
                 AdditionalData = string.Empty
             });
             entity.HasData(new Question
             {
-                Id = (int)Questions.Prescription,
+                Id = (int)Questions.Prescription_PharmacyAddress,
                 Name = "Where does the prescription need collecting from?",
                 QuestionType = (int)QuestionType.Text,
                 AdditionalData = string.Empty
@@ -219,6 +219,7 @@ namespace RequestService.Repo.Helpers
                     else if (activity == SupportActivities.ColdWeatherArmy)
                     {
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.SupportRequesting, Location = "pos1", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Please be aware that information in this section is visible to prospective volunteers" });
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "For example, any special instructions for the volunteer." });
                     }
                     else if (activity == SupportActivities.Shopping)
                     {
@@ -226,7 +227,7 @@ namespace RequestService.Repo.Helpers
                         {
                             ActivityId = (int)activity,
                             RequestFormStageId = (int)RequestHelpFormStage.Request,
-                            QuestionId = (int)Questions.Shopping,
+                            QuestionId = (int)Questions.Shopping_List,
                             Location = "pos1",
                             Order = 1,
                             RequestFormVariantId = (int)form,
@@ -236,9 +237,8 @@ namespace RequestService.Repo.Helpers
 
                         string anythingElseToTellUs_placeholderText = form switch
                         {
-                            RequestHelpFormVariant.HLP_CommunityConnector => "Is there a specific issue you would like to discuss with the Community Connector, e.g. dealing with a bereavement (please don’t include personal details here)",
                             RequestHelpFormVariant.Ruddington => "For example, let us know if you’re struggling to find help elsewhere.",
-                            _ => "For example, if it’s a request for some shopping and you know what you want, you could give us the list."
+                            _ => "For example, any special instructions for the volunteer."
                         };
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = anythingElseToTellUs_placeholderText });
                     }
@@ -248,7 +248,7 @@ namespace RequestService.Repo.Helpers
                         {
                             ActivityId = (int)activity,
                             RequestFormStageId = (int)RequestHelpFormStage.Request,
-                            QuestionId = (int)Questions.Prescription,
+                            QuestionId = (int)Questions.Prescription_PharmacyAddress,
                             Location = "pos1",
                             Order = 1,
                             RequestFormVariantId = (int)form,
@@ -276,7 +276,7 @@ namespace RequestService.Repo.Helpers
                         {
                             RequestHelpFormVariant.HLP_CommunityConnector => "Is there a specific issue you would like to discuss with the Community Connector, e.g. dealing with a bereavement (please don’t include personal details here)",
                             RequestHelpFormVariant.Ruddington => "For example, let us know if you’re struggling to find help elsewhere.",
-                            _ => "For example, if it’s a request for some shopping and you know what you want, you could give us the list."
+                            _ => "For example, any special instructions for the volunteer."
                         };
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = anythingElseToTellUs_placeholderText });
                     }

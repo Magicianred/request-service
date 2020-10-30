@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201029210024_AnythingElseText")]
+    partial class AnythingElseText
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,7 +251,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any special instructions for the volunteer.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -777,7 +779,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any special instructions for the volunteer.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -1478,7 +1480,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any special instructions for the volunteer.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -2180,7 +2182,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any special instructions for the volunteer.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3126,7 +3128,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 8,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any special instructions for the volunteer.",
+                            PlaceholderText = "For example, if it’s a request for some shopping and you know what you want, you could give us the list.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3249,17 +3251,6 @@ namespace RequestService.Repo.Migrations
                             Order = 1,
                             PlaceholderText = "Please be aware that information in this section is visible to prospective volunteers",
                             RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 15,
-                            QuestionId = 10,
-                            RequestFormVariantId = 8,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, any special instructions for the volunteer.",
-                            RequestFormStageId = 2,
                             Required = false
                         },
                         new
