@@ -101,7 +101,7 @@ namespace RequestService.Repo.Helpers
             {
                 Id = (int) Questions.Shopping_List,
                 Name = "Please tell us what you need from the shop (make sure to include the size, brand, and any other important details)",
-                QuestionType = (int) QuestionType.Text,
+                QuestionType = (int) QuestionType.MultiLineText,
                 AdditionalData = string.Empty
             });
             entity.HasData(new Question
