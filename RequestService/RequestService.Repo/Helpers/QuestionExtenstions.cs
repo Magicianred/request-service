@@ -100,7 +100,7 @@ namespace RequestService.Repo.Helpers
             entity.HasData(new Question
             {
                 Id = (int) Questions.Shopping_List,
-                Name = "Please tell us what you need from the shop (make sure to include the size, brand, and any other important details)",
+                Name = "Please tell us what you need from the shop",
                 QuestionType = (int) QuestionType.MultiLineText,
                 AdditionalData = string.Empty
             });
@@ -232,7 +232,8 @@ namespace RequestService.Repo.Helpers
                             Order = 1,
                             RequestFormVariantId = (int)form,
                             Required = true,
-                            PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs."
+                            PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs.",
+                            Subtext = "Make sure to include the size, brand, and any other important details"
                         });
 
                         string anythingElseToTellUs_placeholderText = form switch
