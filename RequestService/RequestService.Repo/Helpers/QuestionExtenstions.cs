@@ -335,6 +335,15 @@ namespace RequestService.Repo.Helpers
                     ((List<SupportActivities>)activites).Add(SupportActivities.ColdWeatherArmy);
                     break;
 
+                case RequestHelpFormVariant.AgeUKNottsBalderton:
+                    activites = new List<SupportActivities>()
+                    {
+                        SupportActivities.Shopping,
+                        SupportActivities.CollectingPrescriptions,
+                        SupportActivities.Other
+                    };
+                    break;
+
                 default: 
                     activites = genericSupportActivities; 
                     break;
