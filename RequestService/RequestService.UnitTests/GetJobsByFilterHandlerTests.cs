@@ -21,13 +21,11 @@ namespace RequestService.UnitTests
         private Mock<IRepository> _repository;
         private Mock<IJobFilteringService> _jobFilteringService;
         private Mock<IAddressService> _addressService;
-        private Mock<IGroupService> _groupService;
         private GetJobsByFilterHandler _classUnderTest;
         private GetJobsByFilterRequest _request;
         private GetJobsByFilterResponse _response;
         private List<JobHeader> _jobHeaders;
         private MockRepository _mockRepository;
-        private GetUserGroupsResponse _getUserGroupsResponse;
 
         [SetUp]
         public void Setup()
@@ -36,7 +34,6 @@ namespace RequestService.UnitTests
             SetupRepository();
             SetUpJobFilteringService();
             SetupAddressService();
-            SetupGroupService();
 
             _jobHeaders = new List<JobHeader>();
             _jobHeaders.Add(new JobHeader
@@ -75,7 +72,7 @@ namespace RequestService.UnitTests
                 JobHeaders = _jobHeaders
             };
 
-            _classUnderTest = new GetJobsByFilterHandler(_repository.Object, _addressService.Object, _jobFilteringService.Object, _groupService.Object);
+            _classUnderTest = new GetJobsByFilterHandler(_repository.Object, _addressService.Object, _jobFilteringService.Object);
         }
 
         private void SetUpJobFilteringService()
@@ -96,13 +93,6 @@ namespace RequestService.UnitTests
         {
             _addressService = _mockRepository.Create<IAddressService>();
             _addressService.Setup(x => x.IsValidPostcode(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
-        }
-
-        private void SetupGroupService()
-        {
-            _groupService = _mockRepository.Create<IGroupService>();
-            _groupService.Setup(x => x.GetUserGroups(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(_getUserGroupsResponse);
         }
 
         [TearDown]
