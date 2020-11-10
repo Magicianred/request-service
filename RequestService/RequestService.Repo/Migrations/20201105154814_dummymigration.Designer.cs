@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201105154814_dummymigration")]
+    partial class dummymigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3278,136 +3280,6 @@ namespace RequestService.Repo.Migrations
                             PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
                             RequestFormStageId = 2,
                             Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 12,
-                            RequestFormVariantId = 9,
-                            Location = "pos1",
-                            Order = 1,
-                            PlaceholderText = "For example, Hovis wholemeal bread, 2 pints semi-skimmed milk, 6 large eggs.",
-                            RequestFormStageId = 1,
-                            Required = true,
-                            Subtext = "Make sure to include the size, brand, and any other important details"
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 10,
-                            RequestFormVariantId = 9,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, any special instructions for the volunteer.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 6,
-                            RequestFormVariantId = 9,
-                            Location = "pos3",
-                            Order = 2,
-                            RequestFormStageId = 1,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 1,
-                            QuestionId = 9,
-                            RequestFormVariantId = 9,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 13,
-                            RequestFormVariantId = 9,
-                            Location = "pos1",
-                            Order = 1,
-                            PlaceholderText = "Please give the name and address of the pharmacy, e.g. Boots Pharmacy, Victoria Centre, Nottingham.",
-                            RequestFormStageId = 1,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 10,
-                            RequestFormVariantId = 9,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 6,
-                            RequestFormVariantId = 9,
-                            Location = "pos3",
-                            Order = 2,
-                            RequestFormStageId = 1,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 2,
-                            QuestionId = 9,
-                            RequestFormVariantId = 9,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 1,
-                            RequestFormVariantId = 9,
-                            Location = "pos1",
-                            Order = 1,
-                            PlaceholderText = "Please don’t include any sensitive details that aren’t needed in order for us to help you",
-                            RequestFormStageId = 1,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 10,
-                            RequestFormVariantId = 9,
-                            Location = "details2",
-                            Order = 2,
-                            PlaceholderText = "For example, any special instructions for the volunteer.",
-                            RequestFormStageId = 2,
-                            Required = false
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 6,
-                            RequestFormVariantId = 9,
-                            Location = "pos3",
-                            Order = 2,
-                            RequestFormStageId = 1,
-                            Required = true
-                        },
-                        new
-                        {
-                            ActivityId = 11,
-                            QuestionId = 9,
-                            RequestFormVariantId = 9,
-                            Location = "details2",
-                            Order = 1,
-                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
-                            RequestFormStageId = 2,
-                            Required = false
                         });
                 });
 
@@ -3663,11 +3535,6 @@ namespace RequestService.Repo.Migrations
                         {
                             Id = 8,
                             Name = "AgeUKWirral"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "AgeUKNottsBalderton"
                         });
                 });
 

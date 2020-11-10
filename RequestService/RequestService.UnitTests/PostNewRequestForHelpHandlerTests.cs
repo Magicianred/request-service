@@ -272,8 +272,6 @@ namespace RequestService.UnitTests
                     new VolunteerSummary
                     {
                         UserID = 1,
-                         IsStreetChampionForGivenPostCode = true,
-                         IsVerified = true,
                         DistanceInMiles = 1,
                     }
                 }
