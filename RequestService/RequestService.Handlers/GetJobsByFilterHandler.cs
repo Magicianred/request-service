@@ -17,14 +17,17 @@ namespace RequestService.Handlers
         private readonly IRepository _repository;
         private readonly IAddressService _addressService;
         private readonly IJobFilteringService _jobFilteringService;
+        private readonly IGroupService _groupService;
         public GetJobsByFilterHandler(
             IRepository repository,
             IAddressService addressService,
-            IJobFilteringService jobFilteringService)
+            IJobFilteringService jobFilteringService,
+            IGroupService groupService)
         {
             _repository = repository;
             _addressService = addressService;
             _jobFilteringService = jobFilteringService;
+            _groupService = groupService;
         }
 
         public async Task<GetJobsByFilterResponse> Handle(GetJobsByFilterRequest request, CancellationToken cancellationToken)
@@ -44,6 +47,17 @@ namespace RequestService.Handlers
             }
         
             GetJobsByFilterResponse result = new GetJobsByFilterResponse() { JobHeaders = new List<JobHeader>() };
+            
+            if(request.UserID.HasValue)
+            {
+                var userGroups = await _groupService.GetUserGroups(request.UserID.Value, cancellationToken);
+            
+                if(userGroups.Groups.Count == 0)
+                {
+                    return result;
+                }
+            }
+            
             List<JobHeader> jobHeaders = _repository.GetJobHeaders(request);
 
             if (jobHeaders.Count == 0)
