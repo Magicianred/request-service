@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using HelpMyStreet.Utils.Enums;
+using HelpMyStreet.Contracts.GroupService.Response;
 
 namespace RequestService.UnitTests
 {

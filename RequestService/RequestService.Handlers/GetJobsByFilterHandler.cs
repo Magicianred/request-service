@@ -44,6 +44,12 @@ namespace RequestService.Handlers
             }
         
             GetJobsByFilterResponse result = new GetJobsByFilterResponse() { JobHeaders = new List<JobHeader>() };
+            
+            if(request.Groups != null && request.Groups.Groups.Count == 0)
+            {
+                return result;
+            }
+            
             List<JobHeader> jobHeaders = _repository.GetJobHeaders(request);
 
             if (jobHeaders.Count == 0)
