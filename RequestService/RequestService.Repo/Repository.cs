@@ -790,7 +790,8 @@ namespace RequestService.Repo
                             Location = x.Location,
                             PlaceholderText = x.PlaceholderText,
                             Type = (QuestionType)x.Question.QuestionType,
-                            AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>()
+                            AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>(),
+                            AnswerContainsSensitiveData = x.Question.AnswerContainsSensitiveData
                         }).ToList();
         }
 
