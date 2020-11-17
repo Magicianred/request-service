@@ -35,6 +35,7 @@ namespace RequestService.Repo.EntityFramework.Entities
         public string Source { get; set; }
         public bool? Archive { get; set; }
 
+        public bool RequestorDefinedByGroup { get; set; }
         public virtual Person PersonIdRecipientNavigation { get; set; }
         public virtual Person PersonIdRequesterNavigation { get; set; }
 
