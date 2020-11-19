@@ -32,13 +32,13 @@ namespace RequestService.AzureFunction
         {
             try
             {
-                log.LogInformation("C# HTTP trigger function processed a request.");
+                log.LogInformation("PostNewRequestForHelp started.");
                 PostNewRequestForHelpResponse response = await _mediator.Send(req);                
                 return new OkObjectResult(ResponseWrapper<PostNewRequestForHelpResponse, RequestServiceErrorCode>.CreateSuccessfulResponse(response));
             }
             catch (Exception exc)
             {
-                log.LogError("Exception occured in Log Request", exc);
+                log.LogError($"Exception occured in PostNewRequestForHelp. Error {exc.ToString()}", exc);
                 return new ObjectResult(ResponseWrapper<PostNewRequestForHelpResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.InternalServerError, "Internal Error")) { StatusCode = StatusCodes.Status500InternalServerError };                
             }
         }
