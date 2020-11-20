@@ -11,16 +11,20 @@ using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using AzureFunctions.Extensions.Swashbuckle.Attribute;
+using HelpMyStreet.Utils.Utils;
+using System.Threading;
 
 namespace RequestService.AzureFunction
 {
     public class PutUpdateJobStatusToDone
     {
         private readonly IMediator _mediator;
+        private readonly ILoggerWrapper<PutUpdateJobStatusToDoneRequest> _logger;
 
-        public PutUpdateJobStatusToDone(IMediator mediator)
+        public PutUpdateJobStatusToDone(IMediator mediator, ILoggerWrapper<PutUpdateJobStatusToDoneRequest> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         [FunctionName("PutUpdateJobStatusToDone")]
@@ -28,17 +32,17 @@ namespace RequestService.AzureFunction
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "put", Route = null)]
             [RequestBodyType(typeof(PutUpdateJobStatusToDoneRequest), "put update job status to done request")] PutUpdateJobStatusToDoneRequest req,
-            ILogger log)
+            CancellationToken cancellationToken)
         {
             try
             {
-                log.LogInformation("C# HTTP trigger function processed a request.");
-                PutUpdateJobStatusToDoneResponse response = await _mediator.Send(req); 
+                _logger.LogInformation("PutUpdateJobStatusToDone started");
+                PutUpdateJobStatusToDoneResponse response = await _mediator.Send(req, cancellationToken); 
                 return new OkObjectResult(ResponseWrapper<PutUpdateJobStatusToDoneResponse, RequestServiceErrorCode>.CreateSuccessfulResponse(response));
             }
             catch (Exception exc)
             {
-                log.LogError("Exception occured in Log Request", exc);
+                _logger.LogErrorAndNotifyNewRelic("Exception occured in PutUpdateJobStatusToDone", exc);
                 return new ObjectResult(ResponseWrapper<PutUpdateJobStatusToDoneResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.InternalServerError, "Internal Error")) { StatusCode = StatusCodes.Status500InternalServerError };                
             }
         }
