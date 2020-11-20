@@ -47,7 +47,7 @@ namespace RequestService.AzureFunction
             }
             catch (Exception exc)
             {
-                _logger.LogErrorAndNotifyNewRelic("PostCodeException occured in GetJobsByFilter", exc);
+                _logger.LogErrorAndNotifyNewRelic("Exception occured in GetJobsByFilter", exc);
                 return new ObjectResult(ResponseWrapper<GetJobsByFilterResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.InternalServerError, "Internal Error")) { StatusCode = StatusCodes.Status500InternalServerError };                
             }
         }
