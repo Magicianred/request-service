@@ -11,12 +11,14 @@ using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using AzureFunctions.Extensions.Swashbuckle.Attribute;
+using HelpMyStreet.Utils.Utils;
 
 namespace RequestService.AzureFunction
 {
     public class PutUpdateJobStatusToOpen
     {
         private readonly IMediator _mediator;
+        private readonly ILoggerWrapper<PutUpdateJobStatusToOpenRequest> _logger;
 
         public PutUpdateJobStatusToOpen(IMediator mediator)
         {

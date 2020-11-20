@@ -11,16 +11,20 @@ using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using AzureFunctions.Extensions.Swashbuckle.Attribute;
+using HelpMyStreet.Utils.Utils;
+using System.Threading;
 
 namespace RequestService.AzureFunction
 {
     public class GetJobsByStatuses
     {
         private readonly IMediator _mediator;
+        private readonly ILoggerWrapper<GetJobsByStatusesRequest> _logger;
 
-        public GetJobsByStatuses(IMediator mediator)
+        public GetJobsByStatuses(IMediator mediator, ILoggerWrapper<GetJobsByStatusesRequest> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         [FunctionName("GetJobsByStatuses")]
@@ -28,17 +32,17 @@ namespace RequestService.AzureFunction
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)]
             [RequestBodyType(typeof(GetJobsByStatusesRequest), "jobs by statuses request")] GetJobsByStatusesRequest req,
-            ILogger log)
+            CancellationToken cancellationToken)
         {
             try
             {
-                log.LogInformation("C# HTTP trigger function processed a request.");
-                GetJobsByStatusesResponse response = await _mediator.Send(req); 
+                _logger.LogInformation("GetJobsByStatuses started");
+                GetJobsByStatusesResponse response = await _mediator.Send(req,cancellationToken); 
                 return new OkObjectResult(ResponseWrapper<GetJobsByStatusesResponse, RequestServiceErrorCode>.CreateSuccessfulResponse(response));
             }
             catch (Exception exc)
             {
-                log.LogError("Exception occured in by statuses", exc);
+                _logger.LogErrorAndNotifyNewRelic("Exception occured in GetJobsByStatuses", exc);
                 return new ObjectResult(ResponseWrapper<GetJobsByStatusesResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.InternalServerError, "Internal Error")) { StatusCode = StatusCodes.Status500InternalServerError };                
             }
         }

@@ -11,16 +11,20 @@ using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
 using RequestService.Core.Exceptions;
 using System.Net;
+using HelpMyStreet.Utils.Utils;
+using System.Threading;
 
 namespace RequestService.AzureFunction
 {
     public class GetJobsByFilter
     {
         private readonly IMediator _mediator;
+        private readonly ILoggerWrapper<GetJobsByFilterRequest> _logger;
 
-        public GetJobsByFilter(IMediator mediator)
+        public GetJobsByFilter(IMediator mediator, ILoggerWrapper<GetJobsByFilterRequest> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         [FunctionName("GetJobsByFilter")]
@@ -28,22 +32,22 @@ namespace RequestService.AzureFunction
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]
             GetJobsByFilterRequest req,
-            ILogger log)
+            CancellationToken cancellationToken)
         {
             try
             {
-                log.LogInformation("C# HTTP trigger function processed a request.");
-                GetJobsByFilterResponse response = await _mediator.Send(req); 
+                _logger.LogInformation("GetJobsByFilter started");
+                GetJobsByFilterResponse response = await _mediator.Send(req, cancellationToken); 
                 return new OkObjectResult(ResponseWrapper<GetJobsByFilterResponse, RequestServiceErrorCode>.CreateSuccessfulResponse(response));
             }
-            catch(PostCodeException)
+            catch(PostCodeException exc)
             {
-                log.LogError($"{req.Postcode} is an invalid postcode");
+                _logger.LogErrorAndNotifyNewRelic($"{req.Postcode} is an invalid postcode", exc);
                 return new ObjectResult(ResponseWrapper<GetJobsByFilterResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.ValidationError, "Invalid Postcode")) { StatusCode = StatusCodes.Status400BadRequest };
             }
             catch (Exception exc)
             {
-                log.LogError("Exception occured in Log Request", exc);
+                _logger.LogErrorAndNotifyNewRelic("PostCodeException occured in GetJobsByFilter", exc);
                 return new ObjectResult(ResponseWrapper<GetJobsByFilterResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.InternalServerError, "Internal Error")) { StatusCode = StatusCodes.Status500InternalServerError };                
             }
         }
