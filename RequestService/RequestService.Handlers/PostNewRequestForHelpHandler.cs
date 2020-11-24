@@ -122,7 +122,7 @@ namespace RequestService.Handlers
             // Currently indicates standard "passed to volunteers" result
             response.Fulfillable = Fulfillable.Accepted_ManualReferral;
 
-            var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable);
+            var result = await _repository.NewHelpRequestAsync(request, response.Fulfillable, formVariant.RequestorDefinedByGroup);
             response.RequestID = result;
 
             var actions = _groupService.GetNewRequestActions(new HelpMyStreet.Contracts.GroupService.Request.GetNewRequestActionsRequest()

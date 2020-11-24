@@ -22,35 +22,40 @@ namespace RequestService.Repo.Helpers
                 Id = (int)Questions.SupportRequesting,
                 Name = "Please tell us more about the help or support you're requesting",
                 QuestionType = (int)QuestionType.MultiLineText,
-                AdditionalData = GetAdditionalData(Questions.SupportRequesting)
+                AdditionalData = GetAdditionalData(Questions.SupportRequesting),
+                AnswerContainsSensitiveData = false
             });
             entity.HasData(new Question
             {
                 Id = (int)Questions.FaceMask_SpecificRequirements,
                 Name = "Please tell us about any specific requirements (e.g. size, colour, style etc.)",
                 QuestionType = (int)QuestionType.MultiLineText,
-                AdditionalData = GetAdditionalData(Questions.FaceMask_SpecificRequirements)
+                AdditionalData = GetAdditionalData(Questions.FaceMask_SpecificRequirements),
+                AnswerContainsSensitiveData = false
             });
             entity.HasData(new Question
             {
                 Id = (int)Questions.FaceMask_Amount,
                 Name = "How many face coverings do you need?",
                 QuestionType = (int)QuestionType.Number,
-                AdditionalData = GetAdditionalData(Questions.FaceMask_Amount)
+                AdditionalData = GetAdditionalData(Questions.FaceMask_Amount),
+                AnswerContainsSensitiveData = false
             });
             entity.HasData(new Question
             {
                 Id = (int)Questions.FaceMask_Recipient,
                 Name = "Who will be using the face coverings?",
                 QuestionType = (int)QuestionType.Radio,
-                AdditionalData = GetAdditionalData(Questions.FaceMask_Recipient)
+                AdditionalData = GetAdditionalData(Questions.FaceMask_Recipient),
+                AnswerContainsSensitiveData = false
             });
             entity.HasData(new Question
             {
                 Id = (int)Questions.FaceMask_Cost,
                 Name = "Are you able to pay the cost of materials for your face covering (usually £2 - £3 each)?",
                 QuestionType = (int)QuestionType.Radio,
-                AdditionalData = GetAdditionalData(Questions.FaceMask_Cost)
+                AdditionalData = GetAdditionalData(Questions.FaceMask_Cost),
+                AnswerContainsSensitiveData = false
             });
 
             entity.HasData(new Question
@@ -58,14 +63,16 @@ namespace RequestService.Repo.Helpers
                 Id = (int)Questions.IsHealthCritical,
                 Name = "Is this request critical to someone's health or wellbeing?",
                 QuestionType = (int)QuestionType.Radio,
-                AdditionalData = GetAdditionalData(Questions.IsHealthCritical)
+                AdditionalData = GetAdditionalData(Questions.IsHealthCritical),
+                AnswerContainsSensitiveData = false
             });
             entity.HasData(new Question
             {
                 Id = (int)Questions.WillYouCompleteYourself,
                 Name = "Will you complete this request yourself?",
                 QuestionType = (int)QuestionType.Radio,
-                AdditionalData = GetAdditionalData(Questions.WillYouCompleteYourself)
+                AdditionalData = GetAdditionalData(Questions.WillYouCompleteYourself),
+                AnswerContainsSensitiveData = false
             });
 
             entity.HasData(new Question
@@ -73,7 +80,8 @@ namespace RequestService.Repo.Helpers
                 Id = (int)Questions.FtlosDonationInformation,
                 Name = "Please donate to the For the Love of Scrubs GoFundMe <a href=\"https://www.gofundme.com/f/for-the-love-of-scrubs-face-coverings\" target=\"_blank\">here</a> to help pay for materials and to help us continue our good work. Recommended donation £3 - £4 per face covering.",
                 QuestionType = (int)QuestionType.LabelOnly,
-                AdditionalData = string.Empty
+                AdditionalData = string.Empty,
+                AnswerContainsSensitiveData = false
             });
 
             entity.HasData(new Question
@@ -81,35 +89,49 @@ namespace RequestService.Repo.Helpers
                 Id = (int)Questions.CommunicationNeeds,
                 Name = "Are there any communication needs that volunteers need to know about before they contact you or the person who needs help?",
                 QuestionType = (int)QuestionType.MultiLineText,
-                AdditionalData = string.Empty
+                AdditionalData = string.Empty,
+                AnswerContainsSensitiveData = false
             });
             entity.HasData(new Question
             {
                 Id = (int)Questions.AnythingElseToTellUs,
                 Name = "Is there anything else you would like to tell us about the request?",
                 QuestionType = (int)QuestionType.MultiLineText,
-                AdditionalData = string.Empty
+                AdditionalData = string.Empty,
+                AnswerContainsSensitiveData = false
             });
             entity.HasData(new Question
             {
                 Id = (int)Questions.AgeUKReference,
                 Name = "AgeUK Reference",
                 QuestionType = (int)QuestionType.Text,
-                AdditionalData = string.Empty
+                AdditionalData = string.Empty,
+                AnswerContainsSensitiveData = false
             });
             entity.HasData(new Question
             {
                 Id = (int) Questions.Shopping_List,
                 Name = "Please tell us what you need from the shop",
                 QuestionType = (int) QuestionType.MultiLineText,
-                AdditionalData = string.Empty
+                AdditionalData = string.Empty,
+                AnswerContainsSensitiveData = false
             });
             entity.HasData(new Question
             {
                 Id = (int)Questions.Prescription_PharmacyAddress,
                 Name = "Where does the prescription need collecting from?",
                 QuestionType = (int)QuestionType.Text,
-                AdditionalData = string.Empty
+                AdditionalData = string.Empty,
+                AnswerContainsSensitiveData = false
+            });
+
+            entity.HasData(new Question
+            {
+                Id = (int)Questions.SensitiveInformation,
+                Name = "Is there any other personal or sensitive information the volunteer needs to know to complete the request?",                
+                QuestionType = (int)QuestionType.MultiLineText,
+                AdditionalData = string.Empty,
+                AnswerContainsSensitiveData = true
             });
         }
         private static string GetAdditionalData(Questions question)
@@ -196,6 +218,7 @@ namespace RequestService.Repo.Helpers
         public static void SetActivityQuestionData(this EntityTypeBuilder<ActivityQuestions> entity)
         {
             var requestFormVariants = Enum.GetValues(typeof(RequestHelpFormVariant)).Cast<RequestHelpFormVariant>();
+            string subText_anythingElse = "This information will be visible to volunteers deciding whether to accept the request";
 
             foreach (var form in requestFormVariants)
             {
@@ -219,7 +242,7 @@ namespace RequestService.Repo.Helpers
                     else if (activity == SupportActivities.ColdWeatherArmy)
                     {
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.SupportRequesting, Location = "pos1", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "Please be aware that information in this section is visible to prospective volunteers" });
-                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "For example, any special instructions for the volunteer." });
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "For example, any special instructions for the volunteer.", Subtext = subText_anythingElse });
                     }
                     else if (activity == SupportActivities.Shopping)
                     {
@@ -239,7 +262,7 @@ namespace RequestService.Repo.Helpers
                         string anythingElseToTellUs_placeholderText = form switch
                         {
                             RequestHelpFormVariant.Ruddington => "For example, let us know if you’re struggling to find help elsewhere.",
-                            _ => "For example, any special instructions for the volunteer."
+                            _ => "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box."
                         };
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = anythingElseToTellUs_placeholderText });
                     }
@@ -266,7 +289,7 @@ namespace RequestService.Repo.Helpers
                             Order = 2, 
                             RequestFormVariantId = (int)form, 
                             Required = false, 
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for." 
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box."
                         });
                     }
                     else
@@ -279,7 +302,7 @@ namespace RequestService.Repo.Helpers
                             RequestHelpFormVariant.Ruddington => "For example, let us know if you’re struggling to find help elsewhere.",
                             _ => "For example, any special instructions for the volunteer."
                         };
-                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = anythingElseToTellUs_placeholderText });
+                        entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.AnythingElseToTellUs, Location = "details2", Order = 2, RequestFormVariantId = (int)form, Required = false, PlaceholderText = anythingElseToTellUs_placeholderText, Subtext = subText_anythingElse });
                     }
 
                     if (form == RequestHelpFormVariant.VitalsForVeterans)
@@ -296,9 +319,9 @@ namespace RequestService.Repo.Helpers
                     {
                         entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Request, QuestionId = (int)Questions.WillYouCompleteYourself, Location = "pos3", Order = 3, RequestFormVariantId = (int)form, Required = true });
                     }
-
-                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.CommunicationNeeds, Location = "details2", Order = 1, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?" });
-                }
+                    
+                    entity.HasData(new ActivityQuestions { ActivityId = (int)activity, RequestFormStageId = (int)RequestHelpFormStage.Detail, QuestionId = (int)Questions.SensitiveInformation, Location = "details2", Order = 3, RequestFormVariantId = (int)form, Required = false, PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.", Subtext = "We will only share this information with a volunteer after they have accepted your request" });
+                    }
             }
         }
 

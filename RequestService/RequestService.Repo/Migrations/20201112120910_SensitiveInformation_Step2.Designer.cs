@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201112120910_SensitiveInformation_Step2")]
+    partial class SensitiveInformation_Step2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,7 +252,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -267,14 +269,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 1,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -294,7 +306,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -311,14 +323,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 2,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -340,8 +362,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -356,14 +377,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 3,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 3,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -385,8 +416,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -401,14 +431,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 4,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 4,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -430,8 +470,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -446,14 +485,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 5,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 5,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -475,8 +524,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -491,14 +539,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 6,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 6,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -520,8 +578,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -536,14 +593,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 7,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 7,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -565,8 +632,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -581,14 +647,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 8,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 8,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -610,8 +686,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -626,14 +701,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 9,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 9,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -655,8 +740,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -671,14 +755,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 10,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 10,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -700,8 +794,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -716,14 +809,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 11,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 11,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -772,14 +875,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 12,
+                            QuestionId = 9,
+                            RequestFormVariantId = 1,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 12,
                             QuestionId = 14,
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -800,7 +913,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -827,14 +940,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 1,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -854,7 +977,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -881,14 +1004,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 2,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -910,22 +1043,21 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
-                        },
-                        new
-                        {
-                            ActivityId = 3,
-                            QuestionId = 11,
-                            RequestFormVariantId = 2,
-                            Location = "pos1",
-                            Order = 2,
-                            RequestFormStageId = 1,
                             Required = false
                         },
                         new
                         {
                             ActivityId = 3,
+                            QuestionId = 11,
+                            RequestFormVariantId = 2,
+                            Location = "pos1",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 3,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
                             Location = "pos3",
@@ -936,14 +1068,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 3,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 3,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -965,22 +1107,21 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
-                        },
-                        new
-                        {
-                            ActivityId = 4,
-                            QuestionId = 11,
-                            RequestFormVariantId = 2,
-                            Location = "pos1",
-                            Order = 2,
-                            RequestFormStageId = 1,
                             Required = false
                         },
                         new
                         {
                             ActivityId = 4,
+                            QuestionId = 11,
+                            RequestFormVariantId = 2,
+                            Location = "pos1",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 4,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
                             Location = "pos3",
@@ -991,14 +1132,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 4,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 4,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1020,22 +1171,21 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
-                        },
-                        new
-                        {
-                            ActivityId = 5,
-                            QuestionId = 11,
-                            RequestFormVariantId = 2,
-                            Location = "pos1",
-                            Order = 2,
-                            RequestFormStageId = 1,
                             Required = false
                         },
                         new
                         {
                             ActivityId = 5,
+                            QuestionId = 11,
+                            RequestFormVariantId = 2,
+                            Location = "pos1",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 5,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
                             Location = "pos3",
@@ -1046,14 +1196,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 5,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 5,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1075,22 +1235,21 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
-                        },
-                        new
-                        {
-                            ActivityId = 6,
-                            QuestionId = 11,
-                            RequestFormVariantId = 2,
-                            Location = "pos1",
-                            Order = 2,
-                            RequestFormStageId = 1,
                             Required = false
                         },
                         new
                         {
                             ActivityId = 6,
+                            QuestionId = 11,
+                            RequestFormVariantId = 2,
+                            Location = "pos1",
+                            Order = 2,
+                            RequestFormStageId = 1,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 6,
                             QuestionId = 6,
                             RequestFormVariantId = 2,
                             Location = "pos3",
@@ -1101,14 +1260,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 6,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 6,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1130,8 +1299,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1156,14 +1324,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 7,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 7,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1185,8 +1363,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1211,14 +1388,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 8,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 8,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1240,8 +1427,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1266,14 +1452,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 9,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 9,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1295,8 +1491,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1321,14 +1516,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 10,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 10,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1350,8 +1555,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1376,14 +1580,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 11,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 11,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1442,14 +1656,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 12,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 12,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1471,8 +1695,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1497,14 +1720,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 13,
+                            QuestionId = 9,
+                            RequestFormVariantId = 2,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 13,
                             QuestionId = 14,
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1525,7 +1758,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -1552,14 +1785,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 1,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1579,7 +1822,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -1606,14 +1849,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 2,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1635,8 +1888,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1661,14 +1913,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 3,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 3,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1690,8 +1952,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1716,14 +1977,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 4,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 4,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1745,8 +2016,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1771,14 +2041,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 5,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 5,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1800,8 +2080,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1826,14 +2105,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 6,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 6,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1855,8 +2144,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1881,14 +2169,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 7,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 7,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1910,8 +2208,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1936,14 +2233,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 8,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 8,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -1965,8 +2272,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -1991,14 +2297,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 9,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 9,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2020,8 +2336,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2046,14 +2361,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 10,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 10,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2075,8 +2400,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2101,14 +2425,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 11,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 11,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2167,14 +2501,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 12,
+                            QuestionId = 9,
+                            RequestFormVariantId = 3,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 12,
                             QuestionId = 14,
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2222,14 +2566,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 12,
+                            QuestionId = 9,
+                            RequestFormVariantId = 4,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 12,
                             QuestionId = 14,
                             RequestFormVariantId = 4,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2250,7 +2604,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -2267,14 +2621,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 1,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2294,7 +2658,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -2311,14 +2675,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 2,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2340,8 +2714,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2356,14 +2729,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 3,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 3,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2385,8 +2768,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2401,14 +2783,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 4,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 4,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2430,8 +2822,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2446,14 +2837,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 5,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 5,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2475,8 +2876,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2491,14 +2891,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 6,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 6,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2520,8 +2930,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2536,14 +2945,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 7,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 7,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2565,8 +2984,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2581,14 +2999,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 8,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 8,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2610,8 +3038,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2626,14 +3053,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 9,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 9,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2655,8 +3092,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2671,14 +3107,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 10,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 10,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2700,8 +3146,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -2716,14 +3161,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 11,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 11,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2772,14 +3227,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 12,
+                            QuestionId = 9,
+                            RequestFormVariantId = 5,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 12,
                             QuestionId = 14,
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2801,8 +3266,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "Is there a specific issue you would like to discuss with the Community Connector, e.g. dealing with a bereavement (please don’t include personal details here)",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 14,
+                            QuestionId = 9,
+                            RequestFormVariantId = 6,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -2811,10 +3286,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 6,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2842,14 +3316,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 1,
                             QuestionId = 14,
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2869,7 +3353,18 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 2,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -2880,10 +3375,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2905,8 +3399,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 3,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -2915,10 +3419,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2940,8 +3443,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 4,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -2950,10 +3463,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -2975,8 +3487,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 5,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -2985,10 +3507,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3010,8 +3531,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 6,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -3020,10 +3551,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3045,8 +3575,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 7,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -3055,10 +3595,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3080,8 +3619,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 8,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -3090,10 +3639,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3115,8 +3663,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 10,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -3125,10 +3683,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3150,8 +3707,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, let us know if you’re struggling to find help elsewhere.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 11,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -3160,10 +3727,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3212,14 +3778,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 12,
+                            QuestionId = 9,
+                            RequestFormVariantId = 7,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 12,
                             QuestionId = 14,
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3240,7 +3816,18 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 8,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any special instructions for the volunteer.",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 1,
+                            QuestionId = 9,
+                            RequestFormVariantId = 8,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3251,10 +3838,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 8,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3274,7 +3860,18 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 8,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 2,
+                            QuestionId = 9,
+                            RequestFormVariantId = 8,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3285,10 +3882,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 8,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3310,8 +3906,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 11,
+                            QuestionId = 9,
+                            RequestFormVariantId = 8,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -3320,10 +3926,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 8,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3345,8 +3950,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 16,
+                            QuestionId = 9,
+                            RequestFormVariantId = 8,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -3355,10 +3970,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 8,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3380,8 +3994,18 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 15,
+                            QuestionId = 9,
+                            RequestFormVariantId = 8,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
                         },
                         new
                         {
@@ -3390,10 +4014,9 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 8,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3414,7 +4037,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 9,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3431,14 +4054,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 1,
+                            QuestionId = 9,
+                            RequestFormVariantId = 9,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 1,
                             QuestionId = 14,
                             RequestFormVariantId = 9,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3458,7 +4091,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 9,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3475,14 +4108,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 2,
+                            QuestionId = 9,
+                            RequestFormVariantId = 9,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 2,
                             QuestionId = 14,
                             RequestFormVariantId = 9,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         },
                         new
                         {
@@ -3504,8 +4147,7 @@ namespace RequestService.Repo.Migrations
                             Order = 2,
                             PlaceholderText = "For example, any special instructions for the volunteer.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "This information will be visible to volunteers deciding whether to accept the request"
+                            Required = false
                         },
                         new
                         {
@@ -3520,14 +4162,24 @@ namespace RequestService.Repo.Migrations
                         new
                         {
                             ActivityId = 11,
+                            QuestionId = 9,
+                            RequestFormVariantId = 9,
+                            Location = "details2",
+                            Order = 1,
+                            PlaceholderText = "For example, do you have any specific language requirement or hearing issues that we should know about?",
+                            RequestFormStageId = 2,
+                            Required = false
+                        },
+                        new
+                        {
+                            ActivityId = 11,
                             QuestionId = 14,
                             RequestFormVariantId = 9,
                             Location = "details2",
                             Order = 3,
-                            PlaceholderText = "For example, a door entry code, or contact details for a friend / relative / caregiver.",
+                            PlaceholderText = "For example, phone John on XXXXX when you’re ten minutes away. Or use code 1234 to access the main gate etc.",
                             RequestFormStageId = 2,
-                            Required = false,
-                            Subtext = "We will only share this information with a volunteer after they have accepted your request"
+                            Required = false
                         });
                 });
 
@@ -4224,7 +4876,7 @@ namespace RequestService.Repo.Migrations
                             Id = 14,
                             AdditionalData = "",
                             AnswerContainsSensitiveData = true,
-                            Name = "Is there any other personal or sensitive information the volunteer needs to know to complete the request?",
+                            Name = "Any sensitve information to share?",
                             QuestionType = (byte)3
                         });
                 });
@@ -4292,9 +4944,6 @@ namespace RequestService.Repo.Migrations
 
                     b.Property<int>("ReferringGroupId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("RequestorDefinedByGroup")
-                        .HasColumnType("bit");
 
                     b.Property<byte?>("RequestorType")
                         .HasColumnType("tinyint");

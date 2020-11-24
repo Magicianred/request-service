@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RequestService.Repo;
 
 namespace RequestService.Repo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201112133303_SensitiveInformation_Step3")]
+    partial class SensitiveInformation_Step3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,7 +252,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -294,7 +296,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 1,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -800,7 +802,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -854,7 +856,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 2,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -1525,7 +1527,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -1579,7 +1581,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 3,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -2250,7 +2252,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -2294,7 +2296,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 5,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -2869,7 +2871,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 7,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3240,7 +3242,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 8,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3274,7 +3276,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 8,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3414,7 +3416,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 9,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, any mobility or communication needs, or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -3458,7 +3460,7 @@ namespace RequestService.Repo.Migrations
                             RequestFormVariantId = 9,
                             Location = "details2",
                             Order = 2,
-                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. Please don’t include any personal or sensitive information in this box.",
+                            PlaceholderText = "For example, let us know if the prescription needs to be paid for, or if there are any mobility or communication needs or special instructions for the volunteer. **Please don’t include any personal or sensitive information in this box**.",
                             RequestFormStageId = 2,
                             Required = false
                         },
@@ -4292,9 +4294,6 @@ namespace RequestService.Repo.Migrations
 
                     b.Property<int>("ReferringGroupId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("RequestorDefinedByGroup")
-                        .HasColumnType("bit");
 
                     b.Property<byte?>("RequestorType")
                         .HasColumnType("tinyint");

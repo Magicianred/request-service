@@ -145,7 +145,7 @@ namespace RequestService.Repo
             };
         }
 
-        public async Task<int> NewHelpRequestAsync(PostNewRequestForHelpRequest postNewRequestForHelpRequest, Fulfillable fulfillable)
+        public async Task<int> NewHelpRequestAsync(PostNewRequestForHelpRequest postNewRequestForHelpRequest, Fulfillable fulfillable, bool requestorDefinedByGroup)
         {
             Person requester = GetPersonFromPersonalDetails(postNewRequestForHelpRequest.HelpRequest.Requestor);
             Person recipient;
@@ -180,7 +180,8 @@ namespace RequestService.Repo
                         FulfillableStatus = (byte)fulfillable,
                         CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId,
                         ReferringGroupId = postNewRequestForHelpRequest.HelpRequest.ReferringGroupId,
-                        Source = postNewRequestForHelpRequest.HelpRequest.Source
+                        Source = postNewRequestForHelpRequest.HelpRequest.Source,
+                        RequestorDefinedByGroup = requestorDefinedByGroup
                     };
 
                     foreach (HelpMyStreet.Utils.Models.Job job in postNewRequestForHelpRequest.NewJobsRequest.Jobs)
@@ -558,7 +559,8 @@ namespace RequestService.Repo
                 DateRequested = job.NewRequest.DateRequested,
                 RequestorType = (RequestorType)job.NewRequest.RequestorType,
                 Archive = job.NewRequest.Archive,
-                DueDateType = (DueDateType) job.DueDateTypeId
+                DueDateType = (DueDateType) job.DueDateTypeId,
+                RequestorDefinedByGroup = job.NewRequest.RequestorDefinedByGroup
             };
         }
 
@@ -790,7 +792,8 @@ namespace RequestService.Repo
                             Location = x.Location,
                             PlaceholderText = x.PlaceholderText,
                             Type = (QuestionType)x.Question.QuestionType,
-                            AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>()
+                            AddtitonalData = x.Question.AdditionalData != null ? JsonConvert.DeserializeObject<List<AdditonalQuestionData>>(x.Question.AdditionalData) : new List<AdditonalQuestionData>(),
+                            AnswerContainsSensitiveData = x.Question.AnswerContainsSensitiveData
                         }).ToList();
         }
 
