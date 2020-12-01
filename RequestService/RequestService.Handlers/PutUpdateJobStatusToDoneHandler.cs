@@ -7,6 +7,7 @@ using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.CommunicationService.Request;
 using HelpMyStreet.Contracts.RequestService.Response;
 using HelpMyStreet.Utils.Enums;
+using System.Collections.Generic;
 
 namespace RequestService.Handlers
 {
@@ -49,7 +50,11 @@ namespace RequestService.Handlers
                         new RequestCommunicationRequest()
                         {
                             CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate },
-                            JobID = request.JobID
+                            JobID = request.JobID,
+                            AdditionalParameters = new Dictionary<string, string>()
+                            {
+                                { "FieldUpdated","Status" }
+                            }
                         },
                         cancellationToken);
                     }
