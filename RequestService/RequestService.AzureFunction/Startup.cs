@@ -20,6 +20,8 @@ using RequestService.Core.Services;
 using UserService.Core.Utils;
 using HelpMyStreet.Utils.Enums;
 using HelpMyStreet.Utils.Utils;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 [assembly: FunctionsStartup(typeof(RequestService.AzureFunction.Startup))]
 namespace RequestService.AzureFunction
@@ -89,10 +91,13 @@ namespace RequestService.AzureFunction
             builder.Services.AddTransient<IJobFilteringService, JobFilteringService>();
             builder.Services.AddTransient<IArchiveService, ArchiveService>();
 
+            builder.Services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(Logger<>)));
+            builder.Services.TryAdd(ServiceDescriptor.Singleton(typeof(ILoggerWrapper<>), typeof(LoggerWrapper<>)));
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                     ConfigureDbContextOptionsBuilder(options, connectionStrings.RequestService),
                 ServiceLifetime.Transient
-            );
+            );            
 
             // automatically apply EF migrations
             // DbContext is being created manually instead of through DI as it throws an exception and I've not managed to find a way to solve it yet: 
