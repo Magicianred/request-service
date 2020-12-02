@@ -11,16 +11,20 @@ using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using AzureFunctions.Extensions.Swashbuckle.Attribute;
+using HelpMyStreet.Utils.Utils;
+using System.Threading;
 
 namespace RequestService.AzureFunction
 {
     public class GetJobsAllocatedToUser
     {
         private readonly IMediator _mediator;
+        private readonly ILoggerWrapper<GetJobsAllocatedToUserRequest> _logger;
 
-        public GetJobsAllocatedToUser(IMediator mediator)
+        public GetJobsAllocatedToUser(IMediator mediator, ILoggerWrapper<GetJobsAllocatedToUserRequest> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         [FunctionName("GetJobsAllocatedToUser")]
@@ -28,17 +32,17 @@ namespace RequestService.AzureFunction
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)]
             [RequestBodyType(typeof(GetJobsAllocatedToUserRequest), "get jobs allocated to user request")] GetJobsAllocatedToUserRequest req,
-            ILogger log)
+            CancellationToken cancellationToken)
         {
             try
             {
-                log.LogInformation("C# HTTP trigger function processed a request.");
-                GetJobsAllocatedToUserResponse response = await _mediator.Send(req); 
+                _logger.LogInformation("GetJobsAllocatedToUser started");
+                GetJobsAllocatedToUserResponse response = await _mediator.Send(req, cancellationToken); 
                 return new OkObjectResult(ResponseWrapper<GetJobsAllocatedToUserResponse, RequestServiceErrorCode>.CreateSuccessfulResponse(response));
             }
             catch (Exception exc)
             {
-                log.LogError("Exception occured in Log Request", exc);
+                _logger.LogErrorAndNotifyNewRelic("Exception occured in GetJobsAllocatedToUser", exc);
                 return new ObjectResult(ResponseWrapper<GetJobsAllocatedToUserResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.InternalServerError, "Internal Error")) { StatusCode = StatusCodes.Status500InternalServerError };                
             }
         }

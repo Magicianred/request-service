@@ -11,16 +11,20 @@ using HelpMyStreet.Contracts.Shared;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using AzureFunctions.Extensions.Swashbuckle.Attribute;
+using HelpMyStreet.Utils.Utils;
+using System.Threading;
 
 namespace RequestService.AzureFunction
 {
     public class PutUpdateJobStatusToCancelled
     {
         private readonly IMediator _mediator;
+        private readonly ILoggerWrapper<PutUpdateJobStatusToCancelledRequest> _logger;
 
-        public PutUpdateJobStatusToCancelled(IMediator mediator)
+        public PutUpdateJobStatusToCancelled(IMediator mediator, ILoggerWrapper<PutUpdateJobStatusToCancelledRequest> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         [FunctionName("PutUpdateJobStatusToCancelled")]
@@ -28,17 +32,17 @@ namespace RequestService.AzureFunction
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "put", Route = null)]
             [RequestBodyType(typeof(PutUpdateJobStatusToCancelledRequest), "put update job status to cancelled request")] PutUpdateJobStatusToCancelledRequest req,
-            ILogger log)
+            CancellationToken cancellationToken)
         {
             try
             {
-                log.LogInformation("C# HTTP trigger function processed a request.");
-                PutUpdateJobStatusToCancelledResponse response = await _mediator.Send(req); 
+                _logger.LogInformation("PutUpdateJobStatusToCancelled started");
+                PutUpdateJobStatusToCancelledResponse response = await _mediator.Send(req, cancellationToken); 
                 return new OkObjectResult(ResponseWrapper<PutUpdateJobStatusToCancelledResponse, RequestServiceErrorCode>.CreateSuccessfulResponse(response));
             }
             catch (Exception exc)
             {
-                log.LogError("Exception occured in Log Request", exc);
+                _logger.LogErrorAndNotifyNewRelic("Exception occured in PutUpdateJobStatusToCancelled", exc);
                 return new ObjectResult(ResponseWrapper<PutUpdateJobStatusToCancelledResponse, RequestServiceErrorCode>.CreateUnsuccessfulResponse(RequestServiceErrorCode.InternalServerError, "Internal Error")) { StatusCode = StatusCodes.Status500InternalServerError };                
             }
         }
