@@ -809,5 +809,32 @@ namespace RequestService.Repo
                 return false;
             }
         }
+
+        public async Task<UpdateJobOutcome> UpdateJobDueDateAsync(int jobID, int authorisedByUserID, DateTime dueDate, CancellationToken cancellationToken)
+        {
+            UpdateJobOutcome response = UpdateJobOutcome.BadRequest;
+            var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
+            if (job != null)
+            {
+                if (job.DueDate != dueDate)
+                {
+                    job.DueDate = dueDate;
+                    int result = await _context.SaveChangesAsync(cancellationToken);
+                    if (result == 1)
+                    {
+                        response = UpdateJobOutcome.Success;
+                    }
+                    else
+                    {
+                        response = UpdateJobOutcome.BadRequest;
+                    }
+                }
+                else
+                {
+                    response = UpdateJobOutcome.AlreadyInThisState;
+                }
+            }
+            return response;
+        }
     }
 }
