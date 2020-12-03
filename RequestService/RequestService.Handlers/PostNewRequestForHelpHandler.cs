@@ -1,4 +1,4 @@
-using MediatR;
+﻿using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using RequestService.Core.Interfaces.Repositories;
@@ -148,7 +148,7 @@ namespace RequestService.Handlers
                         case NewTaskAction.MakeAvailableToGroups:
                             foreach (int i in actionAppliesToIds)
                             {
-                                await _repository.AddJobAvailableToGroupAsync(jobID, i,cancellationToken);
+                                await _repository.AddJobAvailableToGroupAsync(jobID, i, cancellationToken);
                             }
                             break;
 
@@ -160,7 +160,7 @@ namespace RequestService.Handlers
                                     GroupID = groupId,
                                     CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification },
                                     JobID = jobID
-                                },cancellationToken);
+                                }, cancellationToken);
                                 await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
                             }
                             break;
@@ -176,6 +176,18 @@ namespace RequestService.Handlers
                             break;
                         case NewTaskAction.SetStatusToOpen:
                             await _repository.UpdateJobStatusOpenAsync(jobID, -1, cancellationToken);
+                            break;
+                        case NewTaskAction.NotifyGroupAdmins:
+                            foreach (int groupId in actionAppliesToIds)
+                            {
+                                bool commsSent = await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                                {
+                                    GroupID = groupId,
+                                    CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.NewTaskPendingApprovalNotification },
+                                    JobID = jobID
+                                }, cancellationToken);
+                                await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
+                            }
                             break;
                     }
                 }
