@@ -765,10 +765,10 @@ namespace RequestService.Repo
             return response;
         }
 
-        public bool JobHasSameStatusAsProposedStatus(int jobID, JobStatuses newJobStatus)
+        public bool JobHasStatus(int jobID, JobStatuses status)
         {
             var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
-            if (job.JobStatusId == (byte)newJobStatus)
+            if (job.JobStatusId == (byte)status)
             {
                 return true;
             }

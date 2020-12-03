@@ -29,7 +29,7 @@ namespace RequestService.Handlers
                 Outcome = UpdateJobStatusOutcome.Unauthorized
             };
 
-            if (_repository.JobHasSameStatusAsProposedStatus(request.JobID, JobStatuses.Done))
+            if (_repository.JobHasStatus(request.JobID, JobStatuses.Done))
             {
                 response.Outcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
             }

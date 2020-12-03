@@ -36,7 +36,7 @@ namespace RequestService.Handlers
                 Outcome = UpdateJobStatusOutcome.Unauthorized
             };
 
-            if (_repository.JobHasSameStatusAsProposedStatus(request.JobID, JobStatuses.Cancelled))
+            if (_repository.JobHasStatus(request.JobID, JobStatuses.Cancelled))
             {
                 response.Outcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
             }
