@@ -180,13 +180,12 @@ namespace RequestService.Handlers
                         case NewTaskAction.NotifyGroupAdmins:
                             foreach (int groupId in actionAppliesToIds)
                             {
-                                bool commsSent = await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                                await _communicationService.RequestCommunication(new RequestCommunicationRequest()
                                 {
                                     GroupID = groupId,
                                     CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.NewTaskPendingApprovalNotification },
                                     JobID = jobID
                                 }, cancellationToken);
-                                await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
                             }
                             break;
                     }
