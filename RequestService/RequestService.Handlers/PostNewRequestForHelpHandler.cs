@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using RequestService.Core.Interfaces.Repositories;
@@ -173,6 +173,9 @@ namespace RequestService.Handlers
 
                             // For now, this only happens with a DIY request
                             response.Fulfillable = Fulfillable.Accepted_DiyRequest;
+                            break;
+                        case NewTaskAction.SetStatusToOpen:
+                            await _repository.UpdateJobStatusOpenAsync(jobID, -1, cancellationToken);
                             break;
                     }
                 }
