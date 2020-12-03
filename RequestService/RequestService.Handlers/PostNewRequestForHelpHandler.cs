@@ -158,7 +158,7 @@ namespace RequestService.Handlers
                                 bool commsSent = await _communicationService.RequestCommunication(new RequestCommunicationRequest()
                                 {
                                     GroupID = groupId,
-                                    CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification },
+                                    CommunicationJob = new CommunicationJob { CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification },
                                     JobID = jobID
                                 }, cancellationToken);
                                 await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
@@ -183,10 +183,17 @@ namespace RequestService.Handlers
                                 await _communicationService.RequestCommunication(new RequestCommunicationRequest()
                                 {
                                     GroupID = groupId,
-                                    CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.NewTaskPendingApprovalNotification },
+                                    CommunicationJob = new CommunicationJob { CommunicationJobType = CommunicationJobTypes.NewTaskPendingApprovalNotification },
                                     JobID = jobID
                                 }, cancellationToken);
                             }
+                            break;
+                        case NewTaskAction.SendRequestorConfirmation:
+                            await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                            {
+                                CommunicationJob = new CommunicationJob { CommunicationJobType = CommunicationJobTypes.RequestorTaskConfirmation },
+                                JobID = jobID
+                            }, cancellationToken);
                             break;
                     }
                 }
