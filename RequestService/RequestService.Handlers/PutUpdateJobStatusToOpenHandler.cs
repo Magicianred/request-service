@@ -35,6 +35,7 @@ namespace RequestService.Handlers
             }
             else
             {
+                bool newToOpen = _repository.JobHasStatus(request.JobID, JobStatuses.New);
 
                 bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID, cancellationToken);
 
@@ -52,6 +53,23 @@ namespace RequestService.Handlers
                             JobID = request.JobID
                         },
                         cancellationToken);
+
+                        if (newToOpen)
+                        {
+                            //TODO: Potentially, call Group Service here, to make following actions configurable (to mirror call to GetNewRequestActions in PostNewRequestForHelp)
+                            
+                            var jobSummary = _repository.GetJobSummary(request.JobID);
+
+                            foreach (int groupId in jobSummary.JobSummary.Groups)
+                            {
+                                await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                                {
+                                    GroupID = groupId,
+                                    CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification },
+                                    JobID = request.JobID
+                                }, cancellationToken);
+                            }
+                        }
                     }
                 }
             }
