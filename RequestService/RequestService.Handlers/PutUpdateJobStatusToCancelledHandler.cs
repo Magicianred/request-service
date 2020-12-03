@@ -55,7 +55,11 @@ namespace RequestService.Handlers
                         new RequestCommunicationRequest()
                         {
                             CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendTaskStateChangeUpdate },
-                            JobID = request.JobID
+                            JobID = request.JobID,
+                            AdditionalParameters = new Dictionary<string, string>()
+                            {
+                                { "FieldUpdated","Status" }
+                            }                            
                         },
                         cancellationToken);
                     }
