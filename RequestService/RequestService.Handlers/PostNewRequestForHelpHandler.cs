@@ -189,10 +189,15 @@ namespace RequestService.Handlers
                             }
                             break;
                         case NewTaskAction.SendRequestorConfirmation:
+                            Dictionary<string, string> additionalParameters = new Dictionary<string, string>
+                            {
+                                { "StatusIsOpen", (actions.Actions.Keys.Contains((int)NewTaskAction.SetStatusToOpen)).ToString() }
+                            };
                             await _communicationService.RequestCommunication(new RequestCommunicationRequest()
                             {
                                 CommunicationJob = new CommunicationJob { CommunicationJobType = CommunicationJobTypes.RequestorTaskConfirmation },
-                                JobID = jobID
+                                JobID = jobID,
+                                AdditionalParameters = additionalParameters,
                             }, cancellationToken);
                             break;
                     }
