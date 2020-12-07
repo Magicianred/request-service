@@ -195,7 +195,7 @@ namespace RequestService.Repo
                             SupportActivityId = (byte)job.SupportActivity,
                             DueDate = DateTime.Now.AddDays(job.DueDays),
                             DueDateTypeId = (byte) job.DueDateType,
-                            JobStatusId = (byte) JobStatuses.Open,
+                            JobStatusId = (byte) JobStatuses.New,
                             Reference = job.Questions.Where(x => x.Id == (int)Questions.AgeUKReference).FirstOrDefault()?.Answer
                         };
                         _context.Job.Add(EFcoreJob);
@@ -215,7 +215,7 @@ namespace RequestService.Repo
                         _context.RequestJobStatus.Add(new RequestJobStatus()
                         {
                             DateCreated = DateTime.Now,
-                            JobStatusId = (byte)JobStatuses.Open,
+                            JobStatusId = (byte)JobStatuses.New,
                             Job = EFcoreJob,
                             CreatedByUserId = postNewRequestForHelpRequest.HelpRequest.CreatedByUserId,
                         });
@@ -765,10 +765,10 @@ namespace RequestService.Repo
             return response;
         }
 
-        public bool JobHasSameStatusAsProposedStatus(int jobID, JobStatuses newJobStatus)
+        public bool JobHasStatus(int jobID, JobStatuses status)
         {
             var job = _context.Job.Where(w => w.Id == jobID).FirstOrDefault();
-            if (job.JobStatusId == (byte)newJobStatus)
+            if (job.JobStatusId == (byte)status)
             {
                 return true;
             }

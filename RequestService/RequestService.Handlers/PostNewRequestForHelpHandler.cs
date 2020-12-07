@@ -148,7 +148,7 @@ namespace RequestService.Handlers
                         case NewTaskAction.MakeAvailableToGroups:
                             foreach (int i in actionAppliesToIds)
                             {
-                                await _repository.AddJobAvailableToGroupAsync(jobID, i,cancellationToken);
+                                await _repository.AddJobAvailableToGroupAsync(jobID, i, cancellationToken);
                             }
                             break;
 
@@ -158,9 +158,9 @@ namespace RequestService.Handlers
                                 bool commsSent = await _communicationService.RequestCommunication(new RequestCommunicationRequest()
                                 {
                                     GroupID = groupId,
-                                    CommunicationJob = new CommunicationJob() { CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification },
+                                    CommunicationJob = new CommunicationJob { CommunicationJobType = CommunicationJobTypes.SendNewTaskNotification },
                                     JobID = jobID
-                                },cancellationToken);
+                                }, cancellationToken);
                                 await _repository.UpdateCommunicationSentAsync(response.RequestID, commsSent, cancellationToken);
                             }
                             break;
@@ -173,6 +173,32 @@ namespace RequestService.Handlers
 
                             // For now, this only happens with a DIY request
                             response.Fulfillable = Fulfillable.Accepted_DiyRequest;
+                            break;
+                        case NewTaskAction.SetStatusToOpen:
+                            await _repository.UpdateJobStatusOpenAsync(jobID, -1, cancellationToken);
+                            break;
+                        case NewTaskAction.NotifyGroupAdmins:
+                            foreach (int groupId in actionAppliesToIds)
+                            {
+                                await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                                {
+                                    GroupID = groupId,
+                                    CommunicationJob = new CommunicationJob { CommunicationJobType = CommunicationJobTypes.NewTaskPendingApprovalNotification },
+                                    JobID = jobID
+                                }, cancellationToken);
+                            }
+                            break;
+                        case NewTaskAction.SendRequestorConfirmation:
+                            Dictionary<string, string> additionalParameters = new Dictionary<string, string>
+                            {
+                                { "PendingApproval", (!actions.Actions.Keys.Contains((int)NewTaskAction.SetStatusToOpen)).ToString() }
+                            };
+                            await _communicationService.RequestCommunication(new RequestCommunicationRequest()
+                            {
+                                CommunicationJob = new CommunicationJob { CommunicationJobType = CommunicationJobTypes.RequestorTaskConfirmation },
+                                JobID = jobID,
+                                AdditionalParameters = additionalParameters,
+                            }, cancellationToken);
                             break;
                     }
                 }
