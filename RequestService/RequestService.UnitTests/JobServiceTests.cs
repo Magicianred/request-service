@@ -205,6 +205,32 @@ namespace RequestService.UnitTests
             Assert.AreEqual(true, response);
         }
 
+        [Test]
+        public async Task WhenVolunteerIsSameAsCreatedByButNotAllowed_ReturnsFalse()
+        {
+            int jobId = 1;
+            int createdByUserID = 1;
+            _refferingGroupID = 1;
+            _getjobdetailsResponse = new GetJobDetailsResponse()
+            {
+                JobSummary = new JobSummary() { VolunteerUserID = 1 }
+            };
+
+            Dictionary<int, List<int>> roles = new Dictionary<int, List<int>>();
+            roles.Add(1, new List<int>() { (int)GroupRoles.Member });
+
+            _getUserRolesResponse = new GetUserRolesResponse()
+            {
+                UserGroupRoles = roles
+            };
+            var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, false, CancellationToken.None);
+            _repository.Verify(x => x.GetJobDetails(It.IsAny<int>()), Times.Once);
+            _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+            _groupService.Verify(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
+
+            Assert.AreEqual(false, response);
+        }
+
 
         [Test]
         public async Task WhenVolunteerIsDiffentToCreatedByButUserIsNotTaskAdmin_ReturnsFalse()
