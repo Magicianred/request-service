@@ -170,7 +170,7 @@ namespace RequestService.UnitTests
             {
                 UserGroupRoles = roles
             };
-            var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, CancellationToken.None);
+            var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, true, CancellationToken.None);
 
             _repository.Verify(x => x.GetJobDetails(It.IsAny<int>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -197,7 +197,7 @@ namespace RequestService.UnitTests
             {
                 UserGroupRoles = roles
             };
-            var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, CancellationToken.None);
+            var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, true, CancellationToken.None);
             _repository.Verify(x => x.GetJobDetails(It.IsAny<int>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
             _groupService.Verify(x => x.GetUserRoles(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -224,7 +224,7 @@ namespace RequestService.UnitTests
             {
                 UserGroupRoles = roles
             };
-            var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, CancellationToken.None);
+            var response = await _classUnderTest.HasPermissionToChangeStatusAsync(jobId, createdByUserID, true, CancellationToken.None);
 
             _repository.Verify(x => x.GetJobDetails(It.IsAny<int>()), Times.Once);
             _repository.Verify(x => x.GetReferringGroupIDForJobAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);

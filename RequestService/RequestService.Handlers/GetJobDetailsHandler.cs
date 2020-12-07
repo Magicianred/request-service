@@ -28,7 +28,7 @@ namespace RequestService.Handlers
 
             if (request.UserID != ADMIN_USERID)
             {
-                hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.UserID, cancellationToken);
+                hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.UserID, true, cancellationToken);
             }
 
             if (hasPermission)

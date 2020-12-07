@@ -38,7 +38,7 @@ namespace RequestService.Handlers
             {
                 bool newToOpen = _repository.JobHasStatus(request.JobID, JobStatuses.New);
 
-                bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+                bool hasPermission = await _jobService.HasPermissionToChangeStatusAsync(request.JobID, request.CreatedByUserID, !newToOpen, cancellationToken);
 
                 if (hasPermission)
                 {
