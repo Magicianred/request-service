@@ -2,41 +2,35 @@
 using System.Threading;
 using System.Threading.Tasks;
 using RequestService.Core.Interfaces.Repositories;
-using RequestService.Core.Dto;
 using RequestService.Core.Services;
 using System.Collections.Generic;
-using System.Linq;
-using System;
 using HelpMyStreet.Utils.Enums;
-using HelpMyStreet.Contracts.RequestService.Request;
 using HelpMyStreet.Contracts.CommunicationService.Request;
-using Microsoft.Extensions.Options;
-using RequestService.Core.Config;
 using HelpMyStreet.Contracts.RequestService.Response;
-using HelpMyStreet.Utils.Models;
+using HelpMyStreet.Contracts.RequestService.Request;
 
 namespace RequestService.Handlers
 {
-    public class PutUpdateJobStatusToCancelledHandler : IRequestHandler<PutUpdateJobStatusToCancelledRequest, PutUpdateJobStatusToCancelledResponse>
+    public class PutUpdateJobStatusToNewHandler : IRequestHandler<PutUpdateJobStatusToNewRequest, PutUpdateJobStatusToNewResponse>
     {
         private readonly IRepository _repository;
         private readonly IJobService _jobService;
         private readonly ICommunicationService _communicationService;
-        public PutUpdateJobStatusToCancelledHandler(IRepository repository, IJobService jobService, ICommunicationService communicationService)
+        public PutUpdateJobStatusToNewHandler(IRepository repository, IJobService jobService, ICommunicationService communicationService)
         {
             _repository = repository;
             _jobService = jobService;
             _communicationService = communicationService;
         }
 
-        public async Task<PutUpdateJobStatusToCancelledResponse> Handle(PutUpdateJobStatusToCancelledRequest request, CancellationToken cancellationToken)
+        public async Task<PutUpdateJobStatusToNewResponse> Handle(PutUpdateJobStatusToNewRequest request, CancellationToken cancellationToken)
         {
-            PutUpdateJobStatusToCancelledResponse response = new PutUpdateJobStatusToCancelledResponse()
+            PutUpdateJobStatusToNewResponse response = new PutUpdateJobStatusToNewResponse()
             {
                 Outcome = UpdateJobStatusOutcome.Unauthorized
             };
 
-            if (_repository.JobHasStatus(request.JobID, JobStatuses.Cancelled))
+            if (_repository.JobHasStatus(request.JobID, JobStatuses.New))
             {
                 response.Outcome = UpdateJobStatusOutcome.AlreadyInThisStatus;
             }
@@ -46,7 +40,7 @@ namespace RequestService.Handlers
 
                 if (hasPermission)
                 {
-                    var result = await _repository.UpdateJobStatusCancelledAsync(request.JobID, request.CreatedByUserID, cancellationToken);
+                    var result = await _repository.UpdateJobStatusNewAsync(request.JobID, request.CreatedByUserID, cancellationToken);
                     response.Outcome = result;
 
                     if (result == UpdateJobStatusOutcome.Success)

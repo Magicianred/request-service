@@ -132,7 +132,7 @@ namespace RequestService.Core.Services
             }
         }
 
-        public async Task<bool> HasPermissionToChangeStatusAsync(int jobID, int createdByUserID, CancellationToken cancellationToken)
+        public async Task<bool> HasPermissionToChangeStatusAsync(int jobID, int createdByUserID, bool allowVolunteerUserId, CancellationToken cancellationToken)
         {
             var jobDetails = _repository.GetJobDetails(jobID);
 
@@ -141,7 +141,7 @@ namespace RequestService.Core.Services
                 throw new Exception($"Unable to retrieve job details for jobID:{jobID}");
             }
 
-            if (createdByUserID == jobDetails.JobSummary.VolunteerUserID)
+            if (allowVolunteerUserId && createdByUserID == jobDetails.JobSummary.VolunteerUserID)
             {
                 return true;
             }
